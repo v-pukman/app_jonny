@@ -23,8 +23,7 @@ group :development, :test do
   gem 'rspec-rails'
 end
 
-# group :test do
-#   gem 'webmock'
-#   gem 'vcr'
-# end
-
+group :test do
+  gem 'webmock'
+  gem 'vcr'
+end
