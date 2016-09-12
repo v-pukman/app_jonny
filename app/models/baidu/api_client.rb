@@ -14,6 +14,7 @@ class Baidu::ApiClient
 
   #TODO: add common response handler
   #      add new api methods
+  #      generate uid by ruby
   def get_app options
     params = detail_params.merge({
       'docid' => get_option(options, :docid)
