@@ -9,10 +9,16 @@ RSpec.describe Baidu::ApiClient do
 
   describe "get_app" do
     let(:docid) { 9723881 }
-    it "returns app info" do
+    it "returns result" do
       VCR.use_cassette("baidu/get_app") do
         res = client.get_app({ docid: docid })
         expect(res).to_not eq nil
+      end
+    end
+    it "returns app info" do
+      VCR.use_cassette("baidu/get_app") do
+        res = client.get_app({ docid: docid })
+        expect(res["result"]["data"]["base_info"]["docid"].to_i).to eq docid
       end
     end
   end
