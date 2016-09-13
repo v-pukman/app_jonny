@@ -19,10 +19,17 @@ class Baidu::ApiClient
     params = ::Baidu::DefaultParams.detail.merge({
       'docid' => get_option(options, :docid)
     })
-    response = connection(APPS_URL).get do |request|
-      request.params = params
-    end
-    JSON.parse(response.body)
+    make_request(:get, APPS_URL, params)
+  end
+
+  def get_comments options
+    params = ::Baidu::DefaultParams.comments.merge({
+      'docid' => get_option(options, :docid),
+      'groupid' => get_option(options, :groupid),
+      'start' => get_option(options, :start),
+      'count' => get_option(options, :count)
+    })
+    make_request(:get, APPS_URL, params)
   end
 
   private
@@ -43,6 +50,18 @@ class Baidu::ApiClient
       faraday.adapter Faraday.default_adapter
     end
   end
+
+  def make_request request_type, url, params
+    response = connection(url).send(request_type) do |request|
+      request.params = params
+    end
+    JSON.parse(response.body)
+  end
+
+  #Faraday::ConnectionFailed:
+  #     execution expired
+
+  # JSON::ParserError
 
   # do we need it for baidu?
   def handle_timeouts

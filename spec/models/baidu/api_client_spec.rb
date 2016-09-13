@@ -23,6 +23,31 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "get_comments" do
+    let(:docid) { 9945457 }
+    let(:groupid) { 4003077 }
+    let(:start) { 0 }
+    let(:count) { 10 }
+    let(:options) do
+      { docid: docid, groupid: groupid, start: start, count: count }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_comments") do
+        res = client.get_comments options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of comments" do
+      VCR.use_cassette("baidu/get_comments") do
+        res = client.get_comments options
+        expect(res["data"].count).to be > 0
+        expect(res["data"][0]["thread_id"].to_i).to eq groupid
+        expect(res["data"][0]["reply_id"]).to_not eq nil
+        expect(res["data"][0]["content"]).to_not eq nil
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})

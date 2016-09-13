@@ -60,10 +60,53 @@ class Baidu::DefaultParams
       'language' => 'en',
       'apn' => '',
       'crid' => '1473676762976',
-      'native_api' => '1',
       'docid' => '',
       'location' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
       'f' => 'onlinegame@1@2@source+EDITOR@boardid+20113@pos+2@flow+BOARD@trans+NULL@mode+NULL@bid+1@oriboardid+20113@oripos+2@exp+full_flow@sample+adv@package+com.sy37.yhjyj.baidu@searchid+3761264578996139958@terminal_type+client',
+      'rqt' => 'rty',
+      'ptl' => 'hp'
+    }
+  end
+
+  # docid
+  # groupid
+  # start # '0'
+  # count # '10'
+  def self.comments
+    {
+      'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
+      'native_api' => '1',
+      'psize' => '2',
+      'abi' => 'armeabi-v7a',
+      'cll' => '_a2BNgaO2t_lOe8r0u28NguG2i30AqGuB',
+      'usertype' => '0',
+      'is_support_webp' => 'true',
+      'ver' => '16790412',
+      'from' => '1000561u',
+      'cct' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
+      'operator' => '460021',
+      'network' => 'WF',
+      'pkname' => 'com.baidu.appsearch',
+      'country' => 'US',
+      'cen' => 'cuid_cut_cua_uid',
+      'gms' => 'true',
+      'platform_version_id' => '15',
+      'province' => 'qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA',
+      'action' => 'getcommentlist',
+      'pu' => 'cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAeQuB,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98skvB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjNmmB',
+      'language' => 'en',
+      'apn' => '',
+      'crid' => '1473755349737',
+      'actiontype' => 'getCommentList',
+      'groupid' => '',
+      'start' => '',
+      'count' => '',
+      'docid' => '',
+      #'packageid' => '1826432',
+      #'version' => '1.0.2',
+      #'groupids' => '4003077',
+      #'machine' => 'GT-S7562',
+      #'osversion' => '4.0.4',
       'rqt' => 'rty',
       'ptl' => 'hp'
     }
