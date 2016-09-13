@@ -1,6 +1,7 @@
 class Baidu::ApiClient
   APPS_URL = 'http://m.baidu.com/appsrv'
-  SEARCH_URL = 'http://m.baidu.com/s'
+  #SEARCH_URL = 'http://m.baidu.com/s'
+  SEARCH_URL = 'http://m.baidu.com/as'
 
    # get :app, docid: 123
   def get resource, options={}
@@ -30,6 +31,14 @@ class Baidu::ApiClient
       'count' => get_option(options, :count)
     })
     make_request(:get, APPS_URL, params)
+  end
+
+  def get_search options
+    params = ::Baidu::DefaultParams.search.merge({
+      'word' => get_option(options, :word),
+      'pn' => get_option(options, :pn)
+    })
+    make_request(:get, SEARCH_URL, params)
   end
 
   private

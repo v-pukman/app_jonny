@@ -48,6 +48,42 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "get_search" do
+    let(:word) { '斗地主' }
+    let(:pn) { 0 }
+    let(:options) do
+      { word: word, pn: pn }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_search") do
+        res = client.get_search options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of apps" do
+      VCR.use_cassette("baidu/get_search") do
+        res = client.get_search options
+        expect(res["result"]["data"].count).to be > 0
+        expect(res["result"]["data"][0]["itemdata"]["docid"]).to_not eq nil
+        expect(res["result"]["data"][0]["itemdata"]["sname"]).to_not eq nil
+        expect(res["result"]["data"][1]["itemdata"]["docid"]).to_not eq nil
+        expect(res["result"]["data"][1]["itemdata"]["sname"]).to_not eq nil
+      end
+    end
+    it "returns next page" do
+      VCR.use_cassette("baidu/get_search") do
+        res = client.get_search options
+        res_ids = res["result"]["data"].map{|i| i["itemdata"]["docid"].to_i}
+        VCR.use_cassette("baidu/get_search_page2") do
+          options[:pn] += 1
+          res2 = client.get_search options
+          res2_ids = res2["result"]["data"].map{|i| i["itemdata"]["docid"].to_i}
+          expect(res_ids&res2_ids).to eq []
+        end
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})
