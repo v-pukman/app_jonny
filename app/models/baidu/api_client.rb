@@ -41,6 +41,22 @@ class Baidu::ApiClient
     make_request(:get, SEARCH_URL, params)
   end
 
+  def get_board options
+    params = ::Baidu::DefaultParams.board.merge({
+      'boardid' => get_option(options, :boardid),
+      'sorttype' => get_option(options, :sorttype),
+      'pn' => get_option(options, :pn)
+    })
+    make_request(:get, APPS_URL, params)
+  end
+
+  def get_boards options
+    params = ::Baidu::DefaultParams.boards.merge({
+      'sorttype' => get_option(options, :sorttype)
+    })
+    make_request(:get, APPS_URL, params)
+  end
+
   private
 
   def connection api_url

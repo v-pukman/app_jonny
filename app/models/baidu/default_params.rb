@@ -149,4 +149,81 @@ class Baidu::DefaultParams
       'ptl' => 'hp'
     }
   end
+
+  # boardid
+  # pn (0..any)
+  # sorttype (game|soft)
+  def self.board
+    {
+      'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
+      'abi' => 'armeabi-v7a',
+      'subcateurl' => 'true',
+      'is_support_webp' => 'true',
+      'ver' => '16790412',
+      'from' => '1000561u',
+      'cct' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
+      'network' => 'WF',
+      'catestrategy' => 'adv',
+      'cen' => 'cuid_cut_cua_uid',
+      'platform_version_id' => '15',
+      'province' => 'qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA',
+      'boardid' => '',
+      'action' => 'generalboard',
+      'apn' => '',
+      'native_api' => '1',
+      'sorttype' => '',
+      'psize' => '2',
+      'cll' => '_a2BNgaO2t_lOe8r0u28NguG2i30AzjCB',
+      'usertype' => '0',
+      'operator' => '460021',
+      'pkname' => 'com.baidu.appsearch',
+      'country' => 'US',
+      'gms' => 'true',
+      'pu' => 'cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAko4B,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98BASB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjToAB',
+      'language' => 'en',
+      'crid' => '1473780986900',
+      'pn' => '',
+      'f' => 'subcategame@1@1',
+      'bannert' => '26@27@28@29@30@31@32@43',
+      'cpver' => '1',
+      'rqt' => 'rty',
+      'ptl' => 'hp'
+    }
+  end
+
+  # sorttype (soft|game)
+  # pn (default 0, seems there is only one page)
+  def self.boards
+    {
+      'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
+      'native_api' => '1',
+      'sorttype' => '',
+      'psize' => '2',
+      'abi' => 'armeabi-v7a',
+      'cll' => '_a2BNgaO2t_lOe8r0u28NguG2i30AfgjB',
+      'usertype' => '0',
+      'is_support_webp' => 'true',
+      'ver' => '16790412',
+      'from' => '1000561u',
+      'cct' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
+      'operator' => '460021',
+      'network' => 'WF',
+      'pkname' => 'com.baidu.appsearch',
+      'country' => 'US',
+      'cen' => 'cuid_cut_cua_uid',
+      'gms' => 'true',
+      'platform_version_id' => '15',
+      'province' => 'qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA',
+      'action' => 'boardcate',
+      'pu' => 'cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAO95B,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98FVeB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjwKZB',
+      'language' => 'en',
+      'apn' => '',
+      'crid' => '1473783086118',
+      'pn' => '0',
+      'bannert' => '26@27@28@29@30@31@32@43',
+      'cpver' => '1',
+      'rqt' => 'rty',
+      'ptl' => 'hp'
+    }
+  end
 end

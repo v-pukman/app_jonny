@@ -84,6 +84,47 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "#get_board" do
+    let(:boardid) { 'board_100_0105' }
+    let(:sorttype) { 'game' }
+    let(:pn) { 0 }
+    let(:options) do
+      { boardid: boardid, sorttype: sorttype, pn: pn }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_board") do
+        res = client.get_board options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of board games" do
+      VCR.use_cassette("baidu/get_board") do
+        res = client.get_board options
+        expect(res["result"]["data"].count).to be > 0
+        expect(res["result"]["data"].map{|i| i["itemdata"]["docid"] }.compact.count).to be > 0
+      end
+    end
+  end
+
+  describe "#get_boards" do
+    let(:sorttype) { 'soft' }
+    let(:options) do
+      { sorttype: sorttype }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_boards") do
+        res = client.get_boards options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns links to boards" do
+      VCR.use_cassette("baidu/get_boards") do
+        res = client.get_boards options
+        expect(res["result"]["data"][0]["itemdata"].last["dataurl"]).to include "&boardid="
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})

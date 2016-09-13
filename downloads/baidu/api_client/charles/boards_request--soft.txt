@@ -1,0 +1,75 @@
+#list of boards in soft category
+
+http://m.baidu.com/appsrv?uid=guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC&native_api=1&sorttype=soft&psize=2&abi=armeabi-v7a&cll=_a2BNgaO2t_lOe8r0u28NguG2i30AfgjB&usertype=0&is_support_webp=true&ver=16790412&from=1000561u&cct=qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA&operator=460021&network=WF&pkname=com.baidu.appsearch&country=US&cen=cuid_cut_cua_uid&gms=true&platform_version_id=15&province=qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA&action=boardcate&pu=cua%40_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAO95B%2Cosname%40baiduappsearch%2Cctv%401%2Ccfrom%40100027l%2Ccuid%40guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98FVeB%2Ccut%400ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjwKZB&language=en&apn=&&crid=1473783086118&native_api=1&pn=0&bannert=26%4027%4028%4029%4030%4031%4032%4043&cpver=1&rqt=rty&ptl=hp
+Complete
+200 OK
+HTTP/1.1
+GET
+application/x-www-form-urlencoded
+/192.168.1.102
+-
+
+uid guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC
+native_api  1
+sorttype  soft
+psize 2
+abi armeabi-v7a
+cll _a2BNgaO2t_lOe8r0u28NguG2i30AfgjB
+usertype  0
+is_support_webp true
+ver 16790412
+from  1000561u
+cct qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA
+operator  460021
+network WF
+pkname  com.baidu.appsearch
+country US
+cen cuid_cut_cua_uid
+gms true
+platform_version_id 15
+province  qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA
+action  boardcate
+pu  cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAO95B,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98FVeB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjwKZB
+language  en
+apn
+crid  1473783086118
+native_api  1
+pn  0
+bannert 26@27@28@29@30@31@32@43
+cpver 1
+rqt rty
+ptl hp
+
+
+# games boards
+
+uid guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC
+native_api  1
+sorttype  game
+psize 2
+abi armeabi-v7a
+cll _a2BNgaO2t_lOe8r0u28NguG2i30A3aoB
+usertype  0
+is_support_webp true
+ver 16790412
+from  1000561u
+cct qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA
+operator  460021
+network WF
+pkname  com.baidu.appsearch
+country US
+cen cuid_cut_cua_uid
+gms true
+platform_version_id 15
+province  qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA
+action  boardcate
+pu  cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KArkuB,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98IsQB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjfZsB
+language  en
+apn
+crid  1473784201329
+native_api  1
+pn  0
+bannert 26@27@28@29@30@31@32@43
+cpver 1
+rqt rty
+ptl hp
