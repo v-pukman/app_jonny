@@ -160,6 +160,63 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "get_featured" do
+    let(:pn) { 0 }
+    let(:options) do
+      { pn: pn }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_featured") do
+        res = client.get_featured options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list with feature-boards and small list of games" do
+      VCR.use_cassette("baidu/get_featured") do
+        res = client.get_featured options
+        boards = res["result"]["data"].select {|i| i.is_a?(Hash) && i["datatype"] == 339 }
+        expect(boards[0]["itemdata"]["dataurl"]).to include "action=featureboard&board="
+        games = res["result"]["data"].select {|i| i.is_a?(Hash) && i["datatype"] == 341 }
+        expect(games[0]["itemdata"]["docid"]).to_not eq nil
+      end
+    end
+  end
+
+  describe "get_game_ranks" do
+    let(:pn) { 0 }
+    let(:options) do
+      { pn: pn }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_game_ranks") do
+        res = client.get_game_ranks options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of boards and small list of games" do
+      VCR.use_cassette("baidu/get_game_ranks") do
+        res = client.get_game_ranks options
+        blocks = res["result"]["data"].select{|i| i["datatype"] == 329 }
+        expect(blocks[0]["itemdata"]["groupheader"]).to_not eq nil
+        expect(blocks[0]["itemdata"]["groupapp"]).to_not eq nil
+      end
+    end
+    context "when board_id is passed" do
+      let(:board_id) { 'board_102_736' }
+      let(:options) do
+        { pn: pn, board_id: board_id }
+      end
+      it "returns list of ranked games in this board" do
+        VCR.use_cassette("baidu/get_game_ranks--in-board") do
+          res = client.get_game_ranks options
+          games = res["result"]["data"].select{|i| i["datatype"] == 330 }
+          expect(games.count).to be > 0
+          expect(games[0]["itemdata"]["docid"]).to_not eq nil
+        end
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})
