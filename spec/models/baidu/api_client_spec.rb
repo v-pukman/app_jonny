@@ -125,6 +125,41 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "get_ranks" do
+    let(:action) { 'risingrank' }
+    let(:pn) { 0 }
+    let(:options) do
+      { action: action, pn: 0 }
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_ranks") do
+        res = client.get_ranks options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of games with ranknumber" do
+      VCR.use_cassette("baidu/get_ranks--rising") do
+        res = client.get_ranks options
+        items = res["result"]["data"].select {|i| i.is_a?(Hash) && i["datatype"].to_i == 348 }
+        expect(items[0]["itemdata"]["docid"]).to_not eq nil
+        expect(items[0]["itemdata"]["rankingnum"]).to_not eq nil
+        expect(items[0]["itemdata"]["rise_percent"]).to_not eq nil
+      end
+    end
+    context "when top ranks type" do
+      let(:action) { 'ranktoplist' }
+      it "returns list of games with heat value" do
+        VCR.use_cassette("baidu/get_ranks--top") do
+          res = client.get_ranks options
+          items = res["result"]["data"].select {|i| i.is_a?(Hash) && i["datatype"].to_i == 346 }
+          expect(items[0]["itemdata"]["docid"]).to_not eq nil
+          expect(items[0]["itemdata"]["rankingnum"]).to_not eq nil
+          expect(items[0]["itemdata"]["heat_value"]).to_not eq nil
+        end
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})

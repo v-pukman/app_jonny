@@ -153,6 +153,8 @@ class Baidu::DefaultParams
   # boardid
   # pn (0..any)
   # sorttype (game|soft)
+
+  # TODO: try set action (generalboard|featureboard)
   def self.board
     {
       'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
@@ -219,6 +221,41 @@ class Baidu::DefaultParams
       'language' => 'en',
       'apn' => '',
       'crid' => '1473783086118',
+      'pn' => '0',
+      'bannert' => '26@27@28@29@30@31@32@43',
+      'cpver' => '1',
+      'rqt' => 'rty',
+      'ptl' => 'hp'
+    }
+  end
+
+  # action (risingrank|ranktoplist)
+  # pn (page number 0...any), default: 0
+  def self.ranks
+    {
+      'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
+      'native_api' => '1',
+      'psize' => '2',
+      'abi' => 'armeabi-v7a',
+      'cll' => '_a2BNgaOv8gyueiy0u28NguGvisVA',
+      'usertype' => '0',
+      'is_support_webp' => 'true',
+      'ver' => '16790412',
+      'from' => '1000561u',
+      'cct' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
+      'operator' => '460021',
+      'network' => 'WF',
+      'pkname' => 'com.baidu.appsearch',
+      'country' => 'US',
+      'cen' => 'cuid_cut_cua_uid',
+      'gms' => 'true',
+      'platform_version_id' => '15',
+      'province' => 'qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA',
+      'action' => '',
+      'pu' => 'cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAYLiB,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98TJBB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjDBBB',
+      'language' => 'en',
+      'apn' => '',
+      'crid' => '1473853123417',
       'pn' => '0',
       'bannert' => '26@27@28@29@30@31@32@43',
       'cpver' => '1',

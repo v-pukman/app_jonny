@@ -13,48 +13,33 @@ class Baidu::ApiClient
     end
   end
 
-  #TODO: add common response handler
-  #      add new api methods
+  #TODO: add new api methods
   #      generate uid by ruby
+
   def get_app options
-    params = ::Baidu::DefaultParams.detail.merge({
-      'docid' => get_option(options, :docid)
-    })
-    make_request(:get, APPS_URL, params)
+    make_request :get, APPS_URL, ::Baidu::DefaultParams.detail, options, [:docid]
   end
 
   def get_comments options
-    params = ::Baidu::DefaultParams.comments.merge({
-      'docid' => get_option(options, :docid),
-      'groupid' => get_option(options, :groupid),
-      'start' => get_option(options, :start),
-      'count' => get_option(options, :count)
-    })
-    make_request(:get, APPS_URL, params)
+    make_request :get, APPS_URL, ::Baidu::DefaultParams.comments, options, [:docid, :groupid, :start, :count]
   end
 
   def get_search options
-    params = ::Baidu::DefaultParams.search.merge({
-      'word' => get_option(options, :word),
-      'pn' => get_option(options, :pn)
-    })
-    make_request(:get, SEARCH_URL, params)
+    make_request :get, SEARCH_URL, ::Baidu::DefaultParams.search, options, [:word, :pn]
   end
 
   def get_board options
-    params = ::Baidu::DefaultParams.board.merge({
-      'boardid' => get_option(options, :boardid),
-      'sorttype' => get_option(options, :sorttype),
-      'pn' => get_option(options, :pn)
-    })
-    make_request(:get, APPS_URL, params)
+    make_request :get, APPS_URL, ::Baidu::DefaultParams.board, options, [:boardid, :sorttype, :pn]
   end
 
   def get_boards options
-    params = ::Baidu::DefaultParams.boards.merge({
-      'sorttype' => get_option(options, :sorttype)
-    })
-    make_request(:get, APPS_URL, params)
+    make_request :get, APPS_URL, ::Baidu::DefaultParams.boards, options, [:sorttype]
+  end
+
+  # action (risingrank|ranktoplist)
+  # rising and top ranks
+  def get_ranks options
+    make_request :get, APPS_URL, ::Baidu::DefaultParams.ranks, options, [:action, :pn]
   end
 
   private
@@ -76,10 +61,10 @@ class Baidu::ApiClient
     end
   end
 
-  def make_request request_type, url, params
-    response = connection(url).send(request_type) do |request|
-      request.params = params
-    end
+  def make_request request_type, url, default_params, options, required_options
+    params = default_params
+    required_options.each {|key| params[key.to_s] = get_option(options, key) }
+    response = connection(url).send(request_type) {|request| request.params = params }
     JSON.parse(response.body)
   end
 
