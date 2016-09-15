@@ -27,7 +27,7 @@ RSpec.describe Baidu::ApiClient do
       end
     end
     xit "returns app info with replcaced uid in params" do
-      File.write(File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "fixtures", "vcr", "baidu","get_app--generated-uid.yml")), "")
+      File.write(Rails.root.join("fixtures", "vcr", "baidu","get_app--generated-uid.yml"), "")
       VCR.use_cassette("baidu/get_app--generated-uid", record: :new_episodes) do
         res = client.get_app({ docid: docid })
         expect(res["result"]["data"]["base_info"]["docid"].to_i).to eq docid
