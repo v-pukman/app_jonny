@@ -9,14 +9,26 @@ RSpec.describe Baidu::ApiClient do
 
   describe "get_app" do
     let(:docid) { 9723881 }
-    it "returns result" do
-      VCR.use_cassette("baidu/get_app") do
-        res = client.get_app({ docid: docid })
-        expect(res).to_not eq nil
+    context "with default uid" do
+      before do
+        allow(client).to receive(:default_params).with(:details).and_return(client.send(:original_default_params, :details))
+      end
+      it "returns result" do
+        VCR.use_cassette("baidu/get_app") do
+          res = client.get_app({ docid: docid })
+          expect(res).to_not eq nil
+        end
+      end
+      it "returns app info" do
+        VCR.use_cassette("baidu/get_app") do
+          res = client.get_app({ docid: docid })
+          expect(res["result"]["data"]["base_info"]["docid"].to_i).to eq docid
+        end
       end
     end
-    it "returns app info" do
-      VCR.use_cassette("baidu/get_app") do
+    xit "returns app info with replcaced uid in params" do
+      File.write(File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "fixtures", "vcr", "baidu","get_app--generated-uid.yml")), "")
+      VCR.use_cassette("baidu/get_app--generated-uid", record: :new_episodes) do
         res = client.get_app({ docid: docid })
         expect(res["result"]["data"]["base_info"]["docid"].to_i).to eq docid
       end
@@ -30,6 +42,9 @@ RSpec.describe Baidu::ApiClient do
     let(:count) { 10 }
     let(:options) do
       { docid: docid, groupid: groupid, start: start, count: count }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:comments).and_return(client.send(:original_default_params, :comments))
     end
     it "returns result" do
       VCR.use_cassette("baidu/get_comments") do
@@ -53,6 +68,9 @@ RSpec.describe Baidu::ApiClient do
     let(:pn) { 0 }
     let(:options) do
       { word: word, pn: pn }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:search).and_return(client.send(:original_default_params, :search))
     end
     it "returns result" do
       VCR.use_cassette("baidu/get_search") do
@@ -91,6 +109,9 @@ RSpec.describe Baidu::ApiClient do
     let(:options) do
       { boardid: boardid, sorttype: sorttype, pn: pn }
     end
+    before do
+      allow(client).to receive(:default_params).with(:board).and_return(client.send(:original_default_params, :board))
+    end
     it "returns result" do
       VCR.use_cassette("baidu/get_board") do
         res = client.get_board options
@@ -111,6 +132,9 @@ RSpec.describe Baidu::ApiClient do
     let(:options) do
       { sorttype: sorttype }
     end
+    before do
+      allow(client).to receive(:default_params).with(:boards).and_return(client.send(:original_default_params, :boards))
+    end
     it "returns result" do
       VCR.use_cassette("baidu/get_boards") do
         res = client.get_boards options
@@ -130,6 +154,9 @@ RSpec.describe Baidu::ApiClient do
     let(:pn) { 0 }
     let(:options) do
       { action: action, pn: 0 }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:ranks).and_return(client.send(:original_default_params, :ranks))
     end
     it "returns result" do
       VCR.use_cassette("baidu/get_ranks") do
@@ -165,6 +192,9 @@ RSpec.describe Baidu::ApiClient do
     let(:options) do
       { pn: pn }
     end
+    before do
+      allow(client).to receive(:default_params).with(:featured).and_return(client.send(:original_default_params, :featured))
+    end
     it "returns result" do
       VCR.use_cassette("baidu/get_featured") do
         res = client.get_featured options
@@ -186,6 +216,9 @@ RSpec.describe Baidu::ApiClient do
     let(:pn) { 0 }
     let(:options) do
       { pn: pn }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:game_ranks).and_return(client.send(:original_default_params, :game_ranks))
     end
     it "returns result" do
       VCR.use_cassette("baidu/get_game_ranks") do
@@ -261,6 +294,40 @@ RSpec.describe Baidu::ApiClient do
       result = client.send :handle_caching, method, options do
       end
       expect(result).to eq({'tested_code' => 'right'})
+    end
+  end
+
+  describe "#generate_uid" do
+    it "has right length" do
+      uid = client.send :generate_uid, 69
+      expect(uid.length).to eq 69
+    end
+  end
+
+  describe "#original_default_params" do
+    it "returns original default params hash" do
+      params = client.send :original_default_params, :search
+      expect(params).to eq ::Baidu::DefaultParams.search
+    end
+  end
+
+  describe "#default_params" do
+    let(:uid) { client.send(:generate_uid, 69) }
+    it "returns default params hash" do
+      expect(::Baidu::DefaultParams).to receive(:details).and_return(::Baidu::DefaultParams.details)
+      params = client.send :default_params, :details
+      expect(params).to_not eq nil
+    end
+    it "generate new uid and replace it" do
+      allow(client).to receive(:generate_uid).and_return(uid)
+      params = client.send :default_params, :details
+      expect(params['uid']).to eq uid
+      expect(params['pu']).to include "cuid@#{uid[0...42]}"
+    end
+    it "changes pu value" do
+      original_pu = ::Baidu::DefaultParams.details['pu']
+      params = client.send :default_params, :details
+      expect(params['pu']).to_not eq original_pu
     end
   end
 end

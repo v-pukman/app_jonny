@@ -2,7 +2,7 @@ class Baidu::DefaultParams
 
   # docid
   #v16785257
-  # def self.detail
+  # def self.details
   #   {
   #     'uid' => '082YulO6SilQuBig_PvOigPz2ilqiBajYi2U80iuHiqduSivguvsigPS28gfuB85QSIoC',
   #     'native_api' => 1,
@@ -35,7 +35,7 @@ class Baidu::DefaultParams
 
   # docid
   # v16790412 - app info in base_info block now
-  def self.detail
+  def self.details
     {
       'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQS2jC',
       'native_api' => '1',

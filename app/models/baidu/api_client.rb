@@ -18,7 +18,7 @@ class Baidu::ApiClient
   # returns app full info
   ## docid
   def get_app options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.detail, options, [:docid]
+    make_request :get, APPS_URL, :details, options, [:docid]
   end
 
   # returns comments of app
@@ -27,14 +27,14 @@ class Baidu::ApiClient
   ## start (0..any)
   ## count (10..3000)
   def get_comments options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.comments, options, [:docid, :groupid, :start, :count]
+    make_request :get, APPS_URL, :comments, options, [:docid, :groupid, :start, :count]
   end
 
   # returns search results (apps preview list)
   ## word
   ## pn (page number)
   def get_search options
-    make_request :get, SEARCH_URL, ::Baidu::DefaultParams.search, options, [:word, :pn]
+    make_request :get, SEARCH_URL, :search, options, [:word, :pn]
   end
 
   # returns apps in this board
@@ -43,35 +43,35 @@ class Baidu::ApiClient
   ## sorttype (game|soft)
   ## action (generalboard|featureboard) # dafault - generalboard
   def get_board options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.board, options, [:boardid, :sorttype, :pn]
+    make_request :get, APPS_URL, :board, options, [:boardid, :sorttype, :pn]
   end
 
   # returns boards of games or apps
   ## sorttype (soft|game)
   ## pn (default 0, seems there is only one page)
   def get_boards options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.boards, options, [:sorttype]
+    make_request :get, APPS_URL, :boards, options, [:sorttype]
   end
 
   # returns rising and top ranks (games and apps)
   ## action (risingrank|ranktoplist)
   ## pn (page number 0...any)
   def get_ranks options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.ranks, options, [:action, :pn]
+    make_request :get, APPS_URL, :ranks, options, [:action, :pn]
   end
 
   # returns page with featured boards and common featured apps list
   # from this page we can load: 1. featured boards 2. common featured ranks
   ## pn (0..any)
   def get_featured options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.featured, options, [:pn]
+    make_request :get, APPS_URL, :featured, options, [:pn]
   end
 
   # returns main page with boards list or ranked games in the board
   ## pn (0..any)
   ## board_id (not required, if passed - returns ranked games in this board)
   def get_game_ranks options
-    make_request :get, APPS_URL, ::Baidu::DefaultParams.game_ranks, options, [:pn]
+    make_request :get, APPS_URL, :game_ranks, options, [:pn]
   end
 
   private
@@ -93,8 +93,8 @@ class Baidu::ApiClient
     end
   end
 
-  def make_request request_type, url, default_params, options, required_options
-    params = default_params
+  def make_request request_type, url, default_params_name, options, required_options
+    params = default_params default_params_name
     custom_options = options.select{|key,_| !required_options.include?(key) }
 
     required_options.each {|key| params[key.to_s] = get_option(options, key) }
@@ -102,6 +102,27 @@ class Baidu::ApiClient
 
     response = connection(url).send(request_type) {|request| request.params = params }
     JSON.parse(response.body)
+  end
+
+  def original_default_params default_params_name
+    ::Baidu::DefaultParams.send(default_params_name)
+  end
+
+  def default_params default_params_name
+    params = original_default_params default_params_name
+
+    original_uid = params['uid']
+    new_uid = generate_uid 69
+    new_pu = params['pu'].split(',').map {|p| p.include?('cuid@') ? "cuid@#{new_uid[0...42]}#{generate_uid(31)}" : p }.join(',')
+
+    params['uid'] = new_uid
+    params['pu'] = new_pu
+
+    params
+  end
+
+  def generate_uid length
+    SecureRandom.urlsafe_base64(length)[0...length]
   end
 
   #Faraday::ConnectionFailed:
