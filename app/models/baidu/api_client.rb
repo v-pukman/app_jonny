@@ -13,7 +13,16 @@ class Baidu::ApiClient
     end
   end
 
-  #TODO: generate uid by ruby
+  # TODO: add parser logic
+  #       choose postgresql or mysql?
+
+  # NEXT:
+  #       port tasks
+  #       dumb old data
+  #       setup server and deploy
+  #       apply old data
+  #       use worker - collect data in the few threads
+  #       add log (monitoring) system
 
   # returns app full info
   ## docid
