@@ -13,61 +13,59 @@
 
 ActiveRecord::Schema.define(version: 20160803164438) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "baidu_apps", force: :cascade do |t|
-    t.string   "id_str",                  limit: 191
+    t.string   "id_str",                  limit: 255
     t.string   "download_inner",          limit: 255
     t.integer  "dev_id",                  limit: 8
     t.string   "dev_name",                limit: 255
-    t.integer  "dev_score",               limit: 4
-    t.integer  "dev_level",               limit: 4
-    t.text     "brief",                   limit: 65535
+    t.integer  "dev_score"
+    t.integer  "dev_level"
+    t.text     "brief"
     t.string   "size",                    limit: 255
-    t.float    "size_mb",                 limit: 24
+    t.float    "size_mb"
     t.string   "today_str_download",      limit: 255
-    t.float    "platform_version",        limit: 24
+    t.float    "platform_version"
     t.string   "sourcename",              limit: 255
     t.string   "package",                 limit: 255
     t.integer  "packageid",               limit: 8
     t.integer  "groupid",                 limit: 8
     t.integer  "docid",                   limit: 8
     t.string   "versionname",             limit: 255
-    t.text     "manual_brief",            limit: 65535
-    t.integer  "platform_version_id",     limit: 4
-    t.text     "changelog",               limit: 65535
+    t.text     "manual_brief"
+    t.integer  "platform_version_id"
+    t.text     "changelog"
     t.string   "catename",                limit: 255
-    t.integer  "cateid",                  limit: 4
+    t.integer  "cateid"
     t.string   "app_type",                limit: 125
-    t.text     "icon",                    limit: 65535
-    t.string   "sname",                   limit: 191
+    t.text     "icon"
+    t.string   "sname",                   limit: 255
     t.string   "manual_short_brief",      limit: 255
     t.date     "updatetime"
-    t.integer  "aladdin_flag",            limit: 4
-    t.integer  "display_count",           limit: 4
-    t.integer  "display_score",           limit: 4
-    t.text     "brief_short",             limit: 65535
-    t.text     "changelog_short",         limit: 65535
+    t.integer  "aladdin_flag"
+    t.integer  "display_count"
+    t.integer  "display_score"
+    t.text     "brief_short"
+    t.text     "changelog_short"
     t.integer  "total_count",             limit: 8
-    t.integer  "response_count",          limit: 4
-    t.integer  "minsdk",                  limit: 4
-    t.integer  "shareurl",                limit: 4
-    t.integer  "packagesize",             limit: 4
+    t.integer  "response_count"
+    t.integer  "minsdk"
+    t.integer  "shareurl"
+    t.integer  "packagesize"
     t.string   "all_download_pid",        limit: 255
     t.integer  "all_download_pid_number", limit: 8
-    t.integer  "rotate",                  limit: 4
-    t.integer  "templet",                 limit: 4
-    t.integer  "yesterday_download_pid",  limit: 4
-    t.integer  "today_download_pid",      limit: 4
-    t.integer  "now_download",            limit: 4
+    t.integer  "rotate"
+    t.integer  "templet"
+    t.integer  "yesterday_download_pid"
+    t.integer  "today_download_pid"
+    t.integer  "now_download"
     t.string   "usenum",                  limit: 255
-    t.integer  "popu_index",              limit: 4
-    t.integer  "unable_download",         limit: 4
-    t.boolean  "outdated",                              default: false
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
-    t.integer  "search_position",         limit: 4
-    t.integer  "in_board_position",       limit: 4
-    t.integer  "baidu_board_id",          limit: 4
-    t.integer  "rank_position",           limit: 4
+    t.integer  "popu_index"
+    t.integer  "unable_download"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
   add_index "baidu_apps", ["app_type"], name: "index_baidu_apps_on_app_type", using: :btree
@@ -76,14 +74,13 @@ ActiveRecord::Schema.define(version: 20160803164438) do
   add_index "baidu_apps", ["docid"], name: "index_baidu_apps_on_docid", using: :btree
   add_index "baidu_apps", ["groupid"], name: "index_baidu_apps_on_groupid", using: :btree
   add_index "baidu_apps", ["id_str"], name: "index_baidu_apps_on_id_str", unique: true, using: :btree
-  add_index "baidu_apps", ["outdated"], name: "index_baidu_apps_on_outdated", using: :btree
   add_index "baidu_apps", ["packageid"], name: "index_baidu_apps_on_packageid", using: :btree
   add_index "baidu_apps", ["sname"], name: "index_baidu_apps_on_sname", using: :btree
 
   create_table "baidu_boards", force: :cascade do |t|
-    t.string   "name",       limit: 191
-    t.string   "board_id",   limit: 191
-    t.string   "link",       limit: 191
+    t.string   "name",       limit: 255
+    t.string   "board_id",   limit: 255
+    t.string   "link",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
@@ -93,38 +90,38 @@ ActiveRecord::Schema.define(version: 20160803164438) do
   add_index "baidu_boards", ["name"], name: "index_baidu_boards_on_name", using: :btree
 
   create_table "baidu_comments", force: :cascade do |t|
-    t.string   "id_str",               limit: 191
+    t.string   "id_str",               limit: 255
     t.integer  "baidu_app_id",         limit: 8
     t.integer  "thread_id",            limit: 8
     t.integer  "reply_id",             limit: 8
     t.integer  "parent_id",            limit: 8
-    t.integer  "reply_count",          limit: 4
-    t.integer  "score",                limit: 4
-    t.integer  "favor",                limit: 4
-    t.integer  "is_top",               limit: 4
-    t.integer  "like_count",           limit: 4
-    t.integer  "dislike_count",        limit: 4
-    t.integer  "display",              limit: 4
+    t.integer  "reply_count"
+    t.integer  "score"
+    t.integer  "favor"
+    t.integer  "is_top"
+    t.integer  "like_count"
+    t.integer  "dislike_count"
+    t.integer  "display"
     t.datetime "create_time"
     t.integer  "user_id",              limit: 8
-    t.string   "user_name",            limit: 255
-    t.string   "user_ip",              limit: 255
-    t.string   "area",                 limit: 255
-    t.integer  "reserved1",            limit: 4
-    t.integer  "reserved2",            limit: 4
+    t.string   "user_name"
+    t.string   "user_ip"
+    t.string   "area"
+    t.integer  "reserved1"
+    t.integer  "reserved2"
     t.datetime "mdatetime"
-    t.string   "title",                limit: 255
-    t.text     "content",              limit: 65535
-    t.string   "receiver_name",        limit: 255
-    t.string   "reserved3_version",    limit: 255
-    t.string   "reserved3_machine",    limit: 255
-    t.string   "reserved3_fromsite",   limit: 255
-    t.string   "reserved3_installed",  limit: 255
-    t.text     "usericon",             limit: 65535
-    t.integer  "reply_total_count",    limit: 4
-    t.integer  "reply_response_count", limit: 4
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.string   "title"
+    t.text     "content"
+    t.string   "receiver_name"
+    t.string   "reserved3_version"
+    t.string   "reserved3_machine"
+    t.string   "reserved3_fromsite"
+    t.string   "reserved3_installed"
+    t.text     "usericon"
+    t.integer  "reply_total_count"
+    t.integer  "reply_response_count"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "baidu_comments", ["baidu_app_id"], name: "index_baidu_comments_on_baidu_app_id", using: :btree
@@ -135,36 +132,34 @@ ActiveRecord::Schema.define(version: 20160803164438) do
   add_index "baidu_comments", ["user_id"], name: "index_baidu_comments_on_user_id", using: :btree
 
   create_table "baidu_days", force: :cascade do |t|
-    t.float    "avg_rating",              limit: 24
-    t.integer  "reviews_count",           limit: 4
-    t.float    "yesterday_download_pid",  limit: 24
-    t.float    "today_download_pid",      limit: 24
-    t.integer  "now_download",            limit: 4
+    t.float    "avg_rating"
+    t.integer  "reviews_count"
+    t.float    "yesterday_download_pid"
+    t.float    "today_download_pid"
+    t.integer  "now_download"
     t.string   "usenum",                  limit: 255
     t.string   "all_download_pid",        limit: 255
     t.string   "today_str_download",      limit: 255
-    t.integer  "popularity",              limit: 4
-    t.integer  "popu_index",              limit: 4
-    t.integer  "display_count",           limit: 4
-    t.integer  "display_score",           limit: 4
+    t.integer  "popularity"
+    t.integer  "popu_index"
+    t.integer  "display_count"
+    t.integer  "display_score"
     t.string   "total_count",             limit: 255
-    t.integer  "response_count",          limit: 4
-    t.integer  "display_download",        limit: 4
+    t.integer  "response_count"
+    t.integer  "display_download"
     t.boolean  "ishot"
-    t.integer  "score_count",             limit: 4
-    t.integer  "score",                   limit: 4
-    t.integer  "aladdin_flag",            limit: 4
-    t.integer  "baidu_app_id",            limit: 4
+    t.integer  "score_count"
+    t.integer  "score"
+    t.integer  "aladdin_flag"
+    t.integer  "baidu_app_id"
     t.date     "day"
-    t.text     "full_info_source",        limit: 4294967295
-    t.text     "preview_info_source",     limit: 65535
-    t.integer  "search_position",         limit: 4
-    t.integer  "in_board_position",       limit: 4
+    t.integer  "search_position"
+    t.integer  "in_board_position"
     t.integer  "all_download_pid_number", limit: 8
-    t.integer  "dev_score",               limit: 4
-    t.integer  "dev_level",               limit: 4
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.integer  "dev_score"
+    t.integer  "dev_level"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
   add_index "baidu_days", ["baidu_app_id", "day"], name: "index_baidu_days_on_baidu_app_id_and_day", unique: true, using: :btree
@@ -174,14 +169,14 @@ ActiveRecord::Schema.define(version: 20160803164438) do
 
   create_table "baidu_ranks", force: :cascade do |t|
     t.date     "day"
-    t.integer  "rank_number",  limit: 4
-    t.integer  "baidu_app_id", limit: 4
-    t.string   "sname",        limit: 255
+    t.integer  "rank_number"
+    t.integer  "baidu_app_id"
+    t.string   "sname"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.string   "rank_type",    limit: 191
-    t.string   "board_id",     limit: 191
-    t.float    "rise_percent", limit: 24
+    t.string   "rank_type",    limit: 255
+    t.string   "board_id",     limit: 255
+    t.float    "rise_percent"
   end
 
   add_index "baidu_ranks", ["baidu_app_id"], name: "index_baidu_ranks_on_baidu_app_id", using: :btree

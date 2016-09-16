@@ -115,7 +115,6 @@ GEM
     minitest (5.9.0)
     multi_json (1.12.1)
     multipart-post (2.0.0)
-    mysql2 (0.3.21)
     nenv (0.3.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
@@ -126,6 +125,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     ntlm-http (0.1.1)
+    pg (0.18.4)
     pkg-config (1.1.7)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -245,7 +245,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mechanize
-  mysql2 (~> 0.3.18)
+  pg (~> 0.18.4)
   rails (= 4.2.3)
   redis (~> 3.2)
   rspec-rails

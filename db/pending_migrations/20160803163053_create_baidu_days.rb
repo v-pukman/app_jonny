@@ -1,20 +1,20 @@
 class CreateBaiduDays < ActiveRecord::Migration
   def change
     # old baidu_app_days2
-    create_table "baidu_days", :force => true do |t|
+    create_table "baidu_days" do |t|
       t.float    "avg_rating"
       t.integer  "reviews_count"
       t.float    "yesterday_download_pid"
       t.float    "today_download_pid"
       t.integer  "now_download"
-      t.string   "usenum",                  :limit => 255
-      t.string   "all_download_pid",        :limit => 255
-      t.string   "today_str_download",      :limit => 255
+      t.string   "usenum"
+      t.string   "all_download_pid"
+      t.string   "today_str_download"
       t.integer  "popularity"
       t.integer  "popu_index"
       t.integer  "display_count"
       t.integer  "display_score"
-      t.string   "total_count",             :limit => 255
+      t.string   "total_count"
       t.integer  "response_count"
       t.integer  "display_download"
       t.boolean  "ishot"
@@ -23,8 +23,6 @@ class CreateBaiduDays < ActiveRecord::Migration
       t.integer  "aladdin_flag"
       t.integer  "baidu_app_id"
       t.date     "day"
-      t.text     "full_info_source",        :limit => 2147483647
-      t.text     "preview_info_source"
       t.integer  "search_position"
       t.integer  "in_board_position"
       t.integer  "all_download_pid_number", :limit => 8

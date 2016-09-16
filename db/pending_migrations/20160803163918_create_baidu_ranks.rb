@@ -1,15 +1,16 @@
 class CreateBaiduRanks < ActiveRecord::Migration
   def change
-    create_table "baidu_ranks", :force => true do |t|
+    create_table "baidu_ranks" do |t|
       t.date     "day"
       t.integer  "rank_number"
       t.integer  "baidu_app_id"
       t.string   "sname"
+      t.string   "rank_type"
+      t.string   "board_id"
+      t.float    "rise_percent"
+
       t.datetime "created_at",   :null => false
       t.datetime "updated_at",   :null => false
-      t.string   "rank_type", :limit => 191
-      t.string   "board_id", :limit => 191
-      t.float    "rise_percent"
     end
 
     add_index "baidu_ranks", ["baidu_app_id"]

@@ -1,7 +1,7 @@
 class CreateBaiduComments < ActiveRecord::Migration
   def change
-    create_table "baidu_comments", :force => true do |t|
-      t.string   "id_str",               :limit => 191
+    create_table "baidu_comments" do |t|
+      t.string   "id_str"
       t.integer  "baidu_app_id",         :limit => 8
       t.integer  "thread_id",            :limit => 8
       t.integer  "reply_id",             :limit => 8

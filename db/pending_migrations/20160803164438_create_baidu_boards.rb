@@ -1,10 +1,11 @@
 class CreateBaiduBoards < ActiveRecord::Migration
   def change
     # old baidu_game_boards
-    create_table "baidu_boards", :force => true do |t|
-      t.string   "name", :limit => 191
-      t.string   "board_id", :limit => 191
-      t.string   "link", :limit => 191
+    create_table "baidu_boards" do |t|
+      t.string   "name"
+      t.string   "board_id"
+      t.string   "link"
+
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
     end
