@@ -64,3 +64,6 @@ VCR.configure do |config|
   config.cassette_library_dir = "fixtures/vcr"
   config.hook_into :webmock # or :fakeweb
 end
+
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/shared/**/*.rb')].each { |f| require f}

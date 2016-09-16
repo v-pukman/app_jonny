@@ -1,0 +1,52 @@
+{
+  "datatype": 46,
+  "itemdata": {
+    "download_inner": "http://gdown.baidu.com/data/wisegame/3305c88288d6b021/huanledoudizhuchaoqiangban_3780.apk",
+    "versioncode": "3780",
+    "packageid": "445800",
+    "signmd5": "1441789705",
+    "size": "19.8M",
+    "today_strDownload": "5万",
+    "groupid": "3944371",
+    "platform_version": "2.0",
+    "aladdin_flag": "1",
+    "package": "com.mas.wawagame.BDDKlord",
+    "docid": "9841968",
+    "versionname": "3.7.8.0",
+    "score_count": "64319",
+    "type": "game",
+    "md5": "4abd2d083305c88288d6b02144d5cf81",
+    "icon": "http://wa2.baidu-1img.cn/timg?appsite\u0026size=b256_256\u0026imgtype=3\u0026sec=1473956861\u0026nocache\u0026di=f5e23cd31931b7aa78125b36d703078a\u0026src=http%3A%2F%2Fd.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Ff42bd40735fae6cdc8a6587607b30f2442a70f93.jpg",
+    "sname": "欢乐斗地主",
+    "manual_short_brief": "3亿人都在玩的斗地主！签到直接送话费，游戏秒开无等待，欢斗癞斗啥都有，单机没网也能玩！",
+    "updatetime": "2016-08-26",
+    "download_url": "http://gdown.baidu.com/data/wisegame/3305c88288d6b021/huanledoudizhuchaoqiangban_3780.apk",
+    "score": "76",
+    "all_download": "4671万下载",
+    "support_chip": "0",
+    "display_download": "46713844",
+    "popu_index": "93",
+    "yesterday_download_pid": "42494",
+    "detail_background": "",
+    "mtc_status": "1",
+    "app_gift_title": "",
+    "info": [],
+    "adv_wrapper": [],
+    "popularity": "93",
+    "ishot": false,
+    "tj": "game_9841968_445800_欢乐斗地主",
+    "f": "search@斗地主@1@1@search@source+DUOKU@pos+1@bid+1@ctr+0.000000@trans+@keyword+斗地主@query+斗地主@searchid+5127909884349058123@package+com.mas.wawagame.BDDKlord@sample+flow0@logid+1661172792@special@hitSamplings+five_percent_flow_test",
+    "official_icon_url": "http://wap.baidu.com/static/freeapp/native/official-80.png",
+    "screenshots": [{
+      "type": "0",
+      "img_url": "http://wa2.baidu-1img.cn/timg?appsite\u0026size=b307_512\u0026quality=80\u0026sec=1473956861\u0026nocache\u0026di=9fcec8f9269388800c01424a72362fb6\u0026src=http%3A%2F%2Fd.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Ff22397dda144ad348a8e823bd8a20cf431ad855d.jpg",
+      "big_img_url": "http://wa2.baidu-1img.cn/timg?appsite\u0026size=b480_800\u0026quality=100\u0026sec=1473956861\u0026nocache\u0026di=9fcec8f9269388800c01424a72362fb6\u0026src=http%3A%2F%2Fd.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Ff22397dda144ad348a8e823bd8a20cf431ad855d.jpg",
+      "rotate": 1
+    }, {
+      "type": "0",
+      "img_url": "http://wa1.baidu-1img.cn/timg?appsite\u0026size=b307_512\u0026quality=80\u0026sec=1473956861\u0026nocache\u0026di=6fd063a1c1800a7ab4ef043ad65e01a1\u0026src=http%3A%2F%2Fb.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Fa98065380cd79123467f8ec8a5345982b3b780eb.jpg",
+      "big_img_url": "http://wa2.baidu-1img.cn/timg?appsite\u0026size=b480_800\u0026quality=100\u0026sec=1473956861\u0026nocache\u0026di=6fd063a1c1800a7ab4ef043ad65e01a1\u0026src=http%3A%2F%2Fb.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Fa98065380cd79123467f8ec8a5345982b3b780eb.jpg",
+      "rotate": 1
+    }]
+  }
+}

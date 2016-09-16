@@ -1,0 +1,111 @@
+base info
+
+["download_inner", "versioncode", "lang", "packageid", "signmd5", "today_download_pid", "security_display", "security", "cateid", "brief", "size", "today_strDownload", "groupid", "platform_version", "sourcename", "fee_display", "aladdin_flag", "package", "docid", "versionname", "manual_brief", "platform_version_id", "changelog", "catename", "strDownload", "all_download_pid", "iconhdpi", "type", "md5", "icon", "sname", "manual_short_brief", "updatetime", "download_url", "ad_display", "support_chip", "rotate", "gov_whitelist", "comment_tag_display", "templet", "online_flag", "display_download", "popu_index", "yesterday_download_pid", "tag_concept_rp", "mtc_status", "lifeservice", "video_videourl", "video_playcount", "video_image", "inner_info", "video_orientation", "video_duration", "video_source", "video_id", "video_title", "coupon", "video_packageid", "screenshots", "overtime", "topic", "display_score", "display_count", "self_score", "brief_short", "changelog_short", "screenshots_large", "ad_docid", "ad_words", "permission_type", "permission_guide", "fav_count", "is_fold", "single_intro", "supportpad", "nowDownload", "usenum", "total_count", "response_count", "self_send", "minsdk", "tj", "shareurl", "packagesize", "f", "tag_display", "apptags", "award_info", "unable_download", "hastieba", "feedback_appchannel"]
+
+
+short preview
+
+ ["detail_background", "versioncode", "app_gift_title", "display_download", "platform_version", "aladdin_flag", "docid", "versionname", "score_count", "type", "icon", "manual_short_brief", "yesterday_download_pid", "all_download", "download_inner", "packageid", "signmd5", "mtc_status", "size", "today_strDownload", "groupid", "package", "support_chip", "popu_index", "md5", "sname", "download_url", "updatetime", "score", "popularity", "ishot", "tj", "f", "official_icon_url"]
+
+
+joined
+
+t.string :download_inner
+t.string :versioncode
+t.string :lang
+t.string :packageid
+t.string :signmd5
+t.string :today_download_pid
+t.string :security_display
+t.string :security
+t.string :cateid
+t.string :brief
+t.string :size
+t.string :today_strDownload
+t.string :groupid
+t.string :platform_version
+t.string :sourcename
+t.string :fee_display
+t.string :aladdin_flag
+t.string :package
+t.string :docid
+t.string :versionname
+t.string :manual_brief
+t.string :platform_version_id
+t.string :changelog
+t.string :catename
+t.string :strDownload
+t.string :all_download_pid
+t.string :iconhdpi
+t.string :type
+t.string :md5
+t.string :icon
+t.string :sname
+t.string :manual_short_brief
+t.string :updatetime
+t.string :download_url
+t.string :ad_display
+t.string :support_chip
+t.string :rotate
+t.string :gov_whitelist
+t.string :comment_tag_display
+t.string :templet
+t.string :online_flag
+t.string :display_download
+t.string :popu_index
+t.string :yesterday_download_pid
+t.string :tag_concept_rp
+t.string :mtc_status
+t.string :lifeservice
+t.string :video_videourl
+t.string :video_playcount
+t.string :video_image
+t.string :inner_info
+t.string :video_orientation
+t.string :video_duration
+t.string :video_source
+t.string :video_id
+t.string :video_title
+t.string :coupon
+t.string :video_packageid
+t.string :screenshots
+t.string :overtime
+t.string :topic
+t.string :display_score
+t.string :display_count
+t.string :self_score
+t.string :brief_short
+t.string :changelog_short
+t.string :screenshots_large
+t.string :ad_docid
+t.string :ad_words
+t.string :permission_type
+t.string :permission_guide
+t.string :fav_count
+t.string :is_fold
+t.string :single_intro
+t.string :supportpad
+t.string :nowDownload
+t.string :usenum
+t.string :total_count
+t.string :response_count
+t.string :self_send
+t.string :minsdk
+t.string :tj
+t.string :shareurl
+t.string :packagesize
+t.string :f
+t.string :tag_display
+t.string :apptags
+t.string :award_info
+t.string :unable_download
+t.string :hastieba
+t.string :feedback_appchannel
+t.string :detail_background
+t.string :app_gift_title
+t.string :score_count
+t.string :all_download
+t.string :score
+t.string :popularity
+t.string :ishot
+t.string :official_icon_url
