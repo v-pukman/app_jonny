@@ -1,5 +1,5 @@
 def fixture file
-  File.read(Rails.root.join("fixtures", "static", file))
+  File.read(Rails.root.join("fixtures", file))
 end
 
 def json_fixture file
