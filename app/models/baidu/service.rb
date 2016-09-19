@@ -5,7 +5,8 @@ class Baidu::Service
   end
 
   # preview_info example - fixtures/static/baidu/preview_info_source
-  def save_from_preview_info preview_info, additional_data={}
+  #TODO: refactor this previw info usage
+  def save_app_from_preview_info preview_info, additional_data={}
     preview_info = JSON.parse(preview_info.to_json)
     full_info = nil
     itemdata = preview_info['itemdata']
@@ -20,7 +21,24 @@ class Baidu::Service
       # will check for second time
       # because sometimes preview info doesnt have all id
       # also it handles db record dublication error
-      app = create_or_update build_app_attrs(full_info)
+      app = save_app build_app_attrs(full_info)
+
+      save_versions app, build_versions_attrs(full_info)
+      save_video app, build_video_attrs(full_info)
+
+      developer = save_developer build_developer_attrs(full_info)
+      app.developer = developer if developer && developer.id
+
+      category = save_category build_category_attrs(full_info)
+      app.category = category if category && category.id
+
+      tags = save_tags build_tags_attrs(full_info)
+      app.tags = tags if tags.any?
+
+      display_tags = save_display_tags build_display_tags_attrs(full_info)
+      app.display_tags = display_tags if display_tags.any?
+
+      app.save!
     end
 
     #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
@@ -39,7 +57,7 @@ class Baidu::Service
     app
   end
 
-  def create_or_update attrs
+  def save_app attrs
     id_str = Baidu::App.build_id_str(attrs['app_type'], attrs['packageid'], attrs['groupid'], attrs['docid'])
     app = Baidu::App.where(id_str: id_str).first
     if app.nil?
@@ -53,6 +71,103 @@ class Baidu::Service
     app = Baidu::App.where(id_str: id_str).first
     app.update_attributes(attrs)
     app
+  end
+
+  def save_versions app, versions_attrs
+    versions_attrs.each do |attrs|
+      id_str = Baidu::Version.build_id_str_from_attrs(attrs)
+      version = app.versions.where(id_str: id_str).first
+      begin
+        if version.nil?
+          version = app.versions.build(attrs)
+          version.save!
+        else
+          version.update_attributes(attrs)
+        end
+      rescue ActiveRecord::RecordNotUnique
+        version = app.versions.where(id_str: id_str)
+        version.update_attributes(attrs)
+      rescue StandardError => e
+        # add log
+      end
+    end
+  rescue StandardError => e
+    # add log
+  end
+
+  def save_developer developer_attrs
+    developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
+    if developer.nil?
+      developer = Baidu::Developer.create!(developer_attrs)
+    else
+      developer.update_attributes(developer_attrs)
+    end
+    developer
+  rescue ActiveRecord::RecordNotUnique
+    developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
+    developer
+  rescue StandardError => e
+    #add log
+    nil
+  end
+
+  def save_video app, video_attrs
+    if video_attrs[:origin_id]
+      video = app.video
+      if video.nil?
+        video = app.build_video(video_attrs)
+        video.save!
+      else
+        video.update_attributes(video_attrs)
+      end
+      video
+    else
+      nil
+    end
+  rescue ActiveRecord::RecordNotUnique
+    app.video.reload
+  rescue StandardError => e
+    nil
+  end
+
+  def save_category category_attrs
+    category = Baidu::Category.where(origin_id: category_attrs[:origin_id]).first
+    if category.nil?
+      category = Baidu::Category.create!(category_attrs)
+    else
+      category.update_attributes(category_attrs)
+    end
+    category
+  rescue ActiveRecord::RecordNotUnique
+    category = Baidu::Category.where(origin_id: category_attrs[:origin_id]).first
+    category
+  rescue StandardError => e
+    # add log
+    nil
+  end
+
+  def save_tags tags_attrs
+    tags_attrs.map {|tag| Baidu::Tag.where(name: tag[:name]).first_or_create }
+  rescue StandardError => e
+    # add log
+    []
+  end
+
+  def save_display_tags display_tags_attrs
+    display_tags_attrs.map do |tag_attrs|
+      begin
+        tag = Baidu::DisplayTag.where(name: tag_attrs[:name], content: tag_attrs[:content], content_json: tag_attrs[:content_json].to_s).first
+        tag = Baidu::DisplayTag.create!(tag_attrs) if tag.nil?
+        tag
+      rescue ActiveRecord::RecordNotUnique
+        tag = Baidu::DisplayTag.where(name: tag_attrs[:name], content: tag_attrs[:content], content_json: tag_attrs[:content_json].to_s).first
+        tag
+      rescue StandardError => e
+        nil
+      end
+    end.compact
+  rescue StandardError => e
+    []
   end
 
   #TODO: tests!
@@ -130,7 +245,6 @@ class Baidu::Service
           sname: version_content['sname'],
           size: version_content['size'],
           updatetime: version_content['updatetime'],
-          versioncode: version_content['versioncode'],
           sourcename: version_content['sourcename'],
           app_type: version_content['type'],
           all_download_pid: version_content['all_download_pid'],
@@ -170,35 +284,53 @@ class Baidu::Service
   end
 
   # TODO: test on game with video
+   # "video": {
+   #        "videourl": "http://hc34.aipai.com/user/668/33768668/6240107/card/43449648/card.mp4",
+   #        "playcount": 10,
+   #        "iconurl": "http://apps2.bdimg.com/store/static/kvt/98ddcd02afed7c217ba8f6609ba95c7b.jpg",
+   #        "orientation": 80,
+   #        "duration": "3分26秒",
+   #        "from": "爱拍原创",
+   #        "id": 183,
+   #        "title": "阴阳师：妖魔鬼怪的爱恨情仇",
+   #        "packageid": "1778347"
+   #      },
   def build_video_attrs full_info
     base_info = fetch_base_info full_info
-    {
-      :origin_id => base_info['video_id'],
-      :videourl => base_info['video_videourl'],
-      :playcount => base_info['video_playcount'],
-      :image => base_info['video_image'],
-      :orientation => base_info['video_orientation'],
-      :duration => base_info['video_duration'],
-      :source => base_info['video_source'],
-      :title => base_info['video_title'],
-      :packageid => base_info['video_packageid'],
-    }
-  end
-
-  #TODO: tests!
-  def build_tags_attrs full_info
-    base_info = fetch_base_info full_info
-    tags_info = base_info['apptags']
-    attrs = []
-    tags_info.each do |tag|
-      attrs << {
-        name: tag
+    video_info = base_info['video']
+    # video_image only in base_info
+    if video_info
+      {
+        :origin_id => video_info['id'],
+        :videourl => video_info['videourl'],
+        :playcount => video_info['playcount'],
+        :image => base_info['video_image'],
+        :orientation => video_info['orientation'],
+        :duration => video_info['duration'],
+        :source => video_info['from'],
+        :title => video_info['title'],
+        :packageid => video_info['packageid'],
+      }
+    else
+      {
+        :origin_id => base_info['video_id'],
+        :videourl => base_info['video_videourl'],
+        :playcount => base_info['video_playcount'],
+        :image => base_info['video_image'],
+        :orientation => base_info['video_orientation'],
+        :duration => base_info['video_duration'],
+        :source => base_info['video_source'],
+        :title => base_info['video_title'],
+        :packageid => base_info['video_packageid'],
       }
     end
-    attrs
   end
 
-  #TODO: tests!
+  def build_tags_attrs full_info
+    base_info = fetch_base_info full_info
+    base_info['apptags'].map{|tag| {name: tag} }
+  end
+
   def build_display_tags_attrs full_info
     base_info = fetch_base_info full_info
     tags_info = base_info['tag_display']
@@ -208,12 +340,16 @@ class Baidu::Service
         tag_data['content'].each do |content|
           attrs << {
             name: tag_name,
-            content_json: content
+            content_json: content,
+            content: "",
+            icon: tag_data['icon'],
+            flagicon: tag_data['flagicon']
           }
         end
       else
         attrs << {
           name: tag_name,
+          content_json: "",
           content: tag_data['content'],
           icon: tag_data['icon'],
           flagicon: tag_data['flagicon']

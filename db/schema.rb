@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160731164819) do
+ActiveRecord::Schema.define(version: 20160919150133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,14 +101,120 @@ ActiveRecord::Schema.define(version: 20160731164819) do
     t.string   "official_icon_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "developer_id"
+    t.integer  "category_id"
   end
 
   add_index "baidu_apps", ["app_type"], name: "index_baidu_apps_on_app_type", using: :btree
+  add_index "baidu_apps", ["category_id"], name: "index_baidu_apps_on_category_id", using: :btree
   add_index "baidu_apps", ["created_at"], name: "index_baidu_apps_on_created_at", using: :btree
+  add_index "baidu_apps", ["developer_id"], name: "index_baidu_apps_on_developer_id", using: :btree
   add_index "baidu_apps", ["docid"], name: "index_baidu_apps_on_docid", using: :btree
   add_index "baidu_apps", ["groupid"], name: "index_baidu_apps_on_groupid", using: :btree
   add_index "baidu_apps", ["id_str"], name: "index_baidu_apps_on_id_str", unique: true, using: :btree
   add_index "baidu_apps", ["packageid"], name: "index_baidu_apps_on_packageid", using: :btree
   add_index "baidu_apps", ["sname"], name: "index_baidu_apps_on_sname", using: :btree
+
+  create_table "baidu_apps_display_tags", force: :cascade do |t|
+    t.integer "display_tag_id"
+    t.integer "app_id"
+  end
+
+  add_index "baidu_apps_display_tags", ["app_id"], name: "index_baidu_apps_display_tags_on_app_id", using: :btree
+  add_index "baidu_apps_display_tags", ["display_tag_id"], name: "index_baidu_apps_display_tags_on_display_tag_id", using: :btree
+
+  create_table "baidu_apps_tags", force: :cascade do |t|
+    t.integer "tag_id"
+    t.integer "app_id"
+  end
+
+  add_index "baidu_apps_tags", ["app_id"], name: "index_baidu_apps_tags_on_app_id", using: :btree
+  add_index "baidu_apps_tags", ["tag_id"], name: "index_baidu_apps_tags_on_tag_id", using: :btree
+
+  create_table "baidu_categories", force: :cascade do |t|
+    t.integer  "origin_id",  limit: 8
+    t.string   "name"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "baidu_categories", ["name"], name: "index_baidu_categories_on_name", using: :btree
+  add_index "baidu_categories", ["origin_id"], name: "index_baidu_categories_on_origin_id", unique: true, using: :btree
+
+  create_table "baidu_developers", force: :cascade do |t|
+    t.integer  "origin_id",  limit: 8
+    t.string   "name"
+    t.integer  "score",      limit: 8
+    t.integer  "level"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "baidu_developers", ["name"], name: "index_baidu_developers_on_name", using: :btree
+  add_index "baidu_developers", ["origin_id"], name: "index_baidu_developers_on_origin_id", unique: true, using: :btree
+
+  create_table "baidu_display_tags", force: :cascade do |t|
+    t.string   "name"
+    t.string   "content_json", default: ""
+    t.string   "content",      default: ""
+    t.string   "icon"
+    t.string   "flagicon"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "baidu_display_tags", ["name", "content", "content_json"], name: "index_baidu_display_tags_on_name_and_content_and_content_json", unique: true, using: :btree
+  add_index "baidu_display_tags", ["name"], name: "index_baidu_display_tags_on_name", using: :btree
+
+  create_table "baidu_tags", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "baidu_tags", ["name"], name: "index_baidu_tags_on_name", unique: true, using: :btree
+
+  create_table "baidu_versions", force: :cascade do |t|
+    t.integer  "app_id",           limit: 8
+    t.string   "id_str"
+    t.string   "name"
+    t.integer  "code",             limit: 8
+    t.integer  "packageid",        limit: 8
+    t.integer  "groupid",          limit: 8
+    t.integer  "docid",            limit: 8
+    t.string   "sname"
+    t.integer  "size",             limit: 8
+    t.date     "updatetime"
+    t.string   "sourcename"
+    t.string   "app_type"
+    t.integer  "all_download_pid", limit: 8
+    t.string   "str_download"
+    t.integer  "display_score"
+    t.string   "all_download"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "baidu_versions", ["app_id", "id_str"], name: "index_baidu_versions_on_app_id_and_id_str", unique: true, using: :btree
+  add_index "baidu_versions", ["app_id"], name: "index_baidu_versions_on_app_id", using: :btree
+  add_index "baidu_versions", ["updatetime"], name: "index_baidu_versions_on_updatetime", using: :btree
+
+  create_table "baidu_videos", force: :cascade do |t|
+    t.integer  "app_id",      limit: 8
+    t.integer  "origin_id",   limit: 8
+    t.integer  "packageid",   limit: 8
+    t.string   "title"
+    t.string   "source"
+    t.string   "videourl"
+    t.string   "image"
+    t.string   "playcount"
+    t.integer  "orientation"
+    t.integer  "duration"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "baidu_videos", ["app_id"], name: "index_baidu_videos_on_app_id", unique: true, using: :btree
+  add_index "baidu_videos", ["origin_id"], name: "index_baidu_videos_on_origin_id", using: :btree
 
 end

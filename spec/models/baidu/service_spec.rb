@@ -4,6 +4,7 @@ RSpec.describe Baidu::Service do
   include_context "baidu_api_client_with_default_params"
 
   let!(:service) { Baidu::Service.new }
+  let(:app) { create :baidu_app }
   let(:preview_info_source) { json_fixture('static/baidu/preview_info_source--doudizhu.json') }
   let(:full_info_source) { json_vcr_fixture('baidu/get_app--doudizhu.yml') }
   let(:base_info) { service.fetch_base_info(full_info_source) }
@@ -18,18 +19,18 @@ RSpec.describe Baidu::Service do
   end
 
 
-  describe "#create_or_update" do
+  describe "#save_app" do
     let(:attrs) { service.build_app_attrs(full_info_source) }
     let(:id_str) { Baidu::App.build_id_str(attrs['app_type'], attrs['packageid'], attrs['groupid'], attrs['docid']) }
     it "creates new app" do
-      app = service.create_or_update(attrs)
+      app = service.save_app(attrs)
       expect(app.persisted?).to eq true
     end
     it "updates created app" do
       app = create :baidu_app, attrs
       new_brief = 'awesome game!'
       attrs['brief'] = new_brief
-      service.create_or_update(attrs)
+      service.save_app(attrs)
       expect(app.reload.brief).to eq new_brief
     end
     it "handles ActiveRecord::RecordNotUnique error and updates record" do
@@ -39,34 +40,53 @@ RSpec.describe Baidu::Service do
       allow(Baidu::App).to receive(:where).and_return(apps)
       allow(app).to receive(:nil?).and_raise(ActiveRecord::RecordNotUnique, "error")
       expect(app).to receive(:update_attributes).with(attrs)
-      service.create_or_update(attrs)
+      service.save_app(attrs)
     end
   end
 
-  describe "#save_from_preview_info" do
+  describe "#save_app_from_preview_info" do
     let(:itemdata) { preview_info_source['itemdata'] }
     let(:id_str) { Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid']) }
+    let(:app) { create :baidu_app }
     it "return nil when no docid" do
       preview_info_source['itemdata'].delete('docid')
-      app = service.save_from_preview_info preview_info_source
+      app = service.save_app_from_preview_info preview_info_source
       expect(app).to eq nil
     end
     it "return nil when itemdata is not Hash" do
       preview_info_source['itemdata'] = []
-      app = service.save_from_preview_info preview_info_source
+      app = service.save_app_from_preview_info preview_info_source
       expect(app).to eq nil
-    end
-    it "calls create_or_update when app is not created" do
-      VCR.use_cassette("baidu/get_app--doudizhu") do
-        expect(service).to receive(:create_or_update)
-        service.save_from_preview_info preview_info_source
-      end
     end
     it "doesnt request data when app exist" do
       app = create :baidu_app, app_type: itemdata['type'], packageid: itemdata['packageid'], groupid: itemdata['groupid'], docid: itemdata['docid']
       expect(app.persisted?).to eq true
-      expect(service).to_not receive(:create_or_update)
-      service.save_from_preview_info preview_info_source
+      expect(service).to_not receive(:save_app)
+      service.save_app_from_preview_info preview_info_source
+    end
+    it "calls save_app when app is not created" do
+      VCR.use_cassette("baidu/get_app--doudizhu") do
+        expect(service).to receive(:save_app).and_return(app)
+        service.save_app_from_preview_info preview_info_source
+      end
+    end
+    it "calls save_versions" do
+      VCR.use_cassette("baidu/get_app--doudizhu") do
+        expect(service).to receive(:save_versions)
+        service.save_app_from_preview_info preview_info_source
+      end
+    end
+    it "calls save_developer" do
+      VCR.use_cassette("baidu/get_app--doudizhu") do
+        expect(service).to receive(:save_developer)
+        service.save_app_from_preview_info preview_info_source
+      end
+    end
+    it "calls save_category" do
+      VCR.use_cassette("baidu/get_app--doudizhu") do
+        expect(service).to receive(:save_category)
+        service.save_app_from_preview_info preview_info_source
+      end
     end
   end
 
@@ -92,7 +112,6 @@ RSpec.describe Baidu::Service do
       expect(a[:sname]).to eq version_source_content['sname']
       expect(a[:size]).to eq version_source_content['size']
       expect(a[:updatetime]).to eq version_source_content['updatetime']
-      expect(a[:versioncode]).to eq version_source_content['versioncode']
       expect(a[:sourcename]).to eq version_source_content['sourcename']
       expect(a[:app_type]).to eq version_source_content['type']
       expect(a[:all_download_pid]).to eq version_source_content['all_download_pid']
@@ -188,6 +207,139 @@ RSpec.describe Baidu::Service do
       expect(attrs[:origin_id]).to eq base_info['video_id']
       expect(attrs[:title]).to eq base_info['video_title']
       expect(attrs[:packageid]).to eq base_info['video_packageid']
+    end
+    context "when video hash exists" do
+      before :each do
+        VCR.use_cassette("baidu/get_app--with-video") do
+          service.api.get :app, docid: 9921562
+        end
+      end
+      let(:full_info_source) { json_vcr_fixture('baidu/get_app--with-video.yml') }
+      let(:base_info) { service.fetch_base_info(full_info_source) }
+      it "returns video data" do
+        expect(base_info['video'].is_a?(Hash)).to eq true
+        expect(attrs[:videourl]).to eq base_info['video']['videourl']
+        expect(attrs[:playcount]).to eq base_info['video']['playcount']
+        expect(attrs[:image]).to eq base_info['video_image']
+        expect(attrs[:orientation]).to eq base_info['video']['orientation']
+        expect(attrs[:duration]).to eq base_info['video']['duration']
+        expect(attrs[:source]).to eq base_info['video']['from']
+        expect(attrs[:origin_id]).to eq base_info['video']['id']
+        expect(attrs[:title]).to eq base_info['video']['title']
+        expect(attrs[:packageid]).to eq base_info['video']['packageid']
+      end
+    end
+  end
+
+  describe "#build_tags_attrs" do
+    let(:attrs) { service.build_tags_attrs(full_info_source) }
+    it "returns tags data" do
+      tags_attrs = base_info['apptags'].map{|name| {name: name} }
+      expect(attrs).to eq tags_attrs
+    end
+  end
+
+  describe "#build_display_tags_attrs" do
+    let(:attrs) { service.build_display_tags_attrs(full_info_source) }
+    let(:tag_display_info) { base_info['tag_display'] }
+    it { expect(attrs.count).to be >= tag_display_info.count }
+    context "when content field is string" do
+      it "returns attrs with string content" do
+        tag_source = tag_display_info.keep_if{|k, v| v['content'].is_a?(String) }.first #array
+        tag = attrs.first
+        expect(tag[:name]).to eq tag_source[0]
+        expect(tag[:content]).to eq tag_source[1]['content']
+        expect(tag[:icon]).to eq tag_source[1]['icon']
+        expect(tag[:flagicon]).to eq tag_source[1]['flagicon']
+      end
+    end
+    context "when content field is an array" do
+      it "returns attrs with hash content" do
+        tag_source = tag_display_info.keep_if{|k, v| v['content'].is_a?(Array) }.first #array
+        tag = attrs.select{|a| !a[:content_json].empty? }.first
+        expect(tag[:name]).to eq tag_source[0]
+        expect(tag[:content_json]).to eq tag_source[1]['content'][0] #take first json from array
+        expect(tag[:icon]).to eq tag_source[1]['icon']
+        expect(tag[:flagicon]).to eq tag_source[1]['flagicon']
+      end
+    end
+  end
+
+  describe "#save_versions" do
+    let(:version_attrs) { service.build_versions_attrs(full_info_source) }
+    it "saves version for app" do
+      expect(app.versions.count).to eq 0
+      service.save_versions(app, version_attrs)
+      expect(app.versions.count).to eq version_attrs.count
+    end
+  end
+
+  describe "#save_developer" do
+    let(:developer_attrs) { service.build_developer_attrs(full_info_source) }
+    it "saves developer" do
+      developer = service.save_developer developer_attrs
+      expect(developer.persisted?).to eq true
+      expect(developer.origin_id.to_s).to eq developer_attrs[:origin_id]
+      expect(developer.name).to eq developer_attrs[:name]
+      expect(developer.score.to_s).to eq developer_attrs[:score]
+      expect(developer.level.to_s).to eq developer_attrs[:level]
+    end
+  end
+
+  describe "#save_category" do
+    let(:category_attrs) { service.build_category_attrs(full_info_source) }
+    it "saves category" do
+      category = service.save_category(category_attrs)
+      expect(category.persisted?).to eq true
+      expect(category.origin_id.to_s).to eq category_attrs[:origin_id]
+      expect(category.name.to_s).to eq category_attrs[:name]
+    end
+    it "ok when cat already exists" do
+      category = create :baidu_category, category_attrs
+      expect(category.persisted?).to eq true
+
+      category2 = service.save_category(category_attrs)
+      expect(category2.id).to eq category.id
+    end
+  end
+
+  describe "#save_video" do
+    let(:full_info_source) { json_fixture('static/baidu/full_info_with_video.json') }
+    let(:video_attrs) { service.build_video_attrs(full_info_source) }
+    it "saves video" do
+      expect(app.video).to eq nil
+      service.save_video(app, video_attrs)
+      expect(app.video.persisted?).to eq true
+      expect(app.video.origin_id.to_s).to eq video_attrs[:origin_id].to_s
+      expect(app.video.title.to_s).to eq video_attrs[:title].to_s
+    end
+  end
+
+  describe "#save_tags" do
+    let(:tags_attrs) { service.build_tags_attrs(full_info_source) }
+    it "saves tags" do
+      tags = service.save_tags(tags_attrs)
+      expect(tags.count).to eq tags_attrs.count
+      expect(tags.map{|t| t.name}).to eq tags_attrs.map{|t| t[:name]}
+    end
+    it "find already created tags and return it" do
+      tag_name = 'rock-n-roll'
+      saved_tag = create :baidu_tag, name: tag_name
+      expect(saved_tag.persisted?).to eq true
+      tags_attrs << { name: tag_name }
+      tags = service.save_tags(tags_attrs)
+      expect(tags.map{|t| t.name}).to include tag_name
+    end
+  end
+
+  describe "#save_display_tags" do
+    let(:attrs) { service.build_display_tags_attrs(full_info_source) }
+    it "saves tags" do
+      tags = service.save_display_tags(attrs)
+      expect(tags.count).to eq attrs.count
+      expect(tags.first.name).to eq attrs[0][:name]
+      expect(tags.first.content).to eq attrs[0][:content]
+      expect(tags.first.content_json).to eq attrs[0][:content_json]
     end
   end
 end
