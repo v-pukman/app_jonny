@@ -183,11 +183,11 @@ ActiveRecord::Schema.define(version: 20160919150133) do
     t.integer  "groupid",          limit: 8
     t.integer  "docid",            limit: 8
     t.string   "sname"
-    t.integer  "size",             limit: 8
+    t.string   "size"
     t.date     "updatetime"
     t.string   "sourcename"
     t.string   "app_type"
-    t.integer  "all_download_pid", limit: 8
+    t.string   "all_download_pid"
     t.string   "str_download"
     t.integer  "display_score"
     t.string   "all_download"
