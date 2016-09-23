@@ -12,7 +12,7 @@ class CreateBaiduVideos < ActiveRecord::Migration
 
       t.string :playcount
       t.integer :orientation
-      t.integer :duration
+      t.string :duration
 
       t.timestamps null: false
     end

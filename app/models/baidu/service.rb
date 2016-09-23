@@ -340,7 +340,7 @@ class Baidu::Service
         tag_data['content'].each do |content|
           attrs << {
             name: tag_name,
-            content_json: content,
+            content_json: content.to_json,
             content: "",
             icon: tag_data['icon'],
             flagicon: tag_data['flagicon']
@@ -349,7 +349,7 @@ class Baidu::Service
       else
         attrs << {
           name: tag_name,
-          content_json: "",
+          content_json: "{}",
           content: tag_data['content'],
           icon: tag_data['icon'],
           flagicon: tag_data['flagicon']

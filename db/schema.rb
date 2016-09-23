@@ -209,7 +209,7 @@ ActiveRecord::Schema.define(version: 20160919150133) do
     t.string   "image"
     t.string   "playcount"
     t.integer  "orientation"
-    t.integer  "duration"
+    t.string   "duration"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
   end

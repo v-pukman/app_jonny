@@ -256,9 +256,9 @@ RSpec.describe Baidu::Service do
     context "when content field is an array" do
       it "returns attrs with hash content" do
         tag_source = tag_display_info.keep_if{|k, v| v['content'].is_a?(Array) }.first #array
-        tag = attrs.select{|a| !a[:content_json].empty? }.first
+        tag = attrs.select{|a| !JSON.parse(a[:content_json]).empty? }.first
         expect(tag[:name]).to eq tag_source[0]
-        expect(tag[:content_json]).to eq tag_source[1]['content'][0] #take first json from array
+        expect(tag[:content_json]).to eq tag_source[1]['content'][0].to_json #take first json from array
         expect(tag[:icon]).to eq tag_source[1]['icon']
         expect(tag[:flagicon]).to eq tag_source[1]['flagicon']
       end
