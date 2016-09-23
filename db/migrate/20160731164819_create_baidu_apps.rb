@@ -3,12 +3,13 @@ class CreateBaiduApps < ActiveRecord::Migration
     create_table :baidu_apps do |t|
       t.string :id_str
 
-      t.string :packageid, limit: 8
-      t.string :groupid, limit: 8
-      t.string :docid, limit: 8
+      t.string :app_type
+      t.integer :packageid, limit: 8
+      t.integer :groupid, limit: 8
+      t.integer :docid, limit: 8
+
       t.string :package
       t.string :sname
-      t.string :app_type
       t.text :icon
       t.string :iconhdpi
 

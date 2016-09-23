@@ -7,6 +7,9 @@ RSpec.describe Baidu::Service do
   let(:app) { create :baidu_app }
   let(:preview_info_source) { json_fixture('static/baidu/preview_info_source--doudizhu.json') }
   let(:full_info_source) { json_vcr_fixture('baidu/get_app--doudizhu.yml') }
+  # all data
+  let(:data_info) { service.fetch_data_info(full_info_source) }
+  # base info = app info
   let(:base_info) { service.fetch_base_info(full_info_source) }
 
   it { expect(preview_info_source).to_not eq nil }
@@ -341,5 +344,65 @@ RSpec.describe Baidu::Service do
       expect(tags.first.content).to eq attrs[0][:content]
       expect(tags.first.content_json).to eq attrs[0][:content_json]
     end
+  end
+
+  # describe "#build_recommend_groups_attrs" do
+  #   let(:attrs) { service.build_recommend_groups_attrs(full_info_source) }
+  #   it "retruns recommend groups" do
+  #     expect(attrs).to eq data_info['recommend_info'].map{|d| {name: d['recommend_title']} }
+  #   end
+  # end
+
+  describe "#build_recommend_apps_attrs" do
+    let(:attrs) { service.build_recommend_apps_attrs(full_info_source) }
+    it "returns not empty list" do
+      expect(attrs.count).to be > 0
+    end
+    it "retruns recommend app data" do
+      app = attrs[0]
+      expect(app[:group_name]).to_not eq nil
+      expect(app[:sname]).to_not eq nil
+      expect(app[:app_type]).to_not eq nil
+      expect(app[:packageid]).to_not eq nil
+      expect(app[:docid]).to_not eq nil
+      expect(app[:recommend]).to_not eq nil
+    end
+  end
+
+  describe "#save_recommend_apps" do
+    let(:attrs) do
+      [{
+        sname: 'yeah!',
+        group_name: 'rock-n-roll',
+        app_type: 'game',
+        packageid: 1,
+        groupid: 2,
+        docid: 3,
+        recommend: 'cool game!'
+      }]
+    end
+    let(:app) { create :baidu_app }
+    let(:group) { Baidu::RecommendGroup.where(name: attrs[0][:group_name]).first }
+    before do
+      service.save_recommend_apps(app, attrs)
+    end
+    it "saves recommend apps" do
+      expect(app.recommend_apps.count).to be > 0
+    end
+    it "creates group with group_name" do
+      expect(group.persisted?).to eq true
+    end
+    it "saves attrs of app correctly" do
+      app_attrs = attrs.first
+      recommend_app = app.recommend_apps.first
+      expect(recommend_app.app_type).to eq app_attrs[:app_type]
+      expect(recommend_app.packageid).to eq app_attrs[:packageid]
+      expect(recommend_app.groupid).to eq app_attrs[:groupid]
+      expect(recommend_app.docid).to eq app_attrs[:docid]
+      expect(recommend_app.recommend).to eq app_attrs[:recommend]
+      expect(recommend_app.recommend_group).to eq group
+      expect(recommend_app.sname).to eq app_attrs[:sname]
+    end
+
   end
 end

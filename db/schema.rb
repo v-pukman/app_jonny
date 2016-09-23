@@ -11,19 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160919150133) do
+ActiveRecord::Schema.define(version: 20160923094350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "baidu_apps", force: :cascade do |t|
     t.string   "id_str"
-    t.string   "packageid",              limit: 8
-    t.string   "groupid",                limit: 8
-    t.string   "docid",                  limit: 8
+    t.string   "app_type"
+    t.integer  "packageid",              limit: 8
+    t.integer  "groupid",                limit: 8
+    t.integer  "docid",                  limit: 8
     t.string   "package"
     t.string   "sname"
-    t.string   "app_type"
     t.text     "icon"
     t.string   "iconhdpi"
     t.integer  "today_download_pid",     limit: 8
@@ -165,6 +165,35 @@ ActiveRecord::Schema.define(version: 20160919150133) do
 
   add_index "baidu_display_tags", ["name", "content", "content_json"], name: "index_baidu_display_tags_on_name_and_content_and_content_json", unique: true, using: :btree
   add_index "baidu_display_tags", ["name"], name: "index_baidu_display_tags_on_name", using: :btree
+
+  create_table "baidu_recommend_apps", force: :cascade do |t|
+    t.integer  "app_id",             limit: 8
+    t.string   "sname"
+    t.string   "app_type"
+    t.integer  "packageid",          limit: 8
+    t.integer  "groupid",            limit: 8
+    t.integer  "docid",              limit: 8
+    t.integer  "recommend_group_id"
+    t.text     "recommend"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "baidu_recommend_apps", ["app_id", "docid", "packageid", "recommend_group_id"], name: "app_docid_group_pack_index", unique: true, using: :btree
+  add_index "baidu_recommend_apps", ["app_id"], name: "index_baidu_recommend_apps_on_app_id", using: :btree
+  add_index "baidu_recommend_apps", ["docid"], name: "index_baidu_recommend_apps_on_docid", using: :btree
+  add_index "baidu_recommend_apps", ["groupid"], name: "index_baidu_recommend_apps_on_groupid", using: :btree
+  add_index "baidu_recommend_apps", ["packageid"], name: "index_baidu_recommend_apps_on_packageid", using: :btree
+  add_index "baidu_recommend_apps", ["recommend_group_id"], name: "index_baidu_recommend_apps_on_recommend_group_id", using: :btree
+  add_index "baidu_recommend_apps", ["sname"], name: "index_baidu_recommend_apps_on_sname", using: :btree
+
+  create_table "baidu_recommend_groups", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "baidu_recommend_groups", ["name"], name: "index_baidu_recommend_groups_on_name", unique: true, using: :btree
 
   create_table "baidu_tags", force: :cascade do |t|
     t.string   "name"

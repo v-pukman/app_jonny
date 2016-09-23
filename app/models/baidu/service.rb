@@ -25,6 +25,7 @@ class Baidu::Service
 
       save_versions app, build_versions_attrs(full_info)
       save_video app, build_video_attrs(full_info)
+      save_recommend_apps app, build_recommend_apps_attrs(full_info)
 
       developer = save_developer build_developer_attrs(full_info)
       app.developer = developer if developer && developer.id
@@ -170,9 +171,13 @@ class Baidu::Service
     []
   end
 
+  def fetch_data_info full_info
+    JSON.parse(full_info.to_json)['result']['data']
+  end
+
   #TODO: tests!
   def fetch_base_info full_info
-    JSON.parse(full_info.to_json)['result']['data']['base_info']
+    fetch_data_info(full_info)['base_info']
   end
 
   #TODO: tests!
@@ -358,5 +363,65 @@ class Baidu::Service
     end
     attrs
   end
+
+  # def build_recommend_groups_attrs full_info
+  #   recommend_info = fetch_data_info(full_info)['recommend_info']
+  #   groups = recommend_info.map{|d| { name: d['recommend_title']} }
+  #   groups
+  # end
+
+  def build_recommend_apps_attrs full_info
+    recommend_info = fetch_data_info(full_info)['recommend_info']
+    apps = []
+    recommend_info.map do |group|
+      group_name = group['recommend_title']
+      group['recommend_appinfo'].each do |app|
+        apps << {
+          group_name: group_name,
+          sname: app['sname'],
+          app_type: app['type'],
+          packageid: app['packageid'],
+          groupid: app['groupid'],
+          docid: app['docid'],
+          recommend: app['recommend']
+        }
+      end
+    end
+    apps
+  end
+
+  def save_recommend_apps app, recommend_apps_attrs
+    recommend_apps_attrs.each do |attrs|
+      begin
+        group = nil
+        begin
+          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first_or_create
+        rescue ActiveRecord::RecordNotUnique
+          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first
+        end
+
+        recommend_app = app.recommend_apps.where(recommend_group_id: group.id, packageid: attrs[:packageid], docid: attrs[:docid]).first
+        if recommend_app.nil?
+          recommend_app = app.recommend_apps.build({
+            sname: attrs[:sname],
+            app_type: attrs[:app_type],
+            packageid: attrs[:packageid],
+            groupid: attrs[:groupid],
+            docid: attrs[:docid],
+            recommend_group_id: group.id,
+            recommend: attrs[:recommend]
+          })
+          recommend_app.save!
+        end
+      rescue ActiveRecord::RecordNotUnique
+        # don't need to update
+      rescue StandardError => e
+        # log error
+      end
+    end
+  end
+
+  #TODO: reorder methods
+  # if some resource is not valid it must don't stop app save
 
 end

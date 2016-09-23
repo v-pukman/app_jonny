@@ -10,6 +10,7 @@ class Baidu::App < ActiveRecord::Base
   has_one :video
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :display_tags
+  has_many :recommend_apps
 
   validates_uniqueness_of :id_str
   validates :id_str, :app_type, :packageid, :groupid, :docid, presence: true
