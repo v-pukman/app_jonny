@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe Baidu::Service do
+RSpec.describe Baidu::Service::App do
   include_context "baidu_api_client_with_default_params"
 
-  let!(:service) { Baidu::Service.new }
+  let!(:service) { Baidu::Service::App.new }
   let(:app) { create :baidu_app }
   let(:preview_info_source) { json_fixture('static/baidu/preview_info_source--doudizhu.json') }
   let(:full_info_source) { json_vcr_fixture('baidu/get_app--doudizhu.yml') }
