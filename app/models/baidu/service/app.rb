@@ -1,4 +1,8 @@
 class Baidu::Service::App < Baidu::Service::Base
+  #def download_apps_from_board board
+  #end
+
+
   # preview_info example - fixtures/static/baidu/preview_info_source
   #TODO: refactor this previw info usage
   def save_app_from_preview_info preview_info, additional_data={}

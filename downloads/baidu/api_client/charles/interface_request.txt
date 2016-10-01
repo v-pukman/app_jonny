@@ -1,0 +1,25 @@
+uid guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQSiqC
+native_api  1
+psize 2
+abi armeabi-v7a
+cll _a2BNgaOvt_4ue8r0u28NguGvixVQ5qlB
+usertype  0
+is_support_webp true
+ver 16790412
+from  1000561u
+cct qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA
+operator  460021
+network WF
+pkname  com.baidu.appsearch
+country US
+cen cuid_cut_cua_uid
+gms true
+platform_version_id 15
+province  qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA
+activetime  1448523399680
+action  interfacesec
+pu  cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KAU2iB,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv9860LB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjp-GB
+language  en
+apn
+crid  1475338362543
+ptl hp

@@ -1,0 +1,156 @@
+<appcommand time="1475337364">
+  <do>
+    <action>set_urls</action>
+    <data_set version="15_342">
+      <data name="ACCOUNT_INFO_URL">https://appc.baidu.com/appsrv?native_api=1&amp;action=usercenter</data>
+      <data name="CASH_DETAIL_URL">https://appc.baidu.com/appsrv?native_api=1&amp;action=usercenter&amp;type=detail</data>
+      <data name="_id">3</data>
+      <data name="about">https://appc.baidu.com/appsrv?native_api=1&amp;action=about</data>
+      <data name="about91">https://appc.baidu.com/appsrv?native_api=1&amp;action=about91</data>
+      <data name="abouthimarket">https://appc.baidu.com/appsrv?native_api=1&amp;action=abouthimarket</data>
+      <data name="addscore">https://appc.baidu.com/appsrv?native_api=1&amp;action=addscore</data>
+      <data name="alltab">https://appc.baidu.com/appsrv?native_api=1&amp;action=alltabs</data>
+      <data name="app_comment_add_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=addcomment</data>
+      <data name="app_comment_like_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=likecomment</data>
+      <data name="app_comment_list_data_new_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=getcommentlist</data>
+      <data name="app_comment_list_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=listcomment</data>
+      <data name="app_comment_modify_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=modifycomment</data>
+      <data name="app_comment_reply_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=getreplylist</data>
+      <data name="app_comment_reply_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=addreply</data>
+      <data name="app_detail_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=detail</data>
+      <data name="app_detail_data_url_2">http://m.baidu.com/appsrv?native_api=1&amp;action=detail2</data>
+      <data name="app_gray_update">http://fabu.baidu.com/tipappcheck</data>
+      <data name="app_traffic_statistics_url">https://appc.baidu.com/appsrv?action=trafficstatistics&amp;native_api=1</data>
+      <data name="appcontent">https://appc.baidu.com/appsrv?native_api=1&amp;action=detail&amp;pname=</data>
+      <data name="apprecommend">https://appc.baidu.com/appsrv?native_api=1&amp;action=apprecommend</data>
+      <data name="appuninstall">https://appc.baidu.com/appsrv?native_api=1&amp;action=appuninstall</data>
+      <data name="appupdate">https://appc.baidu.com/appsrv?action=upstate&amp;request=retry</data>
+      <data name="award_list">https://appc.baidu.com/appsrv?action=goodslist</data>
+      <data name="baidu_browser_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=bindbrowser</data>
+      <data name="billboard_content_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=homelist&amp;type=billboarddetail</data>
+      <data name="bindinfo_register_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=bindreg</data>
+      <data name="brand_area_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=brandarea</data>
+      <data name="buy_commodity">https://appc.baidu.com/appsrv?action=exchangegoods</data>
+      <data name="category_app_list_data_url">https://appc.baidu.com/appsrv?action=catelist</data>
+      <data name="check_in_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=checkin</data>
+      <data name="checktopapp_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=checktopapp</data>
+      <data name="clientupgrade">https://appc.baidu.com/appsrv?action=upgrade</data>
+      <data name="collection">https://appc.baidu.com/appsrv?action=collection</data>
+      <data name="commodity_list">https://appc.baidu.com/appsrv?action=mall</data>
+      <data name="connect_pc_url_key">http://bcs.91.com/sjapp91/msoft/91defender/android/daemon_jm_2.7.530.apk</data>
+      <data name="constellation_detail_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=constellationdetail</data>
+      <data name="constellation_test_url">https://appc.baidu.com/appsrv?action=constellationtest&amp;native_api=1</data>
+      <data name="cool_app_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=coolappdetail</data>
+      <data name="developer">https://appc.baidu.com/appsrv?native_api=1&amp;action=developer</data>
+      <data name="docid">https://appc.baidu.com/appsrv?action=downinfo</data>
+      <data name="docid_new">https://appc.baidu.com/appsrv?native_api=1&amp;action=hdownloadentry</data>
+      <data name="download_recommend">https://appc.baidu.com/appsrv?native_api=1&amp;action=recinstall</data>
+      <data name="download_statistic_special">https://appc.baidu.com/appsrv?native_api=1&amp;action=downguess</data>
+      <data name="editor_topiclist_data_url">https://appc.baidu.com/appsrv?action=topiceditorlist&amp;native_api=1</data>
+      <data name="feedback">https://appc.baidu.com/appsrv?action=feedback</data>
+      <data name="find_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=find</data>
+      <data name="float_top_1000_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=checktopapp</data>
+      <data name="float_top_list_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=gettoplist</data>
+      <data name="float_weather_data_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=weather</data>
+      <data name="floatingview_config_fetch_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=specialconf&amp;reqtype=3</data>
+      <data name="floatingview_config_fetch_url_new">https://appc.baidu.com/appsrv?native_api=1&amp;action=dialogconf</data>
+      <data name="fragment_list_key">/appsrv?action=fragmentlist</data>
+      <data name="freedown_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=checkfreedown</data>
+      <data name="get_appinfo_by_hijack_url">/appsrv?native_api=1&amp;action=getappinfobyhijack</data>
+      <data name="getact">https://appc.baidu.com/appsrv?native_api=1&amp;action=getact&amp;model=award</data>
+      <data name="gift_code_config_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=giftcode</data>
+      <data name="gift_code_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=getgiftcode</data>
+      <data name="gift_detail_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=gamegiftdetail</data>
+      <data name="gift_order_config_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=mygift</data>
+      <data name="giftbag_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=homelist&amp;type=privilege</data>
+      <data name="goldenbear_newest_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=goldenbear&amp;type=newest</data>
+      <data name="goldenbear_previous_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=goldenbear&amp;type=previous</data>
+      <data name="great_game_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=greatgame</data>
+      <data name="guess_app_data_url">/appsrv?native_api=1&amp;action=guess</data>
+      <data name="help">https://appc.baidu.com/app?action=clienthelp</data>
+      <data name="highdownload_statis_dir">https://appc.baidu.com/appsrv?native_api=1&amp;action=highdownloadstatistic&amp;type=1</data>
+      <data name="hotkey">https://appc.baidu.com/appsrv?native_api=1&amp;action=hotkey</data>
+      <data name="hotword">https://appc.baidu.com/appsrv?native_api=1&amp;action=hotword</data>
+      <data name="hotwordonsearched">https://appc.baidu.com/appsrv?native_api=1&amp;action=homepagehotword</data>
+      <data name="huanjijingling_url_key">http://gdown.baidu.com/data/wisegame/12345678/huanjijingling.apk</data>
+      <data name="inapptopiclist">https://appc.baidu.com/app?action=inapptopiclist#tid=</data>
+      <data name="index">https://appc.baidu.com/appsrv?native_api=1&amp;action=cmain</data>
+      <data name="instruction">https://appc.baidu.com/app?action=instruction</data>
+      <data name="introduce_webview_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=disclaimer</data>
+      <data name="keydownload_base_path_format">BaiduAs/cuid</data>
+      <data name="launcher_img_config_fetch_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=specialconf&amp;reqtype=1</data>
+      <data name="launcher_info_config_fetch_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=specialconf&amp;reqtype=4</data>
+      <data name="like_comment_tag_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=likecommenttag</data>
+      <data name="log_tracer_upload">http://m.baidu.com/appsrv?native_api=1&amp;action=catchlog</data>
+      <data name="login">https://appc.baidu.com/app?action=login2&amp;imei=</data>
+      <data name="login_splash_gift_url" />
+      <data name="managementscenarized">https://appc.baidu.com/appsrv?native_api=1&amp;action=managementscenarizedcard</data>
+      <data name="master_detail_url">https://appc.baidu.com/appsrv?action=master&amp;native_api=1&amp;type=masterdetail</data>
+      <data name="master_info_update_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=master</data>
+      <data name="master_subscrib_url">https://appc.baidu.com/appsrv?action=master&amp;native_api=1&amp;type=todaysubscribe</data>
+      <data name="message_sync_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=messagesync</data>
+      <data name="messagecenter_getlist">https://appc.baidu.com/appsrv?native_api=1&amp;action=mcgetlist</data>
+      <data name="messagecenter_getnewnum">https://appc.baidu.com/appsrv?native_api=1&amp;action=mcgetnewnum</data>
+      <data name="messagecenter_update">https://appc.baidu.com/appsrv?native_api=1&amp;action=mcupdate</data>
+      <data name="mission_complete">https://appc.baidu.com/appsrv?native_api=1&amp;action=taskfinish</data>
+      <data name="mission_list">https://appc.baidu.com/appsrv?action=tasklist&amp;native_api=1</data>
+      <data name="monitor_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=threadmonitor</data>
+      <data name="more_topic_list_data_url">https://appc.baidu.com/appsrv?action=topiclistmanage&amp;native_api=1</data>
+      <data name="must_install_app_list_data_url">https://appc.baidu.com/appsrv?action=must</data>
+      <data name="mustinstallurl">https://appc.baidu.com/appsrv?native_api=1&amp;action=homemust&amp;type=homemust</data>
+      <data name="mustrecommend">https://appc.baidu.com/appsrv?native_api=1&amp;action=recmust</data>
+      <data name="netflowautointerval" />
+      <data name="netflowcorrectrule">https://appc.baidu.com/appsrv?native_api=1&amp;action=netflowacupdate</data>
+      <data name="notification_entrance_url_key">https://appc.baidu.com/appsrv?native_api=1&amp;action=noticeconf</data>
+      <data name="operate_check_fetch_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=specialconf&amp;reqtype=2</data>
+      <data name="pay_app_list_config_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=payapplist</data>
+      <data name="personal">https://apcc.baidu.com/app?ext=appmobile&amp;action=index&amp;tn=personal&amp;pu=osname@baiduappsearch</data>
+      <data name="pk_avatar_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=avatarlist</data>
+      <data name="pk_card_support_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=apppk&amp;want=support</data>
+      <data name="pluginlist">https://appc.baidu.com/appsrv?native_api=1&amp;action=pluginlist</data>
+      <data name="powerusagewhitelist">https://appc.baidu.com/appsrv?native_api=1&amp;action=powerusagewhitelist</data>
+      <data name="protocol_type">https</data>
+      <data name="pushguide">https://appc.baidu.com/app?action=pushguide</data>
+      <data name="rank_topquick_data_url">/appsrv?native_api=1&amp;action=rank&amp;listtype=topquick&amp;pn=0&amp;pagenum=3</data>
+      <data name="recommend_home60_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=homepage&amp;type=homelist</data>
+      <data name="recommend_home_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=homelist&amp;type=homelist</data>
+      <data name="recommend_today_url">/appsrv?native_api=1&amp;action=today&amp;pn=0</data>
+      <data name="ringtone_get_file_url">/appsrv?native_api=1&amp;action=ring&amp;type=geturl</data>
+      <data name="ringtone_tab_url">/appsrv?native_api=1&amp;action=ring&amp;type=ringtab</data>
+      <data name="rootappinfo">https://appc.baidu.com/appsrv?native_api=1&amp;action=rootappinfo</data>
+      <data name="search">https://appc.baidu.com/app?action=search&amp;pu=osname@baiduappsearchat#word=</data>
+      <data name="search_request_url">https://appc.baidu.com/as?native_api=1&amp;pn=0&amp;st=10a001&amp;tn=native&amp;word=</data>
+      <data name="share_conf_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=shareconf</data>
+      <data name="silent_download_list_config_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=silentdownloadlist</data>
+      <data name="sugurl">http://nssug.baidu.com/su?wd=%s&amp;prod=wiseapp&amp;ie=utf-8</data>
+      <data name="sugurl_new">https://appc.baidu.com/appsrv?native_api=1&amp;action=sug&amp;word=%s</data>
+      <data name="talk_subject_list_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=tiebatopic</data>
+      <data name="thread_monitor_upload_server">http://app.navi.baidu.com/competingInfo/sendCompet</data>
+      <data name="topic_app_list_data_url">https://appc.baidu.com/appsrv?action=topiclist</data>
+      <data name="trash_db_url">https://appc.baidu.com/appsrv?action=trashdb&amp;native_api=1</data>
+      <data name="uninstall_feedback">https://appc.baidu.com/app?pu=osname@baiduappsearch&amp;action=uninstall</data>
+      <data name="updaterecommend">https://appc.baidu.com/appsrv?native_api=1&amp;action=updaterecommend</data>
+      <data name="uploadapkquery">https://appc.baidu.com/appsrv?action=uploadapkquery&amp;native_api=1</data>
+      <data name="uploadapkstatus">https://appc.baidu.com/appsrv?action=uploadapkstatus&amp;native_api=1</data>
+      <data name="url_hijack_upload">/appsrv?native_api=1&amp;action=apkanalysis</data>
+      <data name="user_data_migration">https://appc.baidu.com/appsrv?action=import91databy91id</data>
+      <data name="useridgrab">https://appc.baidu.com/app?action=useridgrab</data>
+      <data name="userlog">http://m.baidu.com/appsrv?native_api=1&amp;action=clientuserlog</data>
+      <data name="wallpaper">http://app.image.baidu.com/wallpaper4baidupcsuiteapp</data>
+      <data name="webdownload">https://appc.baidu.com/app?action=download&amp;tj=</data>
+      <data name="webupdatedownload">https://appc.baidu.com/app?action=download&amp;type=update&amp;tj=</data>
+      <data name="whitelist_config_url">https://appc.baidu.com/appsrv?native_api=1&amp;action=whitelist</data>
+      <data name="widgetupdate">https://appc.baidu.com/appsrv?action=widget</data>
+    </data_set>
+  </do>
+  <do>
+    <action>app_events</action>
+    <data_set version="15_0">
+      <data name="event_active_user">ok</data>
+    </data_set>
+  </do>
+  <do>
+    <action>oem_settings</action>
+    <data_set version="" />
+  </do>
+</appcommand>
