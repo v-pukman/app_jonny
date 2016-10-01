@@ -602,17 +602,17 @@
           "type": 16,
           "title": "塔防游戏",
           "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10035\u0026action=generalboard",
-          "fParam": "gameboardcatedynamic@1@1@boardid+board_102_10035@pos+1@is_gxh+true@de_res+gxh@deid+008"
+          "fParam": "gameboardcatedynamic@1@1@boardid+board_102_10035@pos+1@is_gxh+false@de_res+gxh@deid+008"
         }
       }, {
-        "title": "免流量精品",
-        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/472309f7905298223c23e6ffd1ca7bcb0a46d4fe.jpg",
-        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/6c224f4a20a4462341f67eea9d22720e0cf3d77e.jpg",
+        "title": "儿童游戏",
+        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/1ad5ad6eddc451da6858d0d7b0fd5266d0163264.jpg",
+        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/d439b6003af33a878892c292c35c10385243b5bf.jpg",
         "link_info": {
           "type": 16,
-          "title": "免流量精品",
-          "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10033\u0026action=generalboard",
-          "fParam": "gameboardcatedynamic@1@2@boardid+board_102_10033@pos+2@is_gxh+true@de_res+gxh@deid+008"
+          "title": "儿童游戏",
+          "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10024\u0026action=generalboard",
+          "fParam": "gameboardcatedynamic@1@2@boardid+board_102_10024@pos+2@is_gxh+false@de_res+gxh@deid+008"
         }
       }, {
         "title": "休闲小游戏",
@@ -622,17 +622,17 @@
           "type": 16,
           "title": "休闲小游戏",
           "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10009\u0026action=generalboard",
-          "fParam": "gameboardcatedynamic@1@3@boardid+board_102_10009@pos+3@is_gxh+true@de_res+gxh@deid+008"
+          "fParam": "gameboardcatedynamic@1@3@boardid+board_102_10009@pos+3@is_gxh+false@de_res+gxh@deid+008"
         }
       }, {
-        "title": "跑酷游戏",
-        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/cb8065380cd79123ec404848ab345982b2b7806e.jpg",
-        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/d1a20cf431adcbeff4d8a78ea9af2edda2cc9f4e.jpg",
+        "title": "男生酷玩",
+        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/0ff41bd5ad6eddc4b2cf6fc73fdbb6fd526633e6.jpg",
+        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/b03533fa828ba61e177110a74434970a314e599f.jpg",
         "link_info": {
           "type": 16,
-          "title": "跑酷游戏",
-          "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10018\u0026action=generalboard",
-          "fParam": "gameboardcatedynamic@1@4@boardid+board_102_10018@pos+4@is_gxh+true@de_res+gxh@deid+008"
+          "title": "男生酷玩",
+          "url": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_10025\u0026action=generalboard",
+          "fParam": "gameboardcatedynamic@1@4@boardid+board_102_10025@pos+4@is_gxh+false@de_res+gxh@deid+008"
         }
       }]
     }],

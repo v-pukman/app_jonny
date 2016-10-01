@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923094350) do
+ActiveRecord::Schema.define(version: 20160929090037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,19 @@ ActiveRecord::Schema.define(version: 20160923094350) do
 
   add_index "baidu_apps_tags", ["app_id"], name: "index_baidu_apps_tags_on_app_id", using: :btree
   add_index "baidu_apps_tags", ["tag_id"], name: "index_baidu_apps_tags_on_tag_id", using: :btree
+
+  create_table "baidu_boards", force: :cascade do |t|
+    t.string   "name"
+    t.string   "origin_id"
+    t.string   "action_type"
+    t.string   "link"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "baidu_boards", ["action_type"], name: "index_baidu_boards_on_action_type", using: :btree
+  add_index "baidu_boards", ["link"], name: "index_baidu_boards_on_link", unique: true, using: :btree
+  add_index "baidu_boards", ["origin_id"], name: "index_baidu_boards_on_origin_id", using: :btree
 
   create_table "baidu_categories", force: :cascade do |t|
     t.integer  "origin_id",  limit: 8

@@ -311,10 +311,76 @@
     }, {
       "datatype": 21,
       "itemdata": {
+        "catename": "金融理财",
+        "type": "soft",
+        "cateid": "510",
+        "pos": 4,
+        "dataurl": "",
+        "shownum": 5,
+        "icon": "http://imgsrc.baidu.com/anxun/pic/item/d53f8794a4c27d1ed213c3cb1ed5ad6eddc43883.jpg",
+        "high_light": "#68a5e1",
+        "icon_arrow": "http://imgsrc.baidu.com/anxun/pic/item/5243fbf2b2119313235e07bf60380cd791238da4.jpg",
+        "data": [{
+          "name": "股票基金",
+          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_027\u0026subcateurl=true\u0026sorttype=soft",
+          "icon": "",
+          "pagetype": "0",
+          "viewtype": "13",
+          "filterinstalled": true,
+          "high_light": "",
+          "personal_item": "",
+          "f": "subcatesoft@7@1"
+        }, {
+          "name": "银行",
+          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_028\u0026subcateurl=true\u0026sorttype=soft",
+          "icon": "",
+          "pagetype": "0",
+          "viewtype": "13",
+          "filterinstalled": true,
+          "high_light": "",
+          "personal_item": "",
+          "f": "subcatesoft@7@2"
+        }, {
+          "name": "记账",
+          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_025\u0026subcateurl=true\u0026sorttype=soft",
+          "icon": "",
+          "pagetype": "0",
+          "viewtype": "13",
+          "filterinstalled": true,
+          "high_light": "",
+          "personal_item": "",
+          "f": "subcatesoft@7@3"
+        }, {
+          "name": "支付",
+          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_101_731\u0026subcateurl=true\u0026sorttype=soft",
+          "icon": "",
+          "pagetype": "0",
+          "viewtype": "13",
+          "filterinstalled": true,
+          "high_light": "",
+          "personal_item": "",
+          "f": "subcatesoft@7@4"
+        }, {
+          "name": "彩票",
+          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_026\u0026subcateurl=true\u0026sorttype=soft",
+          "icon": "",
+          "pagetype": "0",
+          "viewtype": "13",
+          "filterinstalled": true,
+          "high_light": "",
+          "personal_item": "",
+          "f": "subcatesoft@7@5"
+        }],
+        "f": "catesoft@1@7",
+        "filterinstalled": true
+      }
+    }, {
+      "datatype": 21,
+      "itemdata": {
         "catename": "网上购物",
         "type": "soft",
         "cateid": "",
-        "pos": 4,
+        "pos": 5,
         "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_101_712\u0026subcateurl=true\u0026sorttype=soft",
         "shownum": 4,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/48540923dd54564e590f05e6b7de9c82d0584f83.jpg",
@@ -370,7 +436,7 @@
         "catename": "手机管理",
         "type": "soft",
         "cateid": "501",
-        "pos": 5,
+        "pos": 6,
         "dataurl": "",
         "shownum": 6,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/34fae6cd7b899e51089fd5cb46a7d933c9950ddf.jpg",
@@ -446,7 +512,7 @@
         "catename": "拍摄美化",
         "type": "soft",
         "cateid": "508",
-        "pos": 6,
+        "pos": 7,
         "dataurl": "",
         "shownum": 3,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/55e736d12f2eb9382e1386fdd0628535e5dd6f47.jpg",
@@ -492,7 +558,7 @@
         "catename": "旅游出行",
         "type": "soft",
         "cateid": "509",
-        "pos": 7,
+        "pos": 8,
         "dataurl": "",
         "shownum": 6,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/d009b3de9c82d1582127da69850a19d8bd3e4245.jpg",
@@ -568,7 +634,7 @@
         "catename": "资讯阅读",
         "type": "soft",
         "cateid": "505",
-        "pos": 8,
+        "pos": 9,
         "dataurl": "",
         "shownum": 6,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/7c1ed21b0ef41bd55e2e032b55da81cb38db3df4.jpg",
@@ -644,7 +710,7 @@
         "catename": "手机美化",
         "type": "soft",
         "cateid": "502",
-        "pos": 9,
+        "pos": 10,
         "dataurl": "",
         "shownum": 4,
         "icon": "http://imgsrc.baidu.com/anxun/pic/item/ac6eddc451da81cbc0a46a125666d016082431ab.jpg",
@@ -692,72 +758,6 @@
           "f": "subcatesoft@5@4"
         }],
         "f": "catesoft@1@5",
-        "filterinstalled": true
-      }
-    }, {
-      "datatype": 21,
-      "itemdata": {
-        "catename": "金融理财",
-        "type": "soft",
-        "cateid": "510",
-        "pos": 10,
-        "dataurl": "",
-        "shownum": 5,
-        "icon": "http://imgsrc.baidu.com/anxun/pic/item/d53f8794a4c27d1ed213c3cb1ed5ad6eddc43883.jpg",
-        "high_light": "#68a5e1",
-        "icon_arrow": "http://imgsrc.baidu.com/anxun/pic/item/5243fbf2b2119313235e07bf60380cd791238da4.jpg",
-        "data": [{
-          "name": "股票基金",
-          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_027\u0026subcateurl=true\u0026sorttype=soft",
-          "icon": "",
-          "pagetype": "0",
-          "viewtype": "13",
-          "filterinstalled": true,
-          "high_light": "",
-          "personal_item": "",
-          "f": "subcatesoft@7@1"
-        }, {
-          "name": "银行",
-          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_028\u0026subcateurl=true\u0026sorttype=soft",
-          "icon": "",
-          "pagetype": "0",
-          "viewtype": "13",
-          "filterinstalled": true,
-          "high_light": "",
-          "personal_item": "",
-          "f": "subcatesoft@7@2"
-        }, {
-          "name": "记账",
-          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_025\u0026subcateurl=true\u0026sorttype=soft",
-          "icon": "",
-          "pagetype": "0",
-          "viewtype": "13",
-          "filterinstalled": true,
-          "high_light": "",
-          "personal_item": "",
-          "f": "subcatesoft@7@3"
-        }, {
-          "name": "支付",
-          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_101_731\u0026subcateurl=true\u0026sorttype=soft",
-          "icon": "",
-          "pagetype": "0",
-          "viewtype": "13",
-          "filterinstalled": true,
-          "high_light": "",
-          "personal_item": "",
-          "f": "subcatesoft@7@4"
-        }, {
-          "name": "彩票",
-          "dataurl": "appsrv?native_api=1\u0026action=generalboard\u0026boardid=board_100_026\u0026subcateurl=true\u0026sorttype=soft",
-          "icon": "",
-          "pagetype": "0",
-          "viewtype": "13",
-          "filterinstalled": true,
-          "high_light": "",
-          "personal_item": "",
-          "f": "subcatesoft@7@5"
-        }],
-        "f": "catesoft@1@7",
         "filterinstalled": true
       }
     }, {
@@ -958,7 +958,7 @@
           "type": 16,
           "title": "我是学生党",
           "url": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_10027\u0026action=generalboard",
-          "fParam": "softboardcatedynamic@1@1@boardid+board_100_10027@pos+1@is_gxh+true@de_res+gxh@deid+012"
+          "fParam": "softboardcatedynamic@1@1@boardid+board_100_10027@pos+1@is_gxh+false@de_res+gxh@deid+012"
         }
       }, {
         "title": "汽车资讯",
@@ -968,17 +968,17 @@
           "type": 16,
           "title": "汽车资讯",
           "url": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_10020\u0026action=generalboard",
-          "fParam": "softboardcatedynamic@1@2@boardid+board_100_10020@pos+2@is_gxh+true@de_res+gxh@deid+012"
+          "fParam": "softboardcatedynamic@1@2@boardid+board_100_10020@pos+2@is_gxh+false@de_res+gxh@deid+012"
         }
       }, {
-        "title": "APP也优雅",
-        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/03087bf40ad162d9825cf83317dfa9ec8a13cd6b.jpg",
-        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/4b90f603738da9772d015da3b551f8198618e308.jpg",
+        "title": "奇闻轶事",
+        "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/1b4c510fd9f9d72a3c0ec821d22a2834349bbba0.jpg",
+        "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/562c11dfa9ec8a135aba8e68f203918fa1ecc092.jpg",
         "link_info": {
           "type": 16,
-          "title": "APP也优雅",
-          "url": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_10028\u0026action=generalboard",
-          "fParam": "softboardcatedynamic@1@3@boardid+board_100_10028@pos+3@is_gxh+true@de_res+gxh@deid+012"
+          "title": "奇闻轶事",
+          "url": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_10016\u0026action=generalboard",
+          "fParam": "softboardcatedynamic@1@3@boardid+board_100_10016@pos+3@is_gxh+false@de_res+gxh@deid+012"
         }
       }, {
         "title": "时政资讯",
@@ -988,7 +988,7 @@
           "type": 16,
           "title": "时政资讯",
           "url": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_10014\u0026action=generalboard",
-          "fParam": "softboardcatedynamic@1@4@boardid+board_100_10014@pos+4@is_gxh+true@de_res+gxh@deid+012"
+          "fParam": "softboardcatedynamic@1@4@boardid+board_100_10014@pos+4@is_gxh+false@de_res+gxh@deid+012"
         }
       }]
     }],

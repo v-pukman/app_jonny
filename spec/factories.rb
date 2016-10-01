@@ -6,17 +6,20 @@ FactoryGirl.define do
     sequence :docid
   end
 
-  factory :baidu_comment, class: 'Baidu::Comment' do
-  end
-
-  factory :baidu_day, class: 'Baidu::Day' do
-  end
-
-  factory :baidu_rank, class: 'Baidu::Rank' do
-  end
-
   factory :baidu_board, class: 'Baidu::Board' do
+    sequence :link do |s|
+      "appsrv?native_api=1&sorttype=soft&boardid=board_#{Time.now.to_i}_#{s}&action=generalboard"
+    end
   end
+
+  # factory :baidu_comment, class: 'Baidu::Comment' do
+  # end
+
+  # factory :baidu_day, class: 'Baidu::Day' do
+  # end
+
+  # factory :baidu_rank, class: 'Baidu::Rank' do
+  # end
 
   factory :baidu_category, class: 'Baidu::Category' do
   end
