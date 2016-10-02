@@ -22,6 +22,27 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
+  let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
+  let(:board) { create :baidu_board, origin_id: 'board_100_0105', sort_type: 'game', action_type: 'generalboard' }
+  describe "#download_apps_from_board" do
+    it "calls handle_preview_info" do
+      allow(service.api).to receive(:get).with(:board, {
+        boardid: board.origin_id,
+        sorttype: board.sort_type,
+        action: board.action_type,
+        pn: 0
+      }).and_return(board_info)
+      allow(service.api).to receive(:get).with(:board, {
+        boardid: board.origin_id,
+        sorttype: board.sort_type,
+        action: board.action_type,
+        pn: 1
+      }).and_return({'result' => { 'data' => [] }})
+      expect(service).to receive(:handle_preview_info).at_least(:once)
+      service.download_apps_from_board board
+    end
+  end
+
 
   describe "#save_app" do
     let(:attrs) { service.build_app_attrs(full_info_source) }
@@ -113,6 +134,12 @@ RSpec.describe Baidu::Service::App do
         service.download_app docid
         expect(app.reload.display_tags).to match_array tags
       end
+    end
+
+    it "write error to log" do
+      allow(service).to receive(:save_app).and_raise StandardError.new 'boom!'
+      expect(Baidu::Log).to receive(:error)
+      service.download_app docid
     end
   end
 

@@ -70,7 +70,7 @@ class Baidu::Service::App < Baidu::Service::Base
     app.save!
     app
   rescue StandardError => e
-    p "download_app error: #{e.message}"
+    Baidu::Log.error self.class, :download_app, e, { docid: docid  }
     nil
   end
 

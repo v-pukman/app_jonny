@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161002075351) do
+ActiveRecord::Schema.define(version: 20161002140102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,5 +260,22 @@ ActiveRecord::Schema.define(version: 20161002075351) do
 
   add_index "baidu_videos", ["app_id"], name: "index_baidu_videos_on_app_id", unique: true, using: :btree
   add_index "baidu_videos", ["origin_id"], name: "index_baidu_videos_on_origin_id", using: :btree
+
+  create_table "logs", force: :cascade do |t|
+    t.string   "level"
+    t.string   "area"
+    t.string   "class_name"
+    t.string   "method_name"
+    t.text     "message"
+    t.json     "context"
+    t.text     "backtrace"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "logs", ["area"], name: "index_logs_on_area", using: :btree
+  add_index "logs", ["class_name"], name: "index_logs_on_class_name", using: :btree
+  add_index "logs", ["level"], name: "index_logs_on_level", using: :btree
+  add_index "logs", ["method_name"], name: "index_logs_on_method_name", using: :btree
 
 end
