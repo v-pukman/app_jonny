@@ -1,11 +1,34 @@
 class Baidu::Service::App < Baidu::Service::Base
-  #def download_apps_from_board board
-  #end
+  def download_apps_from_board board
+    # download board
+    # save each app
+    # repeat until no result
+    page_number = 0
+    next_page = true
+
+    while next_page
+      params = {
+        boardid: board.origin_id,
+        sorttype: board.sort_type,
+        action: board.action_type,
+        pn: page_number
+      }
+      result = api.get :board, params
+      items = result['result']['data']
+      items = items.is_a?(Array) ? items : []
+      items.each do |preview_info|
+        handle_preview_info preview_info
+      end
+
+      next_page = items.any?
+      page_number += 1
+    end
+  end
 
 
   # preview_info example - fixtures/static/baidu/preview_info_source
   #TODO: refactor this previw info usage
-  def save_app_from_preview_info preview_info, additional_data={}
+  def handle_preview_info preview_info, additional_data={}
     preview_info = JSON.parse(preview_info.to_json)
     full_info = nil
     itemdata = preview_info['itemdata']
@@ -16,45 +39,39 @@ class Baidu::Service::App < Baidu::Service::Base
     id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
     app = Baidu::App.where(id_str: id_str).first
     if app.nil?
-      full_info = api.get :app, docid: itemdata['docid']
-      # will check for second time
-      # because sometimes preview info doesnt have all id
-      # also it handles db record dublication error
-      app = save_app build_app_attrs(full_info)
-
-      save_versions app, build_versions_attrs(full_info)
-      save_video app, build_video_attrs(full_info)
-      save_recommend_apps app, build_recommend_apps_attrs(full_info)
-
-      developer = save_developer build_developer_attrs(full_info)
-      app.developer = developer if developer && developer.id
-
-      category = save_category build_category_attrs(full_info)
-      app.category = category if category && category.id
-
-      tags = save_tags build_tags_attrs(full_info)
-      app.tags = tags if tags.any?
-
-      display_tags = save_display_tags build_display_tags_attrs(full_info)
-      app.display_tags = display_tags if display_tags.any?
-
-      app.save!
+      app = download_app itemdata['docid']
     end
 
     #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
-
-    # additional_data
-    # developer
-
-    # 1. versions
-    # 2. permition type
-    # 3. permission guide
-    # 4. tags
-    # 5. game tags
-    # 6. video ?
-    # 7. deloper ?
-    # 8. category ?
     app
+  end
+
+  def download_app docid
+    full_info = api.get :app, docid: docid
+
+    app = save_app build_app_attrs(full_info)
+
+    save_versions app, build_versions_attrs(full_info)
+    save_video app, build_video_attrs(full_info)
+    save_recommend_apps app, build_recommend_apps_attrs(full_info)
+
+    developer = save_developer build_developer_attrs(full_info)
+    app.developer = developer if developer && developer.id
+
+    category = save_category build_category_attrs(full_info)
+    app.category = category if category && category.id
+
+    tags = save_tags build_tags_attrs(full_info)
+    app.tags = tags if tags.any?
+
+    display_tags = save_display_tags build_display_tags_attrs(full_info)
+    app.display_tags = display_tags if display_tags.any?
+
+    app.save!
+    app
+  rescue StandardError => e
+    p "download_app error: #{e.message}"
+    nil
   end
 
   def save_app attrs

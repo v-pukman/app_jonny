@@ -12,6 +12,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :baidu_developer, class: 'Baidu::Developer' do
+    sequence :origin_id
+    sequence :name do |s|
+      "developer##{s}"
+    end
+  end
+
   # factory :baidu_comment, class: 'Baidu::Comment' do
   # end
 
@@ -22,11 +29,21 @@ FactoryGirl.define do
   # end
 
   factory :baidu_category, class: 'Baidu::Category' do
+    sequence :origin_id
+    sequence :name do |s|
+      "category##{s}"
+    end
   end
+
   factory :baidu_tag, class: 'Baidu::Tag' do
+    sequence :name do |s|
+      "tag##{s}"
+    end
   end
 
   factory :baidu_display_tag, class: 'Baidu::DisplayTag' do
-    sequence :name
+    sequence :name do |s|
+      "display_tag##{s}"
+    end
   end
 end

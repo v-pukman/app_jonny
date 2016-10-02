@@ -4,20 +4,29 @@ class Baidu::Board < ActiveRecord::Base
 
   before_validation :set_params, on: :create
 
+  def link_params
+    params = {}
+    self.link.to_s.gsub('appsrv?', '').split('&').each do |param|
+      key = param.split('=')[0]
+      value = param.split('=')[1]
+      params[key.to_sym] = value
+    end
+    params
+  end
+
   private
 
   def set_params
     return if self.link.blank? || (self.origin_id && self.action_type)
-
-    self.link.gsub('appsrv?', '').split('&').each do |link_param|
-      key = link_param.split('=')[0]
-      value = link_param.split('=')[1]
-
-      if (key == 'boardid' || key == 'board') && self.origin_id.blank?
+    link_params.each do |key, value|
+      if (key == :boardid || key == :board) && self.origin_id.blank?
         self.origin_id = value
-      elsif key == 'action' && self.action_type.blank?
+      elsif key == :action && self.action_type.blank?
         self.action_type = value
+      elsif key == :sorttype && self.sort_type.blank?
+        self.sort_type = value
       end
     end
   end
+
 end

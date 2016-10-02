@@ -6,6 +6,7 @@ RSpec.describe Baidu::Service::App do
   let!(:service) { Baidu::Service::App.new }
   let(:app) { create :baidu_app }
   let(:preview_info_source) { json_fixture('static/baidu/preview_info_source--doudizhu.json') }
+  let(:docid) { preview_info_source['itemdata']['docid'] }
   let(:full_info_source) { json_vcr_fixture('baidu/get_app--doudizhu.yml') }
   # all data
   let(:data_info) { service.fetch_data_info(full_info_source) }
@@ -29,6 +30,12 @@ RSpec.describe Baidu::Service::App do
       app = service.save_app(attrs)
       expect(app.persisted?).to eq true
     end
+    it "returns already saved app" do
+      app = create :baidu_app, app_type: attrs['app_type'], packageid: attrs['packageid'], groupid: attrs['groupid'], docid: attrs['docid']
+      expect(app.persisted?).to eq true
+      app2 = service.save_app attrs
+      expect(app2).to eq app
+    end
     it "updates created app" do
       app = create :baidu_app, attrs
       new_brief = 'awesome game!'
@@ -47,48 +54,64 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
-  describe "#save_app_from_preview_info" do
+  describe "#handle_preview_info" do
     let(:itemdata) { preview_info_source['itemdata'] }
     let(:id_str) { Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid']) }
     let(:app) { create :baidu_app }
     it "return nil when no docid" do
       preview_info_source['itemdata'].delete('docid')
-      app = service.save_app_from_preview_info preview_info_source
+      app = service.handle_preview_info preview_info_source
       expect(app).to eq nil
     end
     it "return nil when itemdata is not Hash" do
       preview_info_source['itemdata'] = []
-      app = service.save_app_from_preview_info preview_info_source
+      app = service.handle_preview_info preview_info_source
       expect(app).to eq nil
     end
-    it "doesnt request data when app exist" do
-      app = create :baidu_app, app_type: itemdata['type'], packageid: itemdata['packageid'], groupid: itemdata['groupid'], docid: itemdata['docid']
-      expect(app.persisted?).to eq true
-      expect(service).to_not receive(:save_app)
-      service.save_app_from_preview_info preview_info_source
-    end
-    it "calls save_app when app is not created" do
-      VCR.use_cassette("baidu/get_app--doudizhu") do
-        expect(service).to receive(:save_app).and_return(app)
-        service.save_app_from_preview_info preview_info_source
+  end
+
+  describe "#download_app" do
+    context "when save app" do
+      after do
+        service.download_app docid
       end
+      it { expect(service).to receive(:save_app).and_return(app) }
+      it { expect(service).to receive(:save_versions) }
+      it { expect(service).to receive(:save_video) }
+      it { expect(service).to receive(:save_recommend_apps) }
+      it { expect(service).to receive(:save_developer) }
+      it { expect(service).to receive(:save_category) }
+      it { expect(service).to receive(:save_tags).and_return([]) }
+      it { expect(service).to receive(:save_display_tags).and_return([]) }
     end
-    it "calls save_versions" do
-      VCR.use_cassette("baidu/get_app--doudizhu") do
-        expect(service).to receive(:save_versions)
-        service.save_app_from_preview_info preview_info_source
+
+    context "when update dependencies" do
+      before do
+        allow(service).to receive(:save_app).and_return(app)
       end
-    end
-    it "calls save_developer" do
-      VCR.use_cassette("baidu/get_app--doudizhu") do
-        expect(service).to receive(:save_developer)
-        service.save_app_from_preview_info preview_info_source
+      it "updates developer" do
+        developer = create :baidu_developer
+        allow(service).to receive(:save_developer).and_return(developer)
+        service.download_app docid
+        expect(app.reload.developer).to eq developer
       end
-    end
-    it "calls save_category" do
-      VCR.use_cassette("baidu/get_app--doudizhu") do
-        expect(service).to receive(:save_category)
-        service.save_app_from_preview_info preview_info_source
+      it "update category" do
+        cat = create :baidu_category
+        allow(service).to receive(:save_category).and_return(cat)
+        service.download_app docid
+        expect(app.reload.category).to eq cat
+      end
+      it "update tags" do
+        tags = create_list :baidu_tag, 2
+        allow(service).to receive(:save_tags).and_return(tags)
+        service.download_app docid
+        expect(app.reload.tags).to match_array tags
+      end
+      it "update display tags" do
+        tags = create_list :baidu_display_tag, 2
+        allow(service).to receive(:save_display_tags).and_return(tags)
+        service.download_app docid
+        expect(app.reload.display_tags).to match_array tags
       end
     end
   end

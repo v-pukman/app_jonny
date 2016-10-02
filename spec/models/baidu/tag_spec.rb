@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Baidu::Tag, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:tag) { create :baidu_tag }
+
+  it "has a factory" do
+    expect(tag.persisted?).to eq true
+  end
 end
