@@ -40,19 +40,25 @@ RSpec.describe Baidu::Service::App do
 
   describe "#download_apps_from_board" do
     let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
-    let(:board) { create :baidu_board, origin_id: 'board_100_0105', sort_type: 'game', action_type: 'generalboard' }
+    let(:origin_id) { 'board_100_0105' }
+    let(:sort_type) { 'game' }
+    let(:action_type) { 'generalboard' }
+    let(:link) { "appsrv?native_api=1&sorttype=#{sort_type}&boardid=#{origin_id}&action=#{action_type}" }
+    let(:board) { create :baidu_board, link: link }
     it "calls handle_preview_info" do
       allow(service.api).to receive(:get).with(:board, {
         boardid: board.origin_id,
         sorttype: board.sort_type,
         action: board.action_type,
-        pn: 0
+        pn: 0,
+        native_api: "1"
       }).and_return(board_info)
       allow(service.api).to receive(:get).with(:board, {
         boardid: board.origin_id,
         sorttype: board.sort_type,
         action: board.action_type,
-        pn: 1
+        pn: 1,
+        native_api: "1"
       }).and_return({'result' => { 'data' => [] }})
       expect(service).to receive(:handle_preview_info).at_least(:once)
       service.download_apps_from_board board

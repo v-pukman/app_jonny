@@ -120,6 +120,7 @@ class Baidu::ApiClient
   def default_params default_params_name
     params = original_default_params default_params_name
 
+    # change device id
     original_uid = params['uid']
     new_uid = generate_uid 69
     new_pu = params['pu'].split(',').map {|p| p.include?('cuid@') ? "cuid@#{new_uid[0...42]}#{generate_uid(31)}" : p }.join(',')

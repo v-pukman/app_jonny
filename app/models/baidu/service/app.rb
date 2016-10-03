@@ -1,5 +1,7 @@
 class Baidu::Service::App < Baidu::Service::Base
   def download_apps_from_board board
+    return if board.origin_id.blank?
+
     page_number = 0
     next_page = true
 
@@ -10,7 +12,10 @@ class Baidu::Service::App < Baidu::Service::Base
         action: board.action_type,
         pn: page_number
       }
-      result = api.get :board, params
+      params_from_link = board.link_params.keep_if {|key| !params.keys.include?(key) }
+      params_from_link.delete(:board) # remove boardid dublicat
+
+      result = api.get :board, params.merge(params_from_link)
       items = result['result']['data']
       items = items.is_a?(Array) ? items : []
       items.each do |preview_info|
