@@ -22,9 +22,25 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
-  let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
-  let(:board) { create :baidu_board, origin_id: 'board_100_0105', sort_type: 'game', action_type: 'generalboard' }
+  describe "#fetch_data_info" do
+    let(:data_info) { service.fetch_data_info full_info_source }
+    it "retruns hash with data" do
+      expect(data_info.is_a?(Hash)).to eq true
+      expect(data_info.keys.include?('base_info')).to eq true
+    end
+  end
+
+  describe "#fetch_base_info" do
+    let(:base_info) { service.fetch_base_info full_info_source }
+    it "returns app info" do
+      expect(base_info['docid']).to_not eq nil
+      expect(base_info['sname']).to_not eq nil
+    end
+  end
+
   describe "#download_apps_from_board" do
+    let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
+    let(:board) { create :baidu_board, origin_id: 'board_100_0105', sort_type: 'game', action_type: 'generalboard' }
     it "calls handle_preview_info" do
       allow(service.api).to receive(:get).with(:board, {
         boardid: board.origin_id,
@@ -402,6 +418,21 @@ RSpec.describe Baidu::Service::App do
   #     expect(attrs).to eq data_info['recommend_info'].map{|d| {name: d['recommend_title']} }
   #   end
   # end
+
+  describe "#build_app_attrs" do
+    let(:attrs) { service.build_app_attrs(full_info_source) }
+    let(:base_info) { service.fetch_base_info full_info_source }
+    it "fixes names of few fields" do
+      expect(attrs['today_str_download']).to eq base_info['today_strDownload']
+      expect(attrs['now_download']).to eq base_info['nowDownload']
+      expect(attrs['app_type']).to eq base_info['type']
+    end
+    it "keep all fields of app model" do
+      keys =  base_info.keep_if {|a| Baidu::App.column_names.include?(a.to_s)}.keys
+      keys = keys + ['today_str_download', 'now_download', 'app_type']
+      expect(attrs.keys).to match_array keys
+    end
+  end
 
   describe "#build_recommend_apps_attrs" do
     let(:attrs) { service.build_recommend_apps_attrs(full_info_source) }

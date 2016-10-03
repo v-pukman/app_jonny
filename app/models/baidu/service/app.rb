@@ -1,8 +1,5 @@
 class Baidu::Service::App < Baidu::Service::Base
   def download_apps_from_board board
-    # download board
-    # save each app
-    # repeat until no result
     page_number = 0
     next_page = true
 
@@ -23,27 +20,6 @@ class Baidu::Service::App < Baidu::Service::Base
       next_page = items.any?
       page_number += 1
     end
-  end
-
-
-  # preview_info example - fixtures/static/baidu/preview_info_source
-  #TODO: refactor this previw info usage
-  def handle_preview_info preview_info, additional_data={}
-    preview_info = JSON.parse(preview_info.to_json)
-    full_info = nil
-    itemdata = preview_info['itemdata']
-    if itemdata.nil? || !itemdata.is_a?(Hash) || itemdata['docid'].nil?
-      return nil
-    end
-
-    id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
-    app = Baidu::App.where(id_str: id_str).first
-    if app.nil?
-      app = download_app itemdata['docid']
-    end
-
-    #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
-    app
   end
 
   def download_app docid
@@ -71,6 +47,32 @@ class Baidu::Service::App < Baidu::Service::Base
     app
   rescue StandardError => e
     Baidu::Log.error self.class, :download_app, e, { docid: docid  }
+    nil
+  end
+
+  ######################
+  ### helper methods ###
+  ######################
+
+  # preview_info example - fixtures/static/baidu/preview_info_source
+  def handle_preview_info preview_info, additional_data={}
+    preview_info = JSON.parse(preview_info.to_json)
+    full_info = nil
+    itemdata = preview_info['itemdata']
+    if itemdata.nil? || !itemdata.is_a?(Hash) || itemdata['docid'].nil?
+      return nil
+    end
+
+    id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
+    app = Baidu::App.where(id_str: id_str).first
+    if app.nil?
+      app = download_app itemdata['docid']
+    end
+
+    #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
+    app
+  rescue StandardError => e
+    Baidu::Log.error self.class, :handle_preview_info, e, { preview_info: preview_info }
     nil
   end
 
@@ -105,11 +107,11 @@ class Baidu::Service::App < Baidu::Service::Base
         version = app.versions.where(id_str: id_str)
         version.update_attributes(attrs)
       rescue StandardError => e
-        # add log
+        Baidu::Log.error self.class, :save_versions, e
       end
     end
   rescue StandardError => e
-    # add log
+    Baidu::Log.error self.class, :save_versions, e
   end
 
   def save_developer developer_attrs
@@ -124,7 +126,7 @@ class Baidu::Service::App < Baidu::Service::Base
     developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
     developer
   rescue StandardError => e
-    #add log
+    Baidu::Log.error self.class, :save_developer, e
     nil
   end
 
@@ -144,6 +146,7 @@ class Baidu::Service::App < Baidu::Service::Base
   rescue ActiveRecord::RecordNotUnique
     app.video.reload
   rescue StandardError => e
+    Baidu::Log.error self.class, :save_video, e
     nil
   end
 
@@ -159,14 +162,14 @@ class Baidu::Service::App < Baidu::Service::Base
     category = Baidu::Category.where(origin_id: category_attrs[:origin_id]).first
     category
   rescue StandardError => e
-    # add log
+    Baidu::Log.error self.class, :save_category, e
     nil
   end
 
   def save_tags tags_attrs
     tags_attrs.map {|tag| Baidu::Tag.where(name: tag[:name]).first_or_create }
   rescue StandardError => e
-    # add log
+    Baidu::Log.error self.class, :save_tags, e
     []
   end
 
@@ -180,23 +183,56 @@ class Baidu::Service::App < Baidu::Service::Base
         tag = Baidu::DisplayTag.where(name: tag_attrs[:name], content: tag_attrs[:content], content_json: tag_attrs[:content_json].to_s).first
         tag
       rescue StandardError => e
+        Baidu::Log.error self.class, :save_display_tags, e
         nil
       end
     end.compact
   rescue StandardError => e
+    Baidu::Log.error self.class, :save_display_tags, e
     []
+  end
+
+  def save_recommend_apps app, recommend_apps_attrs
+    recommend_apps_attrs.each do |attrs|
+      begin
+        group = nil
+        begin
+          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first_or_create
+        rescue ActiveRecord::RecordNotUnique
+          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first
+        end
+
+        recommend_app = app.recommend_apps.where(recommend_group_id: group.id, packageid: attrs[:packageid], docid: attrs[:docid]).first
+        if recommend_app.nil?
+          recommend_app = app.recommend_apps.build({
+            sname: attrs[:sname],
+            app_type: attrs[:app_type],
+            packageid: attrs[:packageid],
+            groupid: attrs[:groupid],
+            docid: attrs[:docid],
+            recommend_group_id: group.id,
+            recommend: attrs[:recommend]
+          })
+          recommend_app.save!
+        end
+      rescue ActiveRecord::RecordNotUnique
+        # don't need to update
+      rescue StandardError => e
+        Baidu::Log.error self.class, :save_recommend_apps, e
+      end #begin end
+    end #each end
+  rescue StandardError => e
+    Baidu::Log.error self.class, :save_recommend_apps, e
   end
 
   def fetch_data_info full_info
     JSON.parse(full_info.to_json)['result']['data']
   end
 
-  #TODO: tests!
   def fetch_base_info full_info
     fetch_data_info(full_info)['base_info']
   end
 
-  #TODO: tests!
   def build_app_attrs full_info
     data = fetch_base_info full_info
     full_data = fetch_base_info full_info #pointer fix
@@ -205,19 +241,6 @@ class Baidu::Service::App < Baidu::Service::Base
     attrs['today_str_download'] = full_data['today_strDownload']
     attrs['now_download'] = full_data['nowDownload']
     attrs['app_type'] = full_data['type']
-
-    #attrs['search_position'] = search_position if search_position
-    #attrs['in_board_position'] = in_board_position if in_board_position
-    #attrs['baidu_game_board_id'] = additional_data[:baidu_game_board_id] if additional_data[:baidu_game_board_id]
-    #attrs['q_app_id'] = additional_data[:q_app_id] if additional_data[:q_app_id]
-    #attrs['rank_position'] = additional_data[:rank_position] if additional_data[:rank_position]
-
-    #if full_data['dev_display']
-    #  attrs['dev_id'] = full_data['dev_display']['dev_id']
-    #  attrs['dev_name'] = full_data['dev_display']['dev_name']
-    #  attrs['dev_score'] = full_data['dev_display']['dev_score']
-    #  attrs['dev_level'] = full_data['dev_display']['dev_level']
-    #end
 
     attrs
   end
@@ -406,37 +429,4 @@ class Baidu::Service::App < Baidu::Service::Base
     apps
   end
 
-  def save_recommend_apps app, recommend_apps_attrs
-    recommend_apps_attrs.each do |attrs|
-      begin
-        group = nil
-        begin
-          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first_or_create
-        rescue ActiveRecord::RecordNotUnique
-          group = Baidu::RecommendGroup.where(name: attrs[:group_name]).first
-        end
-
-        recommend_app = app.recommend_apps.where(recommend_group_id: group.id, packageid: attrs[:packageid], docid: attrs[:docid]).first
-        if recommend_app.nil?
-          recommend_app = app.recommend_apps.build({
-            sname: attrs[:sname],
-            app_type: attrs[:app_type],
-            packageid: attrs[:packageid],
-            groupid: attrs[:groupid],
-            docid: attrs[:docid],
-            recommend_group_id: group.id,
-            recommend: attrs[:recommend]
-          })
-          recommend_app.save!
-        end
-      rescue ActiveRecord::RecordNotUnique
-        # don't need to update
-      rescue StandardError => e
-        # log error
-      end
-    end
-  end
-
-  #TODO: reorder methods
-  # if some resource is not valid it must don't stop app save
 end
