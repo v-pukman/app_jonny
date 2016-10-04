@@ -10,6 +10,7 @@ class CreateBaiduApps < ActiveRecord::Migration
 
       t.string :package
       t.string :sname
+      #t.string :source
       t.text :icon
       t.string :iconhdpi
 
@@ -46,7 +47,6 @@ class CreateBaiduApps < ActiveRecord::Migration
 
 
       t.string :platform_version
-      t.string :sourcename
       t.string :fee_display
       t.integer :aladdin_flag
 

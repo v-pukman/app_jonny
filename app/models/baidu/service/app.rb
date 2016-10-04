@@ -4,6 +4,7 @@ class Baidu::Service::App < Baidu::Service::Base
 
     page_number = 0
     next_page = true
+    count = 0
 
     while next_page
       params = {
@@ -19,17 +20,57 @@ class Baidu::Service::App < Baidu::Service::Base
       items = result['result']['data']
       items = items.is_a?(Array) ? items : []
       items.each do |preview_info|
-        handle_preview_info preview_info
+        count += 1
+        save_item preview_info
       end
 
       next_page = items.any?
       page_number += 1
     end
+
+    #puts "source items count #{count}"
   end
 
   def download_app docid
     full_info = api.get :app, docid: docid
+    app = save_app_stack full_info
+    app
+  rescue StandardError => e
+    Baidu::Log.error self.class, :download_app, e, { docid: docid  }
+    nil
+  end
 
+  ######################
+  ### helper methods ###
+  ######################
+
+  # preview_info example - fixtures/static/baidu/preview_info_source
+  def save_item preview_info, additional_data={}
+    preview_info = JSON.parse(preview_info.to_json)
+    full_info = nil
+    itemdata = preview_info['itemdata']
+    if itemdata.nil? || !itemdata.is_a?(Hash) || itemdata['docid'].nil?
+      puts "  not itemdata"
+      return nil
+    end
+
+    id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
+    app = Baidu::App.where(id_str: id_str).first
+    if app.nil?
+      app = download_app itemdata['docid']
+    else
+      #puts "app already saved"
+    end
+
+    #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
+    app
+  rescue StandardError => e
+    Baidu::Log.error self.class, :handle_preview_info, e, { preview_info: preview_info }
+    nil
+  end
+
+  # saves app with all its relation models from full_info json
+  def save_app_stack full_info
     app = save_app build_app_attrs(full_info)
 
     save_versions app, build_versions_attrs(full_info)
@@ -42,6 +83,9 @@ class Baidu::Service::App < Baidu::Service::Base
     category = save_category build_category_attrs(full_info)
     app.category = category if category && category.id
 
+    source = save_source build_source_attrs(full_info)
+    app.source = source if source && source.id
+
     tags = save_tags build_tags_attrs(full_info)
     app.tags = tags if tags.any?
 
@@ -50,35 +94,47 @@ class Baidu::Service::App < Baidu::Service::Base
 
     app.save!
     app
-  rescue StandardError => e
-    Baidu::Log.error self.class, :download_app, e, { docid: docid  }
-    nil
   end
 
-  ######################
-  ### helper methods ###
-  ######################
+  ###################################
+  ### app and its relation models ###
+  ###################################
 
-  # preview_info example - fixtures/static/baidu/preview_info_source
-  def handle_preview_info preview_info, additional_data={}
-    preview_info = JSON.parse(preview_info.to_json)
-    full_info = nil
-    itemdata = preview_info['itemdata']
-    if itemdata.nil? || !itemdata.is_a?(Hash) || itemdata['docid'].nil?
-      return nil
-    end
+  def fetch_data_info full_info
+    JSON.parse(full_info.to_json)['result']['data']
+  end
 
-    id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
-    app = Baidu::App.where(id_str: id_str).first
-    if app.nil?
-      app = download_app itemdata['docid']
-    end
+  # app info is located in base_info
+  def fetch_base_info full_info
+    fetch_data_info(full_info)['base_info']
+  end
 
-    #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
-    app
-  rescue StandardError => e
-    Baidu::Log.error self.class, :handle_preview_info, e, { preview_info: preview_info }
-    nil
+  def fetch_versions_info full_info
+    base_info = fetch_base_info(full_info)
+    #1. get list
+    versions = base_info['app_moreversion']
+    #2. add current varsion
+    curr_version = {
+      "version" => base_info['versionname'],
+      "content": [{
+        "packageid": base_info['packageid'],
+        "groupid": base_info['groupid'],
+        "docid": base_info['docid'],
+        "sname": base_info['sname'],
+        "size": base_info['size'],
+        "updatetime": base_info['updatetime'],
+        "versioncode": base_info['versioncode'],
+        "sourcename": base_info['sourcename'],
+        "type": base_info['type'],
+        "all_download_pid": base_info['all_download_pid'],
+        "strDownload": base_info['strDownload'],
+        "display_score": base_info['display_score'],
+        "all_download": base_info['all_download']
+      }],
+      "versioncode": base_info['versioncode']
+    }
+    versions << curr_version.deep_stringify_keys
+    versions
   end
 
   def save_app attrs
@@ -120,6 +176,7 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def save_developer developer_attrs
+    return nil if developer_attrs[:origin_id].blank? #some apps has no data about developer
     developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
     if developer.nil?
       developer = Baidu::Developer.create!(developer_attrs)
@@ -136,7 +193,7 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def save_video app, video_attrs
-    if video_attrs[:origin_id]
+    if video_attrs[:origin_id].present?
       video = app.video
       if video.nil?
         video = app.build_video(video_attrs)
@@ -230,12 +287,18 @@ class Baidu::Service::App < Baidu::Service::Base
     Baidu::Log.error self.class, :save_recommend_apps, e
   end
 
-  def fetch_data_info full_info
-    JSON.parse(full_info.to_json)['result']['data']
-  end
-
-  def fetch_base_info full_info
-    fetch_data_info(full_info)['base_info']
+  def save_source source_attrs
+    source = Baidu::Source.where(name: source_attrs[:name]).first
+    if source.nil?
+      source = Baidu::Source.new(source_attrs)
+      source.save!
+    end
+    source
+  rescue ActiveRecord::RecordNotUnique
+    source = Baidu::Source.where(name: source_attrs[:name]).first
+    source
+  rescue StandardError => e
+    Baidu::Log.error self.class, :save_source, e
   end
 
   def build_app_attrs full_info
@@ -248,34 +311,6 @@ class Baidu::Service::App < Baidu::Service::Base
     attrs['app_type'] = full_data['type']
 
     attrs
-  end
-
-  def fetch_versions_info full_info
-    base_info = fetch_base_info(full_info)
-    #1. get list
-    versions = base_info['app_moreversion']
-    #2. add current varsion
-    curr_version = {
-      "version" => base_info['versionname'],
-      "content": [{
-        "packageid": base_info['packageid'],
-        "groupid": base_info['groupid'],
-        "docid": base_info['docid'],
-        "sname": base_info['sname'],
-        "size": base_info['size'],
-        "updatetime": base_info['updatetime'],
-        "versioncode": base_info['versioncode'],
-        "sourcename": base_info['sourcename'],
-        "type": base_info['type'],
-        "all_download_pid": base_info['all_download_pid'],
-        "strDownload": base_info['strDownload'],
-        "display_score": base_info['display_score'],
-        "all_download": base_info['all_download']
-      }],
-      "versioncode": base_info['versioncode']
-    }
-    versions << curr_version.deep_stringify_keys
-    versions
   end
 
   def build_versions_attrs full_info
@@ -432,6 +467,11 @@ class Baidu::Service::App < Baidu::Service::Base
       end
     end
     apps
+  end
+
+  def build_source_attrs full_info
+    base_info = fetch_base_info full_info
+    { name: base_info['sourcename'] }
   end
 
 end

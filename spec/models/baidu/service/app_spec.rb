@@ -45,7 +45,7 @@ RSpec.describe Baidu::Service::App do
     let(:action_type) { 'generalboard' }
     let(:link) { "appsrv?native_api=1&sorttype=#{sort_type}&boardid=#{origin_id}&action=#{action_type}" }
     let(:board) { create :baidu_board, link: link }
-    it "calls handle_preview_info" do
+    it "calls save_item" do
       allow(service.api).to receive(:get).with(:board, {
         boardid: board.origin_id,
         sorttype: board.sort_type,
@@ -60,7 +60,7 @@ RSpec.describe Baidu::Service::App do
         pn: 1,
         native_api: "1"
       }).and_return({'result' => { 'data' => [] }})
-      expect(service).to receive(:handle_preview_info).at_least(:once)
+      expect(service).to receive(:save_item).at_least(:once)
       service.download_apps_from_board board
     end
   end
@@ -97,26 +97,42 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
-  describe "#handle_preview_info" do
+  describe "#save_item" do
     let(:itemdata) { preview_info_source['itemdata'] }
     let(:id_str) { Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid']) }
     let(:app) { create :baidu_app }
     it "return nil when no docid" do
       preview_info_source['itemdata'].delete('docid')
-      app = service.handle_preview_info preview_info_source
+      app = service.save_item preview_info_source
       expect(app).to eq nil
     end
     it "return nil when itemdata is not Hash" do
       preview_info_source['itemdata'] = []
-      app = service.handle_preview_info preview_info_source
+      app = service.save_item preview_info_source
       expect(app).to eq nil
     end
   end
 
   describe "#download_app" do
+    it "calls api to get app" do
+      expect(service.api).to receive(:get).with(:app, docid: docid).and_return(full_info_source)
+      service.download_app docid
+    end
+    it "calls save_app_stack" do
+      expect(service).to receive(:save_app_stack)
+      service.download_app docid
+    end
+    it "write error to log" do
+      allow(service).to receive(:save_app_stack).and_raise StandardError.new 'boom!'
+      expect(Baidu::Log).to receive(:error)
+      service.download_app docid
+    end
+  end
+
+  describe "#save_app_stack" do
     context "when save app" do
       after do
-        service.download_app docid
+        service.save_app_stack full_info_source
       end
       it { expect(service).to receive(:save_app).and_return(app) }
       it { expect(service).to receive(:save_versions) }
@@ -126,6 +142,7 @@ RSpec.describe Baidu::Service::App do
       it { expect(service).to receive(:save_category) }
       it { expect(service).to receive(:save_tags).and_return([]) }
       it { expect(service).to receive(:save_display_tags).and_return([]) }
+      it { expect(service).to receive(:save_source) }
     end
 
     context "when update dependencies" do
@@ -135,33 +152,27 @@ RSpec.describe Baidu::Service::App do
       it "updates developer" do
         developer = create :baidu_developer
         allow(service).to receive(:save_developer).and_return(developer)
-        service.download_app docid
+        service.save_app_stack full_info_source
         expect(app.reload.developer).to eq developer
       end
       it "update category" do
         cat = create :baidu_category
         allow(service).to receive(:save_category).and_return(cat)
-        service.download_app docid
+        service.save_app_stack full_info_source
         expect(app.reload.category).to eq cat
       end
       it "update tags" do
         tags = create_list :baidu_tag, 2
         allow(service).to receive(:save_tags).and_return(tags)
-        service.download_app docid
+        service.save_app_stack full_info_source
         expect(app.reload.tags).to match_array tags
       end
       it "update display tags" do
         tags = create_list :baidu_display_tag, 2
         allow(service).to receive(:save_display_tags).and_return(tags)
-        service.download_app docid
+        service.save_app_stack full_info_source
         expect(app.reload.display_tags).to match_array tags
       end
-    end
-
-    it "write error to log" do
-      allow(service).to receive(:save_app).and_raise StandardError.new 'boom!'
-      expect(Baidu::Log).to receive(:error)
-      service.download_app docid
     end
   end
 
@@ -490,6 +501,21 @@ RSpec.describe Baidu::Service::App do
       expect(recommend_app.recommend_group).to eq group
       expect(recommend_app.sname).to eq app_attrs[:sname]
     end
+  end
 
+  describe "#build_source_attrs" do
+    let(:attrs) { service.build_source_attrs full_info_source }
+    it { expect(attrs[:name]).to_not eq nil }
+  end
+
+  describe "#save_source" do
+    let(:attrs) do
+      { name: 'baidu store' }
+    end
+    it "saves source" do
+      result = service.save_source attrs
+      expect(result.is_a?(Baidu::Source)).to eq true
+      expect(result.persisted?).to eq true
+    end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161002140102) do
+ActiveRecord::Schema.define(version: 20161004101724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(version: 20161002140102) do
     t.string   "security"
     t.text     "brief"
     t.string   "platform_version"
-    t.string   "sourcename"
     t.string   "fee_display"
     t.integer  "aladdin_flag"
     t.text     "manual_brief"
@@ -103,6 +102,7 @@ ActiveRecord::Schema.define(version: 20161002140102) do
     t.datetime "updated_at"
     t.integer  "developer_id"
     t.integer  "category_id"
+    t.integer  "source_id"
   end
 
   add_index "baidu_apps", ["app_type"], name: "index_baidu_apps_on_app_type", using: :btree
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20161002140102) do
   add_index "baidu_apps", ["id_str"], name: "index_baidu_apps_on_id_str", unique: true, using: :btree
   add_index "baidu_apps", ["packageid"], name: "index_baidu_apps_on_packageid", using: :btree
   add_index "baidu_apps", ["sname"], name: "index_baidu_apps_on_sname", using: :btree
+  add_index "baidu_apps", ["source_id"], name: "index_baidu_apps_on_source_id", using: :btree
 
   create_table "baidu_apps_display_tags", force: :cascade do |t|
     t.integer "display_tag_id"
@@ -209,6 +210,14 @@ ActiveRecord::Schema.define(version: 20161002140102) do
   end
 
   add_index "baidu_recommend_groups", ["name"], name: "index_baidu_recommend_groups_on_name", unique: true, using: :btree
+
+  create_table "baidu_sources", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "baidu_sources", ["name"], name: "index_baidu_sources_on_name", unique: true, using: :btree
 
   create_table "baidu_tags", force: :cascade do |t|
     t.string   "name"

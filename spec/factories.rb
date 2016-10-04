@@ -46,4 +46,8 @@ FactoryGirl.define do
       "display_tag##{s}"
     end
   end
+
+  factory :baidu_source, class: 'Baidu::Source' do
+    sequence :name
+  end
 end
