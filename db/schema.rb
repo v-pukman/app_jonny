@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 20161004101724) do
     t.integer  "online_flag"
     t.json     "tag_concept_rp"
     t.integer  "mtc_status"
-    t.string   "lifeservice"
+    t.json     "lifeservice"
     t.string   "inner_info"
     t.string   "coupon"
     t.text     "screenshots",                      default: [], array: true

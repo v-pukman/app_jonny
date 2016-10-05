@@ -40,7 +40,11 @@ class Log < ActiveRecord::Base
   private
 
   def trace_to_log_file
-    Rails.logger.error "#LOG ##{self.level.to_s.upcase} ************************************"
+    if self.level.to_s == ERROR_LEVEL
+      Rails.logger.error "#LOG #ERROR #{'X'*36}"
+    else
+      Rails.logger.error "#LOG ##{self.level.to_s.upcase} #{'*'*36}"
+    end
     Rails.logger.error "#{self.class_name}/#{self.method_name}"
     Rails.logger.error self.message
     Rails.logger.error (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")
@@ -49,7 +53,11 @@ class Log < ActiveRecord::Base
 
   def trace_to_console
     if Rails.env.development?
-      puts "#LOG ##{self.level.to_s.upcase} ************************************"
+      if self.level.to_s == ERROR_LEVEL
+        puts "#LOG #ERROR #{'X'*36}"
+      else
+        puts "#LOG ##{self.level.to_s.upcase} #{'*'*36}"
+      end
       puts "#{self.class_name}/#{self.method_name}"
       puts self.message
       puts (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")

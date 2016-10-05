@@ -70,7 +70,7 @@ class CreateBaiduApps < ActiveRecord::Migration
 
       t.json :tag_concept_rp
       t.integer :mtc_status
-      t.string :lifeservice
+      t.json :lifeservice
       #t.string :video_videourl
       #t.string :video_playcount
       #t.string :video_image
