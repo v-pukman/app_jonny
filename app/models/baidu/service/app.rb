@@ -4,7 +4,10 @@ class Baidu::Service::App < Baidu::Service::Base
 
     page_number = 0
     next_page = true
-    count = 0
+
+    # some stats
+    items_count = 0
+    saved_count = 0
 
     while next_page
       params = {
@@ -20,15 +23,17 @@ class Baidu::Service::App < Baidu::Service::Base
       items = result['result']['data']
       items = items.is_a?(Array) ? items : []
       items.each do |preview_info|
-        count += 1
-        save_item preview_info
+        app = save_item preview_info
+
+        items_count += 1
+        saved_count += 1 if app && app.id
       end
 
       next_page = items.any?
       page_number += 1
     end
 
-    #puts "source items count #{count}"
+    Baidu::Log.info self.class, :download_apps_from_board, 'download finished', { boardid: board.origin_id, items_count: items_count, saved_count: saved_count }
   end
 
   def download_app docid
@@ -46,11 +51,10 @@ class Baidu::Service::App < Baidu::Service::Base
 
   # preview_info example - fixtures/static/baidu/preview_info_source
   def save_item preview_info, additional_data={}
-    preview_info = JSON.parse(preview_info.to_json)
     full_info = nil
-    itemdata = preview_info['itemdata']
-    if itemdata.nil? || !itemdata.is_a?(Hash) || itemdata['docid'].nil?
-      puts "  not itemdata"
+    itemdata = fetch_itemdata_info preview_info
+    if !itemdata.is_a?(Hash) || itemdata['docid'].nil?
+      Baidu::Log.info self.class, :save_item, 'itemdata has no app info', preview_info
       return nil
     end
 
@@ -58,14 +62,15 @@ class Baidu::Service::App < Baidu::Service::Base
     app = Baidu::App.where(id_str: id_str).first
     if app.nil?
       app = download_app itemdata['docid']
+      app.update_attributes(build_preview_attrs(preview_info)) if app && app.id
     else
-      #puts "app already saved"
+      Baidu::Log.info self.class, :save_item, 'app already saved', { id_str: id_str }
     end
 
     #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
     app
   rescue StandardError => e
-    Baidu::Log.error self.class, :handle_preview_info, e, { preview_info: preview_info }
+    Baidu::Log.error self.class, :save_item, e, preview_info
     nil
   end
 
@@ -99,6 +104,10 @@ class Baidu::Service::App < Baidu::Service::Base
   ###################################
   ### app and its relation models ###
   ###################################
+
+  def fetch_itemdata_info preview_info
+    JSON.parse(preview_info.to_json)['itemdata']
+  end
 
   def fetch_data_info full_info
     JSON.parse(full_info.to_json)['result']['data']
@@ -168,11 +177,11 @@ class Baidu::Service::App < Baidu::Service::Base
         version = app.versions.where(id_str: id_str)
         version.update_attributes(attrs)
       rescue StandardError => e
-        Baidu::Log.error self.class, :save_versions, e
+        Baidu::Log.error self.class, :save_versions, e, versions_attrs
       end
     end
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_versions, e
+    Baidu::Log.error self.class, :save_versions, e, versions_attrs
   end
 
   def save_developer developer_attrs
@@ -188,7 +197,7 @@ class Baidu::Service::App < Baidu::Service::Base
     developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
     developer
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_developer, e
+    Baidu::Log.error self.class, :save_developer, e, developer_attrs
     nil
   end
 
@@ -208,7 +217,7 @@ class Baidu::Service::App < Baidu::Service::Base
   rescue ActiveRecord::RecordNotUnique
     app.video.reload
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_video, e
+    Baidu::Log.error self.class, :save_video, e, video_attrs
     nil
   end
 
@@ -224,14 +233,14 @@ class Baidu::Service::App < Baidu::Service::Base
     category = Baidu::Category.where(origin_id: category_attrs[:origin_id]).first
     category
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_category, e
+    Baidu::Log.error self.class, :save_category, e, category_attrs
     nil
   end
 
   def save_tags tags_attrs
     tags_attrs.map {|tag| Baidu::Tag.where(name: tag[:name]).first_or_create }
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_tags, e
+    Baidu::Log.error self.class, :save_tags, e, tags_attrs
     []
   end
 
@@ -250,7 +259,7 @@ class Baidu::Service::App < Baidu::Service::Base
       end
     end.compact
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_display_tags, e
+    Baidu::Log.error self.class, :save_display_tags, e, display_tags_attrs
     []
   end
 
@@ -280,11 +289,11 @@ class Baidu::Service::App < Baidu::Service::Base
       rescue ActiveRecord::RecordNotUnique
         # don't need to update
       rescue StandardError => e
-        Baidu::Log.error self.class, :save_recommend_apps, e
+        Baidu::Log.error self.class, :save_recommend_apps, e, attrs
       end #begin end
     end #each end
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_recommend_apps, e
+    Baidu::Log.error self.class, :save_recommend_apps, e, recommend_apps_attrs
   end
 
   def save_source source_attrs
@@ -298,7 +307,7 @@ class Baidu::Service::App < Baidu::Service::Base
     source = Baidu::Source.where(name: source_attrs[:name]).first
     source
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_source, e
+    Baidu::Log.error self.class, :save_source, e, source_attrs
   end
 
   def build_app_attrs full_info
@@ -473,5 +482,27 @@ class Baidu::Service::App < Baidu::Service::Base
     base_info = fetch_base_info full_info
     { name: base_info['sourcename'] }
   end
+
+  # some additional app fields
+  # that's located only in preview
+  def build_preview_attrs preview_info
+    itemdata = fetch_itemdata_info preview_info
+    if itemdata.is_a?(Hash) && itemdata['docid'].present?
+      fields = [
+        :detail_background,
+        :app_gift_title,
+        :score_count,
+        :all_download,
+        :score,
+        :popularity,
+        :ishot,
+        :official_icon_url
+      ]
+      itemdata.keep_if{|k| fields.include?(k.to_sym) }
+    else
+      {}
+    end
+  end
+
 
 end

@@ -10,7 +10,7 @@ class Log < ActiveRecord::Base
     BAIDU_AREA = 'baidu'
   ].freeze
 
-  after_create :trace_to_log_file
+  after_create :trace_to_log_file, :trace_to_console
 
   #TODO: send email?
 
@@ -40,28 +40,20 @@ class Log < ActiveRecord::Base
   private
 
   def trace_to_log_file
-    Rails.logger.error "##### LOG #####"
+    Rails.logger.error "#LOG ##{self.level.to_s.upcase} ************************************"
     Rails.logger.error "#{self.class_name}/#{self.method_name}"
     Rails.logger.error self.message
     Rails.logger.error (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")
     Rails.logger.error self.backtrace
   end
 
-  # def self.log_exception e, args
-  #   extra_info = args[:info]
-
-  #   Rails.logger.error extra_info if extra_info
-  #   Rails.logger.error e.message
-  #   st = e.backtrace.join("\n")
-  #   Rails.logger.error st
-
-  #   extra_info ||= "<NO DETAILS>"
-  #   request = args[:request]
-  #   env = request ? request.env : nil
-  #   if env
-  #     ExceptionNotifier::Notifier.exception_notification(env, e, :data => {:message => "Exception: #{extra_info}"}).deliver
-  #   else
-  #     ExceptionNotifier::Notifier.background_exception_notification(e, :data => {:message => "Exception: #{extra_info}"}).deliver
-  #    end
-  # end
+  def trace_to_console
+    if Rails.env.development?
+      puts "#LOG ##{self.level.to_s.upcase} ************************************"
+      puts "#{self.class_name}/#{self.method_name}"
+      puts self.message
+      puts (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")
+      puts self.backtrace
+    end
+  end
 end

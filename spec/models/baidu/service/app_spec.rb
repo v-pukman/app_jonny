@@ -111,6 +111,15 @@ RSpec.describe Baidu::Service::App do
       app = service.save_item preview_info_source
       expect(app).to eq nil
     end
+    it "calls download_app" do
+      expect(service).to receive(:download_app).and_return(app)
+      service.save_item preview_info_source
+    end
+    it "calls update_attributes" do
+      allow(service).to receive(:download_app).and_return(app)
+      expect(app).to receive(:update_attributes).with(service.build_preview_attrs(preview_info_source))
+      service.save_item preview_info_source
+    end
   end
 
   describe "#download_app" do
@@ -516,6 +525,26 @@ RSpec.describe Baidu::Service::App do
       result = service.save_source attrs
       expect(result.is_a?(Baidu::Source)).to eq true
       expect(result.persisted?).to eq true
+    end
+  end
+
+  describe "#build_preview_attrs" do
+    let(:attrs) { service.build_preview_attrs preview_info_source }
+    it "retruns hash with all nedded fields" do
+      expect(attrs['detail_background']).to_not eq nil
+      expect(attrs['app_gift_title']).to_not eq nil
+      expect(attrs['score_count']).to_not eq nil
+      expect(attrs['all_download']).to_not eq nil
+      expect(attrs['score']).to_not eq nil
+      expect(attrs['popularity']).to_not eq nil
+      expect(attrs['ishot']).to_not eq nil
+      expect(attrs['official_icon_url']).to_not eq nil
+    end
+    context "when preview_info_source has no app info" do
+      let(:attrs) { service.build_preview_attrs({'itemdata' => []}) }
+      it "returns empty hash" do
+         expect(attrs).to eq({})
+      end
     end
   end
 end

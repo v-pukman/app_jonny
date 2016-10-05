@@ -3,7 +3,7 @@ class Baidu::Log
     ::Log.error ::Log::BAIDU_AREA, class_name, method_name, error, context
   end
 
-  def self.info class_name, method_name, error, context={}
-    ::Log.info ::Log::BAIDU_AREA, class_name, method_name, error, context
+  def self.info class_name, method_name, message, context={}
+    ::Log.info ::Log::BAIDU_AREA, class_name, method_name, message, context
   end
 end
