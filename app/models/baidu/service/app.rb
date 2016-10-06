@@ -149,7 +149,7 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def save_app attrs
-    id_str = Baidu::App.build_id_str(attrs['app_type'], attrs['packageid'], attrs['groupid'], attrs['docid'])
+    id_str = Baidu::App.build_id_str_from_attrs attrs
     app = Baidu::App.where(id_str: id_str).first
     if app.nil?
       app = Baidu::App.new(attrs)
@@ -166,7 +166,7 @@ class Baidu::Service::App < Baidu::Service::Base
 
   def save_versions app, versions_attrs
     versions_attrs.each do |attrs|
-      id_str = Baidu::Version.build_id_str_from_attrs(attrs)
+      id_str = Baidu::App.build_id_str_from_attrs attrs
       version = app.versions.where(id_str: id_str).first
       begin
         if version.nil?
@@ -204,18 +204,15 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def save_video app, video_attrs
-    if video_attrs[:origin_id].present?
-      video = app.video
-      if video.nil?
-        video = app.build_video(video_attrs)
-        video.save!
-      else
-        video.update_attributes(video_attrs)
-      end
-      video
+    return nil if video_attrs[:origin_id].blank? #some apps has no video
+    video = app.video
+    if video.nil?
+      video = app.build_video(video_attrs)
+      video.save!
     else
-      nil
+      video.update_attributes(video_attrs)
     end
+    video
   rescue ActiveRecord::RecordNotUnique
     app.video.reload
   rescue StandardError => e

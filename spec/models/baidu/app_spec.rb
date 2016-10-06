@@ -20,6 +20,30 @@ RSpec.describe Baidu::App, type: :model do
     end
   end
 
+  describe ".build_id_str_from_attrs" do
+    let(:app_type) { "soft" }
+    let(:packageid) { 123 }
+    let(:groupid) { 567 }
+    let(:docid) { 985 }
+    let(:attrs) do
+      { app_type: app_type, packageid: packageid, groupid: groupid, docid: docid }
+    end
+    it "returns id with app type and its ids" do
+      id_str = Baidu::App.build_id_str_from_attrs attrs
+      expect(id_str).to eq "#{app_type}_#{packageid}_#{groupid}_#{docid}"
+    end
+
+    context "when attrs with string keys" do
+      let(:attrs_with_string_keys) do
+        { 'app_type' => app_type, 'packageid' => packageid, 'groupid' => groupid, 'docid' => docid }
+      end
+      it "returns id with app type and its ids" do
+        id_str = Baidu::App.build_id_str_from_attrs attrs_with_string_keys
+        expect(id_str).to eq "#{app_type}_#{packageid}_#{groupid}_#{docid}"
+      end
+    end
+  end
+
   it "has many tags" do
     tags = [tag1, tag2]
     app.tags << tags

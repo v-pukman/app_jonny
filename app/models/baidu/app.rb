@@ -1,8 +1,3 @@
-#TODO: what is real string size now? 255 or 191?
-
-# get icon url working
-#URI.decode('http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=100\u0026er\u0026sec=0\u0026di=32fa4b486ef8f5f6d43547762ea02fa9\u0026ref=http%3A%2F%2Fh.hiphotos.bdimg.com\u0026src=http%3A%2F%2Fh.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2F3aee3d6d55fbb2fbb41abaf9494a20a44623dc2d.jpg'.gsub('\u0026', '&'))
-
 class Baidu::App < ActiveRecord::Base
   belongs_to :developer
   belongs_to :category
@@ -21,6 +16,15 @@ class Baidu::App < ActiveRecord::Base
   def self.build_id_str app_type, packageid, groupid, docid
     "#{app_type}_#{packageid}_#{groupid}_#{docid}"
   end
+
+  def self.build_id_str_from_attrs attrs
+    attrs = attrs.clone
+    attrs.symbolize_keys! #deep_symbolize_keys!
+    self.build_id_str attrs[:app_type], attrs[:packageid], attrs[:groupid], attrs[:docid]
+  end
+
+  # get icon url working
+  # URI.decode('http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=100\u0026er\u0026sec=0\u0026di=32fa4b486ef8f5f6d43547762ea02fa9\u0026ref=http%3A%2F%2Fh.hiphotos.bdimg.com\u0026src=http%3A%2F%2Fh.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2F3aee3d6d55fbb2fbb41abaf9494a20a44623dc2d.jpg'.gsub('\u0026', '&'))
 
   private
 
