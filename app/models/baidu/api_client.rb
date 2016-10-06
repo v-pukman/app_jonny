@@ -137,14 +137,13 @@ class Baidu::ApiClient
 
   #Faraday::ConnectionFailed:
   #     execution expired
-
   # JSON::ParserError
 
-  # do we need it for baidu?
+  # disabled for now
   def handle_timeouts
     begin
       yield
-    rescue Faraday::TimeoutError
+    rescue Faraday::TimeoutError #, Faraday::ConnectionFailed
       {}
     end
   end
@@ -164,11 +163,11 @@ class Baidu::ApiClient
   end
 
   def make_api_call method_name, options
-    handle_timeouts do
+    #handle_timeouts do
       handle_caching(method_name, options) do
         send(method_name, options)
       end
-    end
+    #end
   end
 
   def get_option options, key

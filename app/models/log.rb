@@ -45,9 +45,16 @@ class Log < ActiveRecord::Base
     else
       Rails.logger.error "#LOG ##{self.level.to_s.upcase} #{'*'*36}"
     end
+
     Rails.logger.error "#{self.class_name}/#{self.method_name}"
     Rails.logger.error self.message
-    Rails.logger.error (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")
+
+    if self.context.is_a?(Hash)
+      Rails.logger.error self.context.map{|k, v| "#{k}: #{v}" }.join("\n")
+    else
+      Rails.logger.error self.context
+    end
+
     Rails.logger.error self.backtrace
   end
 
@@ -58,9 +65,16 @@ class Log < ActiveRecord::Base
       else
         puts "#LOG ##{self.level.to_s.upcase} #{'*'*36}"
       end
+
       puts "#{self.class_name}/#{self.method_name}"
       puts self.message
-      puts (self.context || {}).map{|k, v| "#{k}: #{v}" }.join("\n")
+
+      if self.context.is_a?(Hash)
+        puts self.context.map{|k, v| "#{k}: #{v}" }.join("\n")
+      else
+        puts self.context
+      end
+
       puts self.backtrace
     end
   end

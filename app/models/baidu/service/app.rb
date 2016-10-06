@@ -34,6 +34,8 @@ class Baidu::Service::App < Baidu::Service::Base
     end
 
     Baidu::Log.info self.class, :download_apps_from_board, 'download finished', { boardid: board.origin_id, items_count: items_count, saved_count: saved_count }
+  rescue StandardError => e
+    Baidu::Log.error self.class, :download_apps_from_board, e, { board: board.inspect }
   end
 
   def download_app docid
@@ -421,7 +423,7 @@ class Baidu::Service::App < Baidu::Service::Base
 
   def build_tags_attrs full_info
     base_info = fetch_base_info full_info
-    base_info['apptags'].map{|tag| {name: tag} }
+    (base_info['apptags'] || []).map{|tag| {name: tag} }
   end
 
   def build_display_tags_attrs full_info
