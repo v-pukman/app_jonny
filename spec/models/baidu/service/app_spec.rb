@@ -98,27 +98,60 @@ RSpec.describe Baidu::Service::App do
   end
 
   describe "#save_item" do
-    let(:itemdata) { preview_info_source['itemdata'] }
-    let(:id_str) { Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid']) }
-    let(:app) { create :baidu_app }
-    it "return nil when no docid" do
-      preview_info_source['itemdata'].delete('docid')
-      app = service.save_item preview_info_source
-      expect(app).to eq nil
+    before do
+      allow(service).to receive(:download_app).and_return(app)
     end
     it "return nil when itemdata is not Hash" do
       preview_info_source['itemdata'] = []
       app = service.save_item preview_info_source
       expect(app).to eq nil
     end
-    it "calls download_app" do
-      expect(service).to receive(:download_app).and_return(app)
-      service.save_item preview_info_source
+    context "when docid is not empty" do
+      it "calls download_app" do
+        expect(service).to receive(:download_app).and_return(app)
+        service.save_item preview_info_source
+      end
+      it "calls update_attributes" do
+        expect(app).to receive(:update_attributes).with(service.build_preview_attrs(preview_info_source))
+        service.save_item preview_info_source
+      end
     end
-    it "calls update_attributes" do
-      allow(service).to receive(:download_app).and_return(app)
-      expect(app).to receive(:update_attributes).with(service.build_preview_attrs(preview_info_source))
-      service.save_item preview_info_source
+    context "when docid is empty" do
+      it "returns nil" do
+        preview_info_source['itemdata'].delete('docid')
+        app = service.save_item preview_info_source
+        expect(app).to eq nil
+      end
+      context "and itemdata has *apps* list (22 datatype)" do
+        let(:preview_info_22) { json_fixture('static/baidu/preview_info--datatype-22.json') }
+        let(:itemdata) { service.fetch_itemdata_info preview_info_22 }
+        let(:apps_count) { itemdata['apps'].count }
+        it { expect(apps_count).to be > 0 }
+        it "calls download_app few times" do
+          expect(service).to receive(:download_app).at_least(apps_count).times
+          service.save_item preview_info_22
+        end
+      end
+      context "and itemdata has *app_data* list (40 datatype)" do
+        let(:preview_info_40) { json_fixture('static/baidu/preview_info--datatype-40.json') }
+        let(:itemdata) { service.fetch_itemdata_info preview_info_40 }
+        let(:apps_count) { itemdata['app_data'].count }
+        it { expect(apps_count).to be > 0 }
+        it "calls download_app few times" do
+          expect(service).to receive(:download_app).at_least(apps_count).times
+          service.save_item preview_info_40
+        end
+      end
+      context "and itemdata has *app* included hash" do
+        let(:preview_info_606) { json_fixture('static/baidu/preview_info--datatype-606.json') }
+        let(:itemdata) { service.fetch_itemdata_info preview_info_606 }
+        let(:docid) { itemdata['app']['docid'] }
+        it { expect(itemdata['app'].is_a?(Hash)).to eq true }
+        it "calls download_app with new data" do
+          expect(service).to receive(:download_app).with(docid)
+          service.save_item preview_info_606
+        end
+      end
     end
   end
 

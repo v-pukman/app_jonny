@@ -1,0 +1,81 @@
+{
+  "datatype": 606,
+  "itemdata": {
+    "imagetype": 1,
+    "app": {
+      "sname": "爱奇艺",
+      "aladdin_flag": "1",
+      "docid": "10050107",
+      "groupid": "4069182",
+      "packageid": "3387500632",
+      "type": "soft",
+      "versionname": "7.9",
+      "versioncode": "80790",
+      "cateid": "506",
+      "size": "24M",
+      "download_url": "http://gdown.baidu.com/data/wisegame/e047f0d11f89c6af/aiqiyi_80790.apk",
+      "updatetime": "2016-09-29",
+      "icon": "http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=80\u0026er\u0026sec=0\u0026di=622b6749d8b6029143b33eeecd2b4cc8\u0026ref=http%3A%2F%2Ff.hiphotos.bdimg.com\u0026src=http%3A%2F%2Ff.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2F1fd98d1001e93901b446c6217cec54e736d1966d.jpg",
+      "download_inner": "http://gdown.baidu.com/data/wisegame/e047f0d11f89c6af/aiqiyi_80790.apk",
+      "signmd5": "2890462483",
+      "package": "com.qiyi.video",
+      "score": "83",
+      "score_count": "273209",
+      "all_download": "9.2亿下载",
+      "platform_version": "4.0",
+      "popu_index": "99",
+      "manual_short_brief": "《惊天魔盗团2》震撼上线全网独播",
+      "today_strDownload": "149万日下载",
+      "yesterday_download_pid": "1621805",
+      "app_gift_title": "",
+      "display_download": "921062222",
+      "support_chip": "0",
+      "f": "subcategame@1@1@catestrategy+adv@boardcate@board_101_20034@1@1@source+NATURAL@boardid+23608@pos+1@searchid+953725917263087041@terminal_type+client@spec+0@sample+adv",
+      "tj": "soft_10050107_3387500632_爱奇艺",
+      "brief": "【还在等什么，萌奇带你看热剧追综艺】冯绍峰马天宇霸气逼人，《幻城》 冰与火的对决直面《中国式关系》生活百态共寻人生价值男神陈伟霆、张艺兴实力出演《老九门》，帅到没朋友当软妹周冬雨遇暖男李易峰，岂能错过《麻雀》哪里走！快来看《我的蠢萌老公》杨洋再次实力撩妹谁说温柔女人最可爱，《撕人订制》带你看应采儿手“撕”男神太阳女神谢娜玩转音乐，《偶滴歌神啊》让你值得期待做好准备，《今夜百乐门》掌门金星将与众喜剧大咖乐翻你的生活搞怪天后小S疯狂逗趣，《姐姐好饿》独特演绎花样美食教你挖坑帮你填，《坑王驾到》跟着郭德纲走不一样的“套路”别错过，好剧还在更新！【想要资源，就来爱奇艺】目不转睛看电影：微微一笑很倾城、寒战2、僵尸世界大战、封神传奇、金钱怪兽日韩综艺享不停：两天一夜、我们结婚了、蒙面歌王、我要开动了、无限挑战内地综艺连连看：我去上学啦、我们相爱吧、欢乐喜剧人、奔跑吧兄弟、十二道锋味电视剧任君挑选：幻城、老九门、中国式关系、麻雀、炮神、灰姑娘与四骑士动漫二次元看这里：名侦探柯南、爆笑的虫子、航海王、猫和老鼠、逃亡兔",
+      "manual_brief": "《惊天魔盗团2》震撼上线全网独播",
+      "md5": "0e3b812de047f0d11f89c6af8bc4efcc",
+      "detail_background": "",
+      "discount_info": "《太阳的后裔》，撩妹宋仲基",
+      "sizeb": 25141404,
+      "firstflag": false,
+      "ishot": true,
+      "popularity": "99",
+      "usenum": "9.2亿人在用",
+      "commentsnum": "273209评论",
+      "tabs": [{
+        "type": 1
+      }, {
+        "type": 2
+      }]
+    },
+    "items": [{
+      "title": "游击英雄",
+      "subtitle": "更新到第12集",
+      "imageurl": "http://pic1.qiyipic.com/image/20160729/b6/c5/a_100028859_m_601_195_260.jpg",
+      "tag_text": "",
+      "btn_text": "播放",
+      "dialog_message": "安装即可播放游击英雄",
+      "versioncode_list": 68,
+      "intent": "video://video?aid=204371501\u0026cid=2\u0026tvid=524614500\u0026order=12\u0026identifier=inappsearch\u0026other=#Intent;action=android.intent.action.qiyivideo.player;component=com.qiyi.video/org.iqiyi.video.activity.PlayerActivity;end"
+    }, {
+      "title": "欧布奥特曼",
+      "subtitle": "更新到第7集",
+      "imageurl": "http://pic9.qiyipic.com/image/20160630/6e/2b/a_100027216_m_601_195_260.jpg",
+      "tag_text": "动作",
+      "btn_text": "播放",
+      "dialog_message": "安装即可播放欧布奥特曼",
+      "versioncode_list": 68,
+      "intent": "video://video?aid=204206601\u0026cid=4\u0026tvid=525581800\u0026order=7\u0026identifier=inappsearch\u0026other=#Intent;action=android.intent.action.qiyivideo.player;component=com.qiyi.video/org.iqiyi.video.activity.PlayerActivity;end"
+    }, {
+      "title": "秀丽江山之长歌行",
+      "subtitle": "更新到第56集",
+      "imageurl": "http://pic5.qiyipic.com/image/20160711/25/85/a_100010917_m_601_m1_195_260.jpg",
+      "tag_text": "言情剧",
+      "btn_text": "播放",
+      "dialog_message": "安装即可播放秀丽江山之长歌行",
+      "versioncode_list": 68,
+      "intent": "video://video?aid=202548801\u0026cid=2\u0026tvid=525394500\u0026order=56\u0026identifier=inappsearch\u0026other=#Intent;action=android.intent.action.qiyivideo.player;component=com.qiyi.video/org.iqiyi.video.activity.PlayerActivity;end"
+    }]
+  }
+}

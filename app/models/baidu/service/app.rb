@@ -35,7 +35,7 @@ class Baidu::Service::App < Baidu::Service::Base
 
     Baidu::Log.info self.class, :download_apps_from_board, 'download finished', { boardid: board.origin_id, items_count: items_count, saved_count: saved_count }
   rescue StandardError => e
-    Baidu::Log.error self.class, :download_apps_from_board, e, { board: board.inspect }
+    Baidu::Log.error self.class, :download_apps_from_board, e, { boardid: board.try(:origin_id) }
   end
 
   def download_app docid
@@ -53,9 +53,28 @@ class Baidu::Service::App < Baidu::Service::Base
 
   # preview_info example - fixtures/static/baidu/preview_info_source
   def save_item preview_info, additional_data={}
-    full_info = nil
     itemdata = fetch_itemdata_info preview_info
-    if !itemdata.is_a?(Hash) || itemdata['docid'].nil?
+
+    if !itemdata.is_a?(Hash)
+      Baidu::Log.info self.class, :save_item, 'itemdata is not hash', preview_info
+      return nil
+    end
+
+    if itemdata['docid'].nil?
+      # handle 22, 40 datatypes
+      included_app_list = itemdata['apps'] || itemdata['app_data']
+      if included_app_list.is_a?(Array)
+        results = included_app_list.map {|i| save_item({'itemdata' => i}, additional_data) }
+        return results.compact.last
+      end
+
+      # handle 606 datatype
+      included_app = itemdata['app']
+      if included_app.is_a?(Hash)
+        result = save_item({ 'itemdata' => included_app }, additional_data)
+        return result
+      end
+
       Baidu::Log.info self.class, :save_item, 'itemdata has no app info', preview_info
       return nil
     end
@@ -484,6 +503,7 @@ class Baidu::Service::App < Baidu::Service::Base
 
   # some additional app fields
   # that's located only in preview
+  # official_icon_url - empty at 22,40,354,606 datatype
   def build_preview_attrs preview_info
     itemdata = fetch_itemdata_info preview_info
     if itemdata.is_a?(Hash) && itemdata['docid'].present?
