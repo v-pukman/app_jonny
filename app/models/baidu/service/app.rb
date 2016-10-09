@@ -60,6 +60,7 @@ class Baidu::Service::App < Baidu::Service::Base
       return nil
     end
 
+    # no docid - no app info
     if itemdata['docid'].nil?
       # handle 22, 40 datatypes
       included_app_list = itemdata['apps'] || itemdata['app_data']

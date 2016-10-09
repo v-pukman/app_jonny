@@ -27,6 +27,7 @@ class Baidu::App < ActiveRecord::Base
   # URI.decode('http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=100\u0026er\u0026sec=0\u0026di=32fa4b486ef8f5f6d43547762ea02fa9\u0026ref=http%3A%2F%2Fh.hiphotos.bdimg.com\u0026src=http%3A%2F%2Fh.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2F3aee3d6d55fbb2fbb41abaf9494a20a44623dc2d.jpg'.gsub('\u0026', '&'))
 
   # popularity = popu_index ?
+  # sourcename can be nil, but not often
 
   private
 
