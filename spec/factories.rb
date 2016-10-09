@@ -25,8 +25,12 @@ FactoryGirl.define do
   # factory :baidu_day, class: 'Baidu::Day' do
   # end
 
-  # factory :baidu_rank, class: 'Baidu::Rank' do
-  # end
+  factory :baidu_rank, class: 'Baidu::Rank' do
+    rank_type Baidu::Rank::SOFT_COMMON_RANK
+    day { Date.today }
+    sequence :rank_number
+    association :app, factory: :baidu_app, app_type: Baidu::App::SOFT_APP
+  end
 
   factory :baidu_category, class: 'Baidu::Category' do
     sequence :origin_id

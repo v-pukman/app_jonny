@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004101724) do
+ActiveRecord::Schema.define(version: 20161009112924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -181,6 +181,23 @@ ActiveRecord::Schema.define(version: 20161004101724) do
 
   add_index "baidu_display_tags", ["name", "content", "content_json"], name: "index_baidu_display_tags_on_name_and_content_and_content_json", unique: true, using: :btree
   add_index "baidu_display_tags", ["name"], name: "index_baidu_display_tags_on_name", using: :btree
+
+  create_table "baidu_ranks", force: :cascade do |t|
+    t.string   "rank_type"
+    t.date     "day"
+    t.integer  "rank_number"
+    t.integer  "app_id"
+    t.jsonb    "info",        default: {}, null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "baidu_ranks", ["app_id"], name: "index_baidu_ranks_on_app_id", using: :btree
+  add_index "baidu_ranks", ["day", "app_id"], name: "index_baidu_ranks_on_day_and_app_id", using: :btree
+  add_index "baidu_ranks", ["day"], name: "index_baidu_ranks_on_day", using: :btree
+  add_index "baidu_ranks", ["info"], name: "index_baidu_ranks_on_info", using: :gin
+  add_index "baidu_ranks", ["rank_type", "day", "app_id"], name: "index_baidu_ranks_on_rank_type_and_day_and_app_id", unique: true, using: :btree
+  add_index "baidu_ranks", ["rank_type"], name: "index_baidu_ranks_on_rank_type", using: :btree
 
   create_table "baidu_recommend_apps", force: :cascade do |t|
     t.integer  "app_id",             limit: 8

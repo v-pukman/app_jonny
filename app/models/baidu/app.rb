@@ -1,4 +1,9 @@
 class Baidu::App < ActiveRecord::Base
+  TYPES = [
+    SOFT_APP = 'soft',
+    GAME_APP = 'game'
+  ].freeze
+
   belongs_to :developer
   belongs_to :category
   belongs_to :source
@@ -7,6 +12,7 @@ class Baidu::App < ActiveRecord::Base
   has_and_belongs_to_many :display_tags
   has_many :recommend_apps
   has_many :versions
+  has_many :ranks
 
   validates_uniqueness_of :id_str
   validates :id_str, :app_type, :packageid, :groupid, :docid, presence: true
