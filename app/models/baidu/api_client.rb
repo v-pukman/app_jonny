@@ -83,6 +83,13 @@ class Baidu::ApiClient
     make_request :get, APPS_URL, :game_ranks, options, [:pn]
   end
 
+  # returns list of apps (soft only) with its rank values
+  ## pn (0..any)
+  def get_soft_ranks options
+    make_request :get, APPS_URL, :soft_ranks, options, [:pn]
+  end
+
+
   private
 
   def connection api_url

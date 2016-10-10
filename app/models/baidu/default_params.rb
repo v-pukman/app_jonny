@@ -334,4 +334,39 @@ class Baidu::DefaultParams
       'ptl' => 'hp'
     }
   end
+
+  # returns list of apps (soft only) with its rank values
+  # pn (0..any)
+  def self.soft_ranks
+    {
+      'uid' => 'guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHiqBuSivYu2U8juC2i_javiTQSSqC',
+      'native_api' => '1',
+      'psize' => '2',
+      'abi' => 'armeabi-v7a',
+      'cll' => '_a2BNguOv8g5ue8r0u28NguG2fSlATgqB',
+      'usertype' => '0',
+      'is_support_webp' => 'true',
+      'ver' => '16790412',
+      'from' => '1000561u',
+      'cct' => 'qivtkjuhVfjgRS8I68v3kYuteug_MHaGq8BgklutVujTM-8OA',
+      'operator' => '460021',
+      'network' => 'WF',
+      'pkname' => 'com.baidu.appsearch',
+      'country' => 'US',
+      'cen' => 'cuid_cut_cua_uid',
+      'gms' => 'true',
+      'platform_version_id' => '15',
+      'province' => 'qiB_k0ihetgCRSf66iSTkjO_eug_MS8LqPSpkluJeflfMBioA',
+      'action' => 'softrank',
+      'pu' => 'cua@_PvjhYa6vhIDJEjPkJAiC_hX2Ng-I28KA3bjB,osname@baiduappsearch,ctv@1,cfrom@100027l,cuid@guvC80PH280kiSuujivpi_afHu_-aSf608SPugaYHi6suviJla-Di_ueBi_Ku2iJguv98y9eB,cut@0ks9RgaU2iyvaXiDzuL08gNXxokk5FqJjkcBB',
+      'language' => 'en',
+      'apn' => '',
+      'crid' => '1476088546521',
+      'pn' => '',
+      'bannert' => '26@27@28@29@30@31@32@43',
+      'cpver' => '1',
+      'rqt' => 'rty',
+      'ptl' => 'hp'
+    }
+  end
 end

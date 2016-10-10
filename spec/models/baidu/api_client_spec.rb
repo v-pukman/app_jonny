@@ -250,6 +250,32 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "get_soft_ranks" do
+    let(:pn) { 0 }
+    let(:options) do
+      { pn: pn }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:soft_ranks).and_return(client.send(:original_default_params, :soft_ranks))
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_soft_ranks") do
+        res = client.get_soft_ranks options
+        expect(res).to_not eq nil
+      end
+    end
+    it "has soft apps data" do
+      VCR.use_cassette("baidu/get_soft_ranks") do
+        res = client.get_soft_ranks options
+        apps = res['result']['data']
+        expect(apps.length).to be > 0
+        expect(apps[0]['itemdata']['docid']).to_not eq nil
+        expect(apps[0]['itemdata']['type']).to eq 'soft'
+        expect(apps[0]['itemdata']['rankingnum']).to_not eq nil
+      end
+    end
+  end
+
   describe "#get" do
     it "calls method" do
       expect(client).to receive(:get_app).with({docid: 123})
