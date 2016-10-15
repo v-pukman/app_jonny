@@ -54,4 +54,10 @@ FactoryGirl.define do
   factory :baidu_source, class: 'Baidu::Source' do
     sequence :name
   end
+
+  factory :log do
+    level Log::ERROR_LEVEL
+    area Log::BAIDU_AREA
+    message 'boom!'
+  end
 end

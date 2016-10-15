@@ -14,6 +14,13 @@ class Log < ActiveRecord::Base
 
   #TODO: send email?
 
+  def self.clear select_options
+    Log.transaction do
+      Log.where(select_options).destroy_all
+    end
+  end
+
+
   def self.write level, area, class_name, method_name, message, backtrace=nil, context={}
     Log.create({
       level: level,

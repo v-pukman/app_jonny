@@ -10,6 +10,10 @@ RSpec.describe Log, type: :model do
     { "docid" => 100 }
   end
 
+  it "has a factory" do
+    log = create :log
+    expect(log.persisted?).to eq true
+  end
 
   describe ".write" do
     let(:message) { 'bang!' }
@@ -48,5 +52,19 @@ RSpec.describe Log, type: :model do
     it { expect(log.level).to eq Log::INFO_LEVEL }
     it { expect(log.message).to eq message }
     it { expect(log.backtrace).to eq nil }
+  end
+
+  describe ".clear" do
+    before do
+      Log.destroy_all
+      create_list :log, 5, area: Log::BAIDU_AREA
+      create_list :log, 10, area: 'any other'
+      expect(Log.count).to eq 15
+    end
+    it "delete logs with passed params" do
+      Log.clear area: Log::BAIDU_AREA
+      expect(Log.where(area: Log::BAIDU_AREA).count).to eq 0
+      expect(Log.where(area: 'any other').count).to eq 10
+    end
   end
 end
