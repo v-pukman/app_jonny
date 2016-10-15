@@ -1,6 +1,4 @@
 class Baidu::Service::Rank < Baidu::Service::Base
-  #TODO: tests!
-
   def download_soft_ranks
     page_number = 0
     next_page = true
@@ -25,21 +23,23 @@ class Baidu::Service::Rank < Baidu::Service::Base
     end
 
     Baidu::Log.info self.class, :download_soft_ranks, 'download finished', { items_count: items_count, saved_count: saved_count }
+  rescue StandardError => e
+    Baidu::Log.error self.class, :download_soft_ranks, e
   end
 
   def save_rank app, rank_attrs
     return nil if app.nil? || app.id.nil?
 
-    rank = app.ranks.where(day: attrs[:day], rank_type: attrs[:rank_type]).first
+    rank = app.ranks.where(day: rank_attrs[:day], rank_type: rank_attrs[:rank_type]).first
     if rank.nil?
-      rank = app.ranks.build(attrs)
+      rank = app.ranks.build(rank_attrs)
       rank.save!
     else
-      # dont update attrs for now
+      # dont update rank_attrs for now
     end
     rank
   rescue ActiveRecord::RecordNotUnique
-    app.ranks.where(day: attrs[:day], rank_type: attrs[:rank_type]).first
+    app.ranks.where(day: rank_attrs[:day], rank_type: rank_attrs[:rank_type]).first
   rescue StandardError => e
     Baidu::Log.error self.class, :save_rank, e, rank_attrs
     nil
