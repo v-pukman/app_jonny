@@ -21,15 +21,18 @@ class Baidu::Service::App < Baidu::Service::Base
 
       result = api.get :board, params.merge(params_from_link)
       items = result['result']['data']
-      items = items.is_a?(Array) ? items : []
+      #items = items.is_a?(Array) ? items : []
+      app_info_count = 0
       items.each do |preview_info|
-        app = save_item preview_info
-
         items_count += 1
-        saved_count += 1 if app && app.id
+        app = save_item preview_info
+        if app.try(:id)
+          saved_count += 1
+          app_info_count += 1
+        end
       end
 
-      next_page = items.any?
+      next_page = app_info_count > 0
       page_number += 1
     end
 
@@ -56,6 +59,16 @@ class Baidu::Service::App < Baidu::Service::Base
     itemdata = fetch_itemdata_info preview_info
 
     if !itemdata.is_a?(Hash)
+      if itemdata.is_a?(Array)
+        # handle 34 datatype (list of board links)
+        if itemdata.count{|i| i.is_a?(Hash) && i['link_info'].is_a?(Hash) } > 0
+          boards_attrs = itemdata.map {|i| {link: i['link_info']['url']} }
+          board_service.save_boards boards_attrs
+          Baidu::Log.info self.class, :save_item, 'board links detected', preview_info
+          return nil
+        end
+      end
+
       Baidu::Log.info self.class, :save_item, 'itemdata is not hash', preview_info
       return nil
     end
@@ -524,5 +537,8 @@ class Baidu::Service::App < Baidu::Service::Base
     end
   end
 
+  def board_service
+    @board_service ||= Baidu::Service::Board.new
+  end
 
 end

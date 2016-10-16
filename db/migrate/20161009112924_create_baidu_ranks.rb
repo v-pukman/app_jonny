@@ -14,7 +14,8 @@ class CreateBaiduRanks < ActiveRecord::Migration
     add_index :baidu_ranks, :day
     add_index :baidu_ranks, :app_id
 
-    add_index :baidu_ranks, [:rank_type, :day, :app_id], unique: true
+    #disabled
+    #add_index :baidu_ranks, [:rank_type, :day, :app_id], unique: true
     add_index :baidu_ranks, [:day, :app_id]
 
     add_index :baidu_ranks, :info, using: :gin

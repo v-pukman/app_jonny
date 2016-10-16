@@ -1,17 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Baidu::Service::Board do
-  let(:boards_info) {  json_vcr_fixture('baidu/get_boards.yml') }
+  let(:boards_info) { json_vcr_fixture('baidu/get_boards--soft.yml') }
   let(:service) { Baidu::Service::Board.new }
 
-  describe "#build_boards_attrs" do
-    let(:attrs) { service.build_boards_attrs boards_info }
-    it "retruns board attrs" do
-      expect(attrs.count).to be > 0
-      attrs.each do |a|
-        expect(a[:link]).to include 'appsrv?'
-      end
-    end
+  it "has app_service" do
+    expect(service.app_service.class).to eq Baidu::Service::App
   end
 
   describe "#save_boards" do
@@ -37,14 +31,69 @@ RSpec.describe Baidu::Service::Board do
       expect(service.api).to receive(:get).with(:boards, sorttype: 'game').and_return(boards_info)
       service.download_boards
     end
-    it "download boards" do
+    it "download game and soft boards" do
       Baidu::Board.destroy_all
-      VCR.use_cassette("baidu/get_boards") do
+      VCR.use_cassette("baidu/get_boards--soft") do
         VCR.use_cassette("baidu/get_boards--game") do
           service.download_boards
-          expect(Baidu::Board.count).to be > 0
+          expect(Baidu::Board.where(sort_type: Baidu::App::SOFT_APP).count).to be > 0
+          expect(Baidu::Board.where(sort_type: Baidu::App::GAME_APP).count).to be > 0
         end
       end
+    end
+  end
+
+  describe "#build_boards_attrs" do
+    let(:attrs) { service.build_boards_attrs boards_info }
+    it "retruns board attrs" do
+      expect(attrs.count).to be > 0
+      attrs.each do |a|
+        expect(a[:link]).to include 'appsrv?'
+        expect(a[:link]).to include '&board'
+        expect(a[:link]).to include '&action='
+      end
+    end
+  end
+
+  describe "#download_apps" do
+    let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
+    let(:origin_id) { 'board_100_0105' }
+    let(:sort_type) { 'game' }
+    let(:action_type) { 'generalboard' }
+    let(:link) { "appsrv?native_api=1&sorttype=#{sort_type}&boardid=#{origin_id}&action=#{action_type}" }
+    let(:board) { create :baidu_board, link: link }
+    it "calls save_item" do
+      allow(service.api).to receive(:get).with(:board, {
+        boardid: board.origin_id,
+        sorttype: board.sort_type,
+        action: board.action_type,
+        pn: 0,
+        native_api: "1"
+      }).and_return(board_info)
+      allow(service.api).to receive(:get).with(:board, {
+        boardid: board.origin_id,
+        sorttype: board.sort_type,
+        action: board.action_type,
+        pn: 1,
+        native_api: "1"
+      }).and_return({'result' => { 'data' => [] }})
+      expect(service.app_service).to receive(:save_item).at_least(:once)
+      service.download_apps board
+    end
+  end
+
+  describe "#download_game_rank_boards" do
+    let(:game_ranks) { json_vcr_fixture('baidu/get_game_ranks.yml') }
+    before do
+      allow(service.api).to receive(:get).with(:game_ranks, pn: 0).and_return(game_ranks)
+    end
+    it "calls api_cliet game_ranks method" do
+      expect(service.api).to receive(:get).with(:game_ranks, pn: 0)
+      service.download_game_rank_boards
+    end
+    it "creates boards with ranklist type" do
+      service.download_game_rank_boards
+      expect(Baidu::Board.ranklist.count).to be >= 4
     end
   end
 end

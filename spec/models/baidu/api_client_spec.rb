@@ -136,13 +136,13 @@ RSpec.describe Baidu::ApiClient do
       allow(client).to receive(:default_params).with(:boards).and_return(client.send(:original_default_params, :boards))
     end
     it "returns result" do
-      VCR.use_cassette("baidu/get_boards") do
+      VCR.use_cassette("baidu/get_boards--soft") do
         res = client.get_boards options
         expect(res).to_not eq nil
       end
     end
     it "returns links to boards" do
-      VCR.use_cassette("baidu/get_boards") do
+      VCR.use_cassette("baidu/get_boards--soft") do
         res = client.get_boards options
         expect(res["result"]["data"][0]["itemdata"].last["dataurl"]).to include "&boardid="
       end

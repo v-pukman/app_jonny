@@ -22,6 +22,10 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
+  it "has board_service" do
+    expect(service.board_service.class).to eq Baidu::Service::Board
+  end
+
   describe "#fetch_data_info" do
     let(:data_info) { service.fetch_data_info full_info_source }
     it "retruns hash with data" do
@@ -37,34 +41,6 @@ RSpec.describe Baidu::Service::App do
       expect(base_info['sname']).to_not eq nil
     end
   end
-
-  describe "#download_apps_from_board" do
-    let(:board_info) {  json_vcr_fixture('baidu/get_board.yml') }
-    let(:origin_id) { 'board_100_0105' }
-    let(:sort_type) { 'game' }
-    let(:action_type) { 'generalboard' }
-    let(:link) { "appsrv?native_api=1&sorttype=#{sort_type}&boardid=#{origin_id}&action=#{action_type}" }
-    let(:board) { create :baidu_board, link: link }
-    it "calls save_item" do
-      allow(service.api).to receive(:get).with(:board, {
-        boardid: board.origin_id,
-        sorttype: board.sort_type,
-        action: board.action_type,
-        pn: 0,
-        native_api: "1"
-      }).and_return(board_info)
-      allow(service.api).to receive(:get).with(:board, {
-        boardid: board.origin_id,
-        sorttype: board.sort_type,
-        action: board.action_type,
-        pn: 1,
-        native_api: "1"
-      }).and_return({'result' => { 'data' => [] }})
-      expect(service).to receive(:save_item).at_least(:once)
-      service.download_apps_from_board board
-    end
-  end
-
 
   describe "#save_app" do
     let(:attrs) { service.build_app_attrs(full_info_source) }
@@ -101,10 +77,22 @@ RSpec.describe Baidu::Service::App do
     before do
       allow(service).to receive(:download_app).and_return(app)
     end
-    it "return nil when itemdata is not Hash" do
-      preview_info_source['itemdata'] = []
-      app = service.save_item preview_info_source
-      expect(app).to eq nil
+    context "when itemdata is not Hash" do
+      context "and itemdata is Array" do
+        context "and itemdata has *links_info* (34 datatype)" do
+          let(:preview_info_34) { json_fixture('static/baidu/preview_info--datatype-34.json') }
+          let(:itemdata) { service.fetch_itemdata_info preview_info_34 }
+          it "saves boards links" do
+            expect(service.board_service).to receive(:save_boards)
+            service.save_item preview_info_34
+          end
+        end
+      end
+      it "return nil" do
+        preview_info_source['itemdata'] = []
+        app = service.save_item preview_info_source
+        expect(app).to eq nil
+      end
     end
     context "when docid is not empty" do
       it "calls download_app" do

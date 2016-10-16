@@ -1,4 +1,12 @@
 namespace :baidu do
+  task download_game_ranks: :environment do
+    Baidu::Service::Board.new.download_game_rank_boards
+    Baidu::Board.ranklist.each do |board|
+      p board
+      Baidu::Service::Rank.new.download_game_ranks_in_board board
+    end
+  end
+
   task download_soft_ranks: :environment do
     Baidu::Service::Rank.new.download_soft_ranks
   end
@@ -8,11 +16,11 @@ namespace :baidu do
   end
 
   task download_apps_from_boards: :environment do
-    boards = Baidu::Board.all
+    boards = Baidu::Board.generalboard
     #boards = [boards.first]
     boards.each do |board|
       Baidu::Log.info 'tasks :baidu', :download_apps_from_boards, "start download", { board_origin_id: board.origin_id }
-      Baidu::Service::App.new.download_apps_from_board board
+      Baidu::Service::Board.new.download_apps board
     end
   end
 

@@ -4,6 +4,9 @@ class Baidu::Board < ActiveRecord::Base
 
   before_validation :set_params, on: :create
 
+  scope :generalboard, -> { where(action_type: 'generalboard') }
+  scope :ranklist, -> { where(action_type: 'ranklist') }
+
   def link_params
     params = {}
     self.link.to_s.gsub('appsrv?', '').split('&').each do |param|
@@ -19,7 +22,7 @@ class Baidu::Board < ActiveRecord::Base
   def set_params
     return if self.link.blank? || (self.origin_id && self.action_type)
     link_params.each do |key, value|
-      if (key == :boardid || key == :board) && self.origin_id.blank?
+      if (key == :boardid || key == :board || key == :board_id) && self.origin_id.blank?
         self.origin_id = value
       elsif key == :action && self.action_type.blank?
         self.action_type = value

@@ -11,6 +11,18 @@ RSpec.describe Baidu::Board, type: :model do
     expect(board.persisted?).to eq true
   end
 
+  it "has .generalboard scope" do
+    board1 = create :baidu_board, action_type: 'generalboard'
+    board2 = create :baidu_board, action_type: 'any_other'
+    expect(Baidu::Board.generalboard).to eq [board1]
+  end
+
+  it "has .ranklist scope" do
+    board1 = create :baidu_board, action_type: 'generalboard'
+    board2 = create :baidu_board, action_type: 'ranklist'
+    expect(Baidu::Board.ranklist).to eq [board2]
+  end
+
   context "not valid when" do
     it "has empty link" do
       board = build :baidu_board, link: nil
