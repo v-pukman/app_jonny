@@ -12,6 +12,9 @@ class Log < ActiveRecord::Base
 
   after_create :trace_to_log_file, :trace_to_console
 
+  scope :errors, -> { where(level: ERROR_LEVEL) }
+  scope :infos, -> { where(level: INFO_LEVEL) }
+
   #TODO: send email?
 
   def self.clear select_options

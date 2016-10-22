@@ -1,11 +1,16 @@
 class Baidu::Board < ActiveRecord::Base
+  TYPES = [
+    GENERAL_BOARD = 'generalboard',
+    RANKLIST_BOARD = 'ranklist'
+  ].freeze
+
   validates :link, presence: true
   validates_uniqueness_of :link
 
   before_validation :set_params, on: :create
 
-  scope :generalboard, -> { where(action_type: 'generalboard') }
-  scope :ranklist, -> { where(action_type: 'ranklist') }
+  scope :generalboard, -> { where(action_type: GENERAL_BOARD) }
+  scope :ranklist, -> { where(action_type: RANKLIST_BOARD) }
 
   def link_params
     params = {}

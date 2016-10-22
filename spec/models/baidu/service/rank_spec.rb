@@ -26,7 +26,8 @@ RSpec.describe Baidu::Service::Rank do
       {
         rank_type: rank_type,
         day: today,
-        rank_number: rank_number
+        rank_number: rank_number,
+        info: {}
       }
     end
     let(:app) { create :baidu_app }
@@ -47,7 +48,8 @@ RSpec.describe Baidu::Service::Rank do
     end
   end
 
-  describe "#download_soft_ranks" do
+  context "when soft_ranks" do
+    let(:rank_type) { Baidu::Rank::SOFT_COMMON_RANK }
     let(:items_count) { soft_ranks_source['result']['data'].count }
     before do
       allow(service.api).to receive(:get).with(:soft_ranks, pn: 0).and_return(soft_ranks_source)
@@ -55,16 +57,17 @@ RSpec.describe Baidu::Service::Rank do
     end
     it "calls app_service to save_item" do
       expect(service.app_service).to receive(:save_item).at_least(items_count).times
-      service.download_soft_ranks
+      service.download_ranks rank_type
     end
     it "calls save_rank" do
       allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app))
       expect(service).to receive(:save_rank).at_least(items_count).times
-      service.download_soft_ranks
+      service.download_ranks rank_type
     end
   end
 
-  describe "#download_game_ranks_in_board" do
+  context "#when game_ranks_in_board" do
+    let(:rank_type) { Baidu::Rank::GAMES_IN_BOARD_RANK }
     let(:items_count) { game_ranks_in_board['result']['data'].count }
     let(:board) { create :baidu_board, action_type: 'ranklist' }
     before do
@@ -74,17 +77,17 @@ RSpec.describe Baidu::Service::Rank do
     end
     it "calls app_service to save_item" do
       expect(service.app_service).to receive(:save_item).at_least(items_count).times
-      service.download_game_ranks_in_board board
+      service.download_ranks rank_type, board: board
     end
     it "calls save_rank" do
       expect(service).to receive(:save_rank).at_least(items_count).times
-      service.download_game_ranks_in_board board
+      service.download_ranks rank_type, board: board
     end
     it "returns nil if board is not ranklist type" do
       board = create :baidu_board, action_type: 'any_other'
-      result = service.download_game_ranks_in_board board
-      expect(result).to eq nil
-      expect(service.app_service).to_not receive(:save_item)
+      service.download_ranks rank_type, board: board
+      expect(Log.errors.last.message).to eq "Board is invalid"
+      expect(Log.errors.last.context['options']['board']['id']).to eq board.id
     end
   end
 end
