@@ -17,6 +17,22 @@ RSpec.describe Baidu::Service::Rank do
       expect(attrs[:day]).to eq Date.today
       expect(attrs[:rank_number]).to eq preview_info['itemdata']['rankingnum']
     end
+    context "when preview_info has additional info" do
+      let(:heat_value) { 500 }
+      let(:rise_percent) { "397.9%" }
+      let(:rise_percent_num) { 397.9 }
+      before do
+        preview_info['itemdata']['heat_value'] = heat_value
+        preview_info['itemdata']['rise_percent'] = rise_percent
+      end
+      let(:attrs) { service.build_rank_attrs preview_info, rank_type }
+      it { expect(attrs[:info][:heat_value]).to eq heat_value }
+      it { expect(attrs[:info][:rise_percent]).to eq rise_percent_num }
+    end
+    it "merges info data" do
+      attrs = service.build_rank_attrs preview_info, rank_type, { language: 'ruby' }
+      expect(attrs[:info][:language]).to eq 'ruby'
+    end
   end
 
   describe "#save_rank" do
@@ -81,6 +97,82 @@ RSpec.describe Baidu::Service::Rank do
     end
     it "calls save_rank" do
       expect(service).to receive(:save_rank).at_least(items_count).times
+      service.download_ranks rank_type, board: board
+    end
+    it "returns nil if board is not ranklist type" do
+      board = create :baidu_board, action_type: 'any_other'
+      service.download_ranks rank_type, board: board
+      expect(Log.errors.last.message).to eq "Board is invalid"
+      expect(Log.errors.last.context['options']['board']['id']).to eq board.id
+    end
+  end
+
+  context "when top_ranks" do
+    let(:rank_type) { Baidu::Rank::TOP_RANK }
+    let(:ranks_source) { json_vcr_fixture('baidu/get_ranks--top.yml') }
+    let(:items_count) { ranks_source['result']['data'].count }
+    before do
+      allow(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 0).and_return(ranks_source)
+      allow(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 1).and_return({ 'result' => { 'data' => [] } })
+      allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app))
+    end
+    it "calls api to get ranks" do
+      expect(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 0).at_least(1).times
+      service.download_ranks rank_type
+    end
+    it "calls app_service to save_item" do
+      expect(service.app_service).to receive(:save_item).at_least(items_count).times
+      service.download_ranks rank_type
+    end
+    it "calls save_rank" do
+      expect(service).to receive(:save_rank).at_least(1).times
+      service.download_ranks rank_type
+    end
+  end
+
+  context "when rising_ranks" do
+    let(:rank_type) { Baidu::Rank::RISING_RANK }
+    let(:ranks_source) { json_vcr_fixture('baidu/get_ranks--rising.yml') }
+    let(:items_count) { ranks_source['result']['data'].count }
+    before do
+      allow(service.api).to receive(:get).with(:ranks, action: 'risingrank', pn: 0).and_return(ranks_source)
+      allow(service.api).to receive(:get).with(:ranks, action: 'risingrank', pn: 1).and_return({ 'result' => { 'data' => [] } })
+      allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app))
+    end
+    it "calls api to get ranks" do
+      expect(service.api).to receive(:get).with(:ranks, action: 'risingrank', pn: 0).at_least(1).times
+      service.download_ranks rank_type
+    end
+    it "calls app_service to save_item" do
+      expect(service.app_service).to receive(:save_item).at_least(items_count).times
+      service.download_ranks rank_type
+    end
+    it "calls save_rank" do
+      expect(service).to receive(:save_rank).at_least(1).times
+      service.download_ranks rank_type
+    end
+  end
+
+  context "when featured_board ranks" do
+    let(:board) { create :baidu_board, origin_id: 'board_100_790', action_type: Baidu::Board::FEATURE_BOARD }
+    let(:rank_type) { Baidu::Rank::FEATURE_IN_BOARD_RANK }
+    let(:ranks_source) { json_vcr_fixture('baidu/get_featured_board.yml') }
+    let(:items_count) { ranks_source['result']['data'].count }
+    before do
+      allow(service.api).to receive(:get).with(:featured_board, board: board.origin_id, pn: 0).and_return(ranks_source)
+      allow(service.api).to receive(:get).with(:featured_board, board: board.origin_id, pn: 1).and_return({ 'result' => { 'data' => [] } })
+      allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app))
+    end
+    it "calls api to get ranks" do
+      expect(service.api).to receive(:get).with(:featured_board, board: board.origin_id, pn: 0).at_least(1).times
+      service.download_ranks rank_type, board: board
+    end
+    it "calls app_service to save_item" do
+      expect(service.app_service).to receive(:save_item).at_least(items_count).times
+      service.download_ranks rank_type, board: board
+    end
+    it "calls save_rank" do
+      expect(service).to receive(:save_rank).at_least(1).times
       service.download_ranks rank_type, board: board
     end
     it "returns nil if board is not ranklist type" do

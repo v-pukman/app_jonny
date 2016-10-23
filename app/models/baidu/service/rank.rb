@@ -93,18 +93,28 @@ class Baidu::Service::Rank < Baidu::Service::Base
     saved_count = 0
 
     while next_page
+
       info = {}
       case rank_type
       when Baidu::Rank::SOFT_COMMON_RANK
-        result = api.get :soft_ranks, pn: page_number
+        response = api.get :soft_ranks, pn: page_number
       when Baidu::Rank::GAMES_IN_BOARD_RANK
         board = options[:board]
         raise "Board is invalid" if board.nil? || board.origin_id.blank? || board.action_type != Baidu::Board::RANKLIST_BOARD
         info = { board_id: board.id }
-        result = api.get :game_ranks, board_id: board.origin_id, pn: page_number
+        response = api.get :game_ranks, board_id: board.origin_id, pn: page_number
+      when Baidu::Rank::TOP_RANK
+        response = api.get :ranks, action: 'ranktoplist', pn: page_number
+      when Baidu::Rank::RISING_RANK
+        response = api.get :ranks, action: 'risingrank', pn: page_number
+      when Baidu::Rank::FEATURE_IN_BOARD_RANK
+        board = options[:board]
+        raise "Board is invalid" if board.nil? || board.origin_id.blank? || board.action_type != Baidu::Board::FEATURE_BOARD
+        info = { board_id: board.id }
+        response = api.get :featured_board, board: board.origin_id, pn: page_number
       end
 
-      items = result['result']['data']
+      items = response['result']['data']
       apps_info_count = 0
 
       items.each do |preview_info|
@@ -119,7 +129,7 @@ class Baidu::Service::Rank < Baidu::Service::Base
 
       next_page = apps_info_count > 0
       page_number += 1
-    end
+    end #while end
 
     Baidu::Log.info self.class, :download_ranks, 'download finished', { rank_type: rank_type, options: options, items_count: items_count, saved_count: saved_count }
   rescue StandardError => e
@@ -152,8 +162,13 @@ class Baidu::Service::Rank < Baidu::Service::Base
 
   ### Helpers ###
 
-  def build_rank_attrs preview_info, rank_type, info={}
+  def build_rank_attrs preview_info, rank_type, info_data={}
     itemdata = app_service.fetch_itemdata_info preview_info
+    return {} unless app_service.has_app_info? itemdata
+    info = {}
+    info[:heat_value] = itemdata['heat_value'].to_f if itemdata['heat_value']
+    info[:rise_percent] = itemdata['rise_percent'].to_s.gsub("%", "").to_f if itemdata['rise_percent']
+    info.merge! info_data
     {
       rank_type: rank_type,
       day: Date.today,

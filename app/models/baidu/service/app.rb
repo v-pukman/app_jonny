@@ -140,6 +140,10 @@ class Baidu::Service::App < Baidu::Service::Base
   ### app and its relation models ###
   ###################################
 
+  def has_app_info? itemdata
+    itemdata.is_a?(Hash) && itemdata['docid']
+  end
+
   def fetch_itemdata_info preview_info
     JSON.parse(preview_info.to_json)['itemdata']
   end

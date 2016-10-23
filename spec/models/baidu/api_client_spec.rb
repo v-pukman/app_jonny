@@ -127,6 +127,31 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "#get_featured_board" do
+    let(:board) { 'board_100_790' }
+    let(:pn) { 0 }
+    let(:options) do
+      { board: board, pn: pn }
+    end
+    before do
+      allow(client).to receive(:default_params).with(:featured_board).and_return(client.send(:original_default_params, :featured_board))
+    end
+    it "returns result" do
+      VCR.use_cassette("baidu/get_featured_board") do
+        res = client.get_featured_board options
+        expect(res).to_not eq nil
+      end
+    end
+    it "returns list of ranked apps" do
+      VCR.use_cassette("baidu/get_featured_board") do
+        res = client.get_featured_board options
+        items = res["result"]["data"].select {|i| i.is_a?(Hash) && i['itemdata']["docid"] }
+        expect(items.count).to be > 0
+        expect(items[0]['itemdata']['rankingnum']).to_not eq nil
+      end
+    end
+  end
+
   describe "#get_boards" do
     let(:sorttype) { 'soft' }
     let(:options) do

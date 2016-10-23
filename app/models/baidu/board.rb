@@ -1,7 +1,8 @@
 class Baidu::Board < ActiveRecord::Base
   TYPES = [
     GENERAL_BOARD = 'generalboard',
-    RANKLIST_BOARD = 'ranklist'
+    RANKLIST_BOARD = 'ranklist',
+    FEATURE_BOARD = 'featureboard'
   ].freeze
 
   validates :link, presence: true

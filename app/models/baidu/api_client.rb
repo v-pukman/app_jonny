@@ -50,9 +50,15 @@ class Baidu::ApiClient
   ## boardid
   ## pn (0..any)
   ## sorttype (game|soft)
-  ## action (generalboard|featureboard) # dafault - generalboard
   def get_board options
     make_request :get, APPS_URL, :board, options, [:boardid, :sorttype, :pn]
+  end
+
+  # returns ranked featured apps
+  ## board (board id, featureboard type)
+  ## pn (0..any)
+  def get_featured_board options
+    make_request :get, APPS_URL, :featured_board, options, [:board, :pn]
   end
 
   # returns boards of games or apps
