@@ -57,6 +57,12 @@ class Baidu::Service::Board < Baidu::Service::Base
     save_boards build_boards_attrs(boards_info)
   end
 
+  # get featured page and parse all fetureboard boards
+  def download_feature_boards
+    boards_info = api.get :featured, pn: 0
+    save_boards build_boards_attrs(boards_info)
+  end
+
   def build_boards_attrs boards_info
     links = boards_info.to_s.scan /appsrv[\S]+/
     links = links.map {|l| l.split('"')[0] }.compact

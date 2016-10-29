@@ -12,6 +12,7 @@ class Baidu::Board < ActiveRecord::Base
 
   scope :generalboard, -> { where(action_type: GENERAL_BOARD) }
   scope :ranklist, -> { where(action_type: RANKLIST_BOARD) }
+  scope :featureboard, -> { where(action_type: FEATURE_BOARD) }
 
   def link_params
     params = {}

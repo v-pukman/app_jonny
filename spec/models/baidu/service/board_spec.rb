@@ -26,20 +26,21 @@ RSpec.describe Baidu::Service::Board do
   end
 
   describe "#download_boards" do
+    let(:game_boards) { json_vcr_fixture('baidu/get_boards--game.yml')}
+    let(:soft_boards) { json_vcr_fixture('baidu/get_boards--soft.yml')}
+    before do
+      allow(service.api).to receive(:get).with(:boards, sorttype: 'soft').and_return(game_boards)
+      allow(service.api).to receive(:get).with(:boards, sorttype: 'game').and_return(game_boards)
+    end
     it "call api to download soft and game boards" do
-      expect(service.api).to receive(:get).with(:boards, sorttype: 'soft').and_return(boards_info)
-      expect(service.api).to receive(:get).with(:boards, sorttype: 'game').and_return(boards_info)
+      expect(service.api).to receive(:get).with(:boards, sorttype: 'soft').and_return(game_boards)
+      expect(service.api).to receive(:get).with(:boards, sorttype: 'game').and_return(soft_boards)
       service.download_boards
     end
-    it "download game and soft boards" do
-      Baidu::Board.destroy_all
-      VCR.use_cassette("baidu/get_boards--soft") do
-        VCR.use_cassette("baidu/get_boards--game") do
-          service.download_boards
-          expect(Baidu::Board.where(sort_type: Baidu::App::SOFT_APP).count).to be > 0
-          expect(Baidu::Board.where(sort_type: Baidu::App::GAME_APP).count).to be > 0
-        end
-      end
+    it "saves game and soft boards" do
+      service.download_boards
+      expect(Baidu::Board.where(sort_type: Baidu::App::SOFT_APP).count).to be > 0
+      expect(Baidu::Board.where(sort_type: Baidu::App::GAME_APP).count).to be > 0
     end
   end
 
@@ -94,6 +95,21 @@ RSpec.describe Baidu::Service::Board do
     it "creates boards with ranklist type" do
       service.download_game_rank_boards
       expect(Baidu::Board.ranklist.count).to be >= 4
+    end
+  end
+
+  describe "#download_feature_boards" do
+    let(:featured_page) { json_vcr_fixture('baidu/get_featured.yml') }
+    before do
+      allow(service.api).to receive(:get).with(:featured, pn: 0).and_return(featured_page)
+    end
+    it "calls api_cliet featured method" do
+      expect(service.api).to receive(:get).with(:featured, pn: 0)
+      service.download_feature_boards
+    end
+     it "creates boards with feature type" do
+      service.download_feature_boards
+      expect(Baidu::Board.featureboard.count).to be >= 3
     end
   end
 end
