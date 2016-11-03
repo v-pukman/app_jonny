@@ -87,6 +87,14 @@ RSpec.describe Baidu::Service::App do
             service.save_item preview_info_34
           end
         end
+        context "and itemdata has *dataurl* (34_2 datatype)" do
+          let(:preview_info_34_2) { json_fixture('static/baidu/preview_info--datatype-34_2.json') }
+          let(:itemdata) { service.fetch_itemdata_info preview_info_34_2 }
+          it "saves boards links" do
+            expect(service.board_service).to receive(:save_boards)
+            service.save_item preview_info_34_2
+          end
+        end
       end
       it "return nil" do
         preview_info_source['itemdata'] = []
@@ -128,6 +136,15 @@ RSpec.describe Baidu::Service::App do
         it "calls download_app few times" do
           expect(service).to receive(:download_app).at_least(apps_count).times
           service.save_item preview_info_40
+        end
+        context "and app_data is a Hash (349 datatype)" do
+          let(:preview_info_349) { json_fixture('static/baidu/preview_info--datatype-349.json') }
+          let(:itemdata) { service.fetch_itemdata_info preview_info_349 }
+          let(:docid) { itemdata['app_data']['docid'] }
+          it "calls download_app few times" do
+            expect(service).to receive(:download_app).with(docid)
+            service.save_item preview_info_349
+          end
         end
       end
       context "and itemdata has *app* included hash" do

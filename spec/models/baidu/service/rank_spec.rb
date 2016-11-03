@@ -33,6 +33,11 @@ RSpec.describe Baidu::Service::Rank do
       attrs = service.build_rank_attrs preview_info, rank_type, { language: 'ruby' }
       expect(attrs[:info][:language]).to eq 'ruby'
     end
+    context "when preview_info has app info in app_data" do
+      let(:preview_info_349) { json_fixture('static/baidu/preview_info--datatype-349.json') }
+      let(:attrs) { service.build_rank_attrs preview_info_349, rank_type }
+      it { expect(attrs[:rank_number]).to_not eq nil }
+    end
   end
 
   describe "#save_rank" do
@@ -46,6 +51,7 @@ RSpec.describe Baidu::Service::Rank do
         info: {}
       }
     end
+    let(:board_id) { 1 }
     let(:app) { create :baidu_app }
     it "saves rank record" do
       rank = service.save_rank app, rank_attrs
@@ -56,10 +62,21 @@ RSpec.describe Baidu::Service::Rank do
       expect(rank.app).to eq app
     end
     context "when ranks already saved" do
-      it "returns saved rank" do
+      it "prevents duplication by day, rank_type" do
         rank = service.save_rank app, rank_attrs
         rank2 = service.save_rank app, rank_attrs
         expect(rank2).to eq rank
+      end
+      it "prevents duplication by day, rank_type, and board_id" do
+        attrs_no_info = { rank_type: rank_type, day: today, rank_number: rank_number }
+        attrs_with_info = { rank_type: rank_type, day: today, rank_number: rank_number, info: { board_id: board_id } }
+
+        rank1 = create :baidu_rank, attrs_no_info.merge(app: app)
+        rank2 = create :baidu_rank, attrs_no_info.merge(app: app)
+        rank3 = create :baidu_rank, attrs_with_info.merge(app: app)
+
+        rank = service.save_rank app, attrs_with_info
+        expect(rank.id).to eq rank3.id
       end
     end
   end

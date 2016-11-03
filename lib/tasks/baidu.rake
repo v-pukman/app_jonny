@@ -19,7 +19,7 @@ namespace :baidu do
 
   # all soft ranks on one page
   task download_soft_ranks: :environment do
-    Baidu::Service::Rank.new.download_soft_ranks
+    Baidu::Service::Rank.new.download_ranks Baidu::Rank::SOFT_COMMON_RANK
   end
 
   # run first!

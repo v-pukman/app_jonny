@@ -66,6 +66,12 @@ class Baidu::Service::App < Baidu::Service::Base
           board_service.save_boards boards_attrs
           Baidu::Log.info self.class, :save_item, 'board links detected', preview_info
           return nil
+        #handle 34_2 datatype (list of board links from ranks page)
+        elsif itemdata.count{|i| i.is_a?(Hash) && i['dataurl'].to_s.include?('board') }
+          boards_attrs = itemdata.map{|i| {link: i['dataurl']} }
+          board_service.save_boards boards_attrs
+          Baidu::Log.info self.class, :save_item, 'board links detected', preview_info
+          return nil
         end
       end
 
@@ -76,10 +82,17 @@ class Baidu::Service::App < Baidu::Service::Base
     # no docid - no app info
     if itemdata['docid'].nil?
       # handle 22, 40 datatypes
-      included_app_list = itemdata['apps'] || itemdata['app_data']
-      if included_app_list.is_a?(Array)
-        results = included_app_list.map {|i| save_item({'itemdata' => i}, additional_data) }
+      included_app_data = itemdata['apps'] || itemdata['app_data']
+      if included_app_data.is_a?(Array)
+        results = included_app_data.map {|i| save_item({'itemdata' => i}, additional_data) }
         return results.compact.last
+      end
+
+      # handle 349 datatype (1,2,3 ranked apps)
+      included_app = itemdata['app_data']
+      if included_app.is_a?(Hash)
+        result = save_item({ 'itemdata' => included_app }, additional_data)
+        return result
       end
 
       # handle 606 datatype
@@ -99,9 +112,10 @@ class Baidu::Service::App < Baidu::Service::Base
       app = download_app itemdata['docid']
       app.update_attributes(build_preview_attrs(preview_info)) if app && app.id
     else
-      Baidu::Log.info self.class, :save_item, 'app already saved', { id_str: id_str }
+      #Baidu::Log.info self.class, :save_item, 'app already saved', { id_str: id_str }
     end
 
+    #TODO: save day
     #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
     app
   rescue StandardError => e
@@ -333,6 +347,7 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def save_source source_attrs
+    return nil if source_attrs[:name].blank? #some apps has a blank source
     source = Baidu::Source.where(name: source_attrs[:name]).first
     if source.nil?
       source = Baidu::Source.new(source_attrs)

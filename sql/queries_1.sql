@@ -48,3 +48,17 @@ from logs
 where (context->'datatype')::text IN ('40', '606', '22', '354')
 
 ; 
+
+select * from baidu_ranks; /* "soft_common" */
+
+select a.sname, r.* 
+from baidu_ranks r
+join baidu_apps a on a.id = r.app_id  
+;
+
+select rank_number, count(*)
+from baidu_ranks
+group by rank_number
+order by count(*) desc;
+
+select * from logs where message != 'app already saved';

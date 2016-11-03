@@ -1,0 +1,64 @@
+{
+  "datatype": 349,
+  "itemdata": {
+    "dev_data": {
+      "dev_id": "612595790",
+      "dev_name": "福州羽乐思创信息科技有限公司",
+      "dev_score": "0",
+      "dev_level": "0",
+      "f": "develop_612595790_1424446_10186369",
+      "sub_title": "详情"
+    },
+    "app_data": {
+      "sname": "超级星星消消乐",
+      "aladdin_flag": "1",
+      "docid": "10186369",
+      "groupid": "4159809",
+      "packageid": "1424446",
+      "type": "game",
+      "versionname": "1.23",
+      "versioncode": "123",
+      "cateid": "401",
+      "catename": "休闲益智",
+      "size": "6.6M",
+      "download_url": "http://gdown.baidu.com/data/wisegame/7fd4f9a184062502/chaojixingxingxiaoxiaole_123.apk",
+      "updatetime": "2016-10-26",
+      "icon": "http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=80\u0026er\u0026sec=0\u0026di=7aceee5164e4ee0caaab30839874bd42\u0026ref=http%3A%2F%2Fb.hiphotos.bdimg.com\u0026src=http%3A%2F%2Fb.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2Fc818972bd40735fa87ce6c6196510fb30f24082f.jpg",
+      "download_inner": "http://gdown.baidu.com/data/wisegame/7fd4f9a184062502/chaojixingxingxiaoxiaole_123.apk",
+      "signmd5": "3980073544",
+      "package": "com.yslearning.starxxl",
+      "score": "98",
+      "score_count": "79",
+      "all_download": "75万下载",
+      "platform_version": "4.0.3",
+      "popu_index": "72",
+      "manual_short_brief": "可爱的星星，欢快的消消乐规则简单好玩。1：至少两个同样的图标连在一起就可消去，同时即可获得相应的分数，消去的越多分",
+      "today_strDownload": "1万日下载",
+      "yesterday_download_pid": "251",
+      "app_gift_title": "",
+      "display_download": "758870",
+      "support_chip": "0",
+      "md5": "818ff4837fd4f9a18406250259e559f4",
+      "detail_background": "",
+      "discount_title": "优惠",
+      "sizeb": 6929357,
+      "tj": "game_10186369_1424446_超级星星消消乐",
+      "f": "featuredeveloperapp@1@5@source+EDITOR@boardid+24556@pos+5@flow+BOARD@trans+NULL@global_optim+1@go_personal+0@mode+NULL@bid+1@oriboardid+24556@oripos+5@exp+full_flow@package+com.yslearning.starxxl@searchid+2262864769554150639@terminal_type+client",
+      "firstflag": false,
+      "ishot": true,
+      "brief": "推荐下载试用哦~",
+      "popularity": "72",
+      "usenum": "75万人在玩",
+      "commentsnum": "79评论",
+      "tabs": [{
+        "type": 1
+      }, {
+        "type": 2
+      }, {
+        "type": 3,
+        "f": "catenav_401"
+      }],
+      "rankingnum": 5
+    }
+  }
+}

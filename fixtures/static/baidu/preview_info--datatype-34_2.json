@@ -1,0 +1,18 @@
+{
+  "datatype": 34,
+  "itemdata": [{
+    "type": 16,
+    "title": "时尚购物趴",
+    "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/dcc451da81cb39db1362629fd5160924aa18305c.jpg",
+    "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/0eb30f2442a7d933551b96faa84bd11372f00183.jpg",
+    "dataurl": "appsrv?native_api=1\u0026sorttype=soft\u0026boardid=board_100_023\u0026action=generalboard\u0026norec=1",
+    "f": "ranktoplist_dynamicentry@3@1"
+  }, {
+    "type": 16,
+    "title": "儿童游戏",
+    "small_icon": "http://imgsrc.baidu.com/anxun/pic/item/d31b0ef41bd5ad6e7c1e612384cb39dbb7fd3c17.jpg",
+    "big_icon": "http://imgsrc.baidu.com/anxun/pic/item/d439b6003af33a87f96b7d93c35c10385343b530.jpg",
+    "dataurl": "appsrv?native_api=1\u0026sorttype=game\u0026boardid=board_102_438\u0026action=generalboard\u0026norec=1",
+    "f": "ranktoplist_dynamicentry@3@2"
+  }]
+}
