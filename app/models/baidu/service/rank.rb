@@ -29,7 +29,7 @@ class Baidu::Service::Rank < Baidu::Service::Base
         response = api.get :featured_board, board: board.origin_id, pn: page_number
       end
 
-      items = response['result'].is_a?(Hash) ? response['result']['data'] : []
+      items = fetch_items response
       apps_info_count = 0
 
       items.each do |preview_info|
@@ -76,11 +76,30 @@ class Baidu::Service::Rank < Baidu::Service::Base
 
   ### Helpers ###
 
+  def fetch_items full_info
+    full_info = JSON.parse(full_info.to_json)
+    original_items = full_info['result'].is_a?(Hash) ? full_info['result']['data'] : []
+
+    extracted = []
+    original_items.each do |preview_info|
+      if preview_info['itemdata'].is_a?(Hash)
+        if preview_info['itemdata']['app_data'].is_a?(Array)
+          preview_info['itemdata']['app_data'].each {|d| extracted << { 'itemdata' => d } }
+        elsif preview_info['itemdata']['app_data'].is_a?(Hash)
+          extracted << { 'itemdata' => preview_info['itemdata']['app_data'] }
+        elsif preview_info['itemdata']['app'].is_a?(Hash)
+          extracted << { 'itemdata' => preview_info['itemdata']['app'] }
+        end
+      end
+    end
+    extracted + original_items
+  end
+
   def build_rank_attrs preview_info, rank_type, additional_info={}
     itemdata = app_service.fetch_itemdata_info preview_info
-    if itemdata.is_a?(Hash) && itemdata['app_data'].is_a?(Hash)
-      itemdata = itemdata['app_data'] #handle top ranks first 3 apps (349 datatype)
-    end
+    #if itemdata.is_a?(Hash) && itemdata['app_data'].is_a?(Hash)
+    #  itemdata = itemdata['app_data'] #handle top ranks first 3 apps (349 datatype)
+    #end
     return {} unless app_service.has_app_info? itemdata
 
     info = {}

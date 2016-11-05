@@ -1,5 +1,10 @@
 namespace :baidu do
 
+  task top: :environment do
+    service = Baidu::Service::Rank.new
+    service.download_ranks Baidu::Rank::TOP_RANK
+  end
+
 
   task download_crown_ranks: :environment do
     service = Baidu::Service::Rank.new

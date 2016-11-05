@@ -33,11 +33,6 @@ RSpec.describe Baidu::Service::Rank do
       attrs = service.build_rank_attrs preview_info, rank_type, { language: 'ruby' }
       expect(attrs[:info][:language]).to eq 'ruby'
     end
-    context "when preview_info has app info in app_data" do
-      let(:preview_info_349) { json_fixture('static/baidu/preview_info--datatype-349.json') }
-      let(:attrs) { service.build_rank_attrs preview_info_349, rank_type }
-      it { expect(attrs[:rank_number]).to_not eq nil }
-    end
   end
 
   describe "#save_rank" do
@@ -128,10 +123,11 @@ RSpec.describe Baidu::Service::Rank do
     let(:rank_type) { Baidu::Rank::TOP_RANK }
     let(:ranks_source) { json_vcr_fixture('baidu/get_ranks--top.yml') }
     let(:items_count) { ranks_source['result']['data'].count }
+    let(:app) { create :baidu_app }
     before do
       allow(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 0).and_return(ranks_source)
       allow(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 1).and_return({ 'result' => { 'data' => [] } })
-      allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app))
+      allow(service.app_service).to receive(:save_item).and_return(app)
     end
     it "calls api to get ranks" do
       expect(service.api).to receive(:get).with(:ranks, action: 'ranktoplist', pn: 0).at_least(1).times
@@ -144,6 +140,55 @@ RSpec.describe Baidu::Service::Rank do
     it "calls save_rank" do
       expect(service).to receive(:save_rank).at_least(1).times
       service.download_ranks rank_type
+    end
+    it "saves first 3 bundled apps (app_data array)" do
+      allow(service.app_service).to receive(:save_item).and_return(create(:baidu_app), create(:baidu_app),create(:baidu_app))
+      service.download_ranks rank_type
+      expect(Baidu::Rank.where(rank_type: rank_type, rank_number: 1).first).to_not eq nil
+      expect(Baidu::Rank.where(rank_type: rank_type, rank_number: 2).first).to_not eq nil
+      expect(Baidu::Rank.where(rank_type: rank_type, rank_number: 3).first).to_not eq nil
+    end
+  end
+
+  describe "#fetch_items" do
+    let(:ranks_source) { json_vcr_fixture('baidu/get_ranks--top.yml') }
+    let(:info_with_app_data_array) do
+      {
+        'result' => {'data'=>[ {'itemdata' => { 'app_data' => [{ 'sname' => 'Rock', 'rankingnum' => 1 }, { 'sname' => 'Pop', 'rankingnum' => 2 }] }} ]}
+      }
+    end
+    let(:info_with_app_data_hash) do
+      {
+        'result' => {'data'=>[ {'itemdata' => { 'app_data' => { 'sname' => 'Rock', 'rankingnum' => 50 } }} ]}
+      }
+    end
+    let(:info_with_app_hash) do
+      {
+        'result' => {'data'=>[ {'itemdata' => { 'app' => { 'sname' => 'Rock', 'rankingnum' => 100 } }} ]}
+      }
+    end
+    let(:info_with_app_hash_and_more) do
+      {
+        'result' => {'data'=>[ {'itemdata' => { 'app' => { 'sname' => 'Rock', 'rankingnum' => 100 } }}, {'itemdata' => { 'sname' => 'Cool', 'rankingnum' => 15 } } ]}
+      }
+    end
+    it "extract app_data array (exist in top ranks)" do
+      items = service.fetch_items info_with_app_data_array
+      expect(items[0]['itemdata']['rankingnum']).to eq 1
+      expect(items[1]['itemdata']['rankingnum']).to eq 2
+    end
+    it "extract app_data hash" do
+      items = service.fetch_items info_with_app_data_hash
+      expect(items[0]['itemdata']['rankingnum']).to eq 50
+    end
+    it "extract app hash" do
+      items = service.fetch_items info_with_app_hash
+      expect(items[0]['itemdata']['rankingnum']).to eq 100
+    end
+    it "keeps normal items" do
+       items = service.fetch_items info_with_app_hash_and_more
+       expect(items.first['itemdata']['rankingnum']).to eq 100
+       expect(items.last['itemdata']['rankingnum']).to eq 15
     end
   end
 
