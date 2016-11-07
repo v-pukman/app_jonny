@@ -97,9 +97,6 @@ class Baidu::Service::Rank < Baidu::Service::Base
 
   def build_rank_attrs preview_info, rank_type, additional_info={}
     itemdata = app_service.fetch_itemdata_info preview_info
-    #if itemdata.is_a?(Hash) && itemdata['app_data'].is_a?(Hash)
-    #  itemdata = itemdata['app_data'] #handle top ranks first 3 apps (349 datatype)
-    #end
     return {} unless app_service.has_app_info? itemdata
 
     info = {}

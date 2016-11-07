@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009112924) do
+ActiveRecord::Schema.define(version: 20161107135326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,52 @@ ActiveRecord::Schema.define(version: 20161009112924) do
   end
 
   add_index "baidu_tags", ["name"], name: "index_baidu_tags_on_name", unique: true, using: :btree
+
+  create_table "baidu_track_apps", force: :cascade do |t|
+    t.integer  "app_id"
+    t.date     "day"
+    t.integer  "display_count"
+    t.integer  "score_count"
+    t.integer  "display_score"
+    t.float    "avg_rating"
+    t.integer  "reviews_count"
+    t.string   "total_count"
+    t.integer  "response_count"
+    t.integer  "yesterday_download_pid", limit: 8
+    t.integer  "today_download_pid",     limit: 8
+    t.integer  "now_download",           limit: 8
+    t.string   "all_download_pid"
+    t.string   "usenum"
+    t.string   "today_str_download"
+    t.string   "str_download"
+    t.integer  "display_download",       limit: 8
+    t.string   "all_download"
+    t.integer  "unable_download"
+    t.integer  "score"
+    t.integer  "popularity"
+    t.integer  "popu_index"
+    t.boolean  "ishot"
+    t.integer  "aladdin_flag"
+    t.integer  "packagesize",            limit: 8
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "baidu_track_apps", ["app_id", "day"], name: "index_baidu_track_apps_on_app_id_and_day", unique: true, using: :btree
+  add_index "baidu_track_apps", ["app_id"], name: "index_baidu_track_apps_on_app_id", using: :btree
+  add_index "baidu_track_apps", ["day"], name: "index_baidu_track_apps_on_day", using: :btree
+  add_index "baidu_track_apps", ["yesterday_download_pid", "today_download_pid", "now_download"], name: "baidu_track_apps_download_pid_index", using: :btree
+
+  create_table "baidu_track_developers", force: :cascade do |t|
+    t.integer "developer_id"
+    t.date    "day"
+    t.integer "score",        limit: 8
+    t.integer "level"
+  end
+
+  add_index "baidu_track_developers", ["day"], name: "index_baidu_track_developers_on_day", using: :btree
+  add_index "baidu_track_developers", ["developer_id", "day"], name: "index_baidu_track_developers_on_developer_id_and_day", unique: true, using: :btree
+  add_index "baidu_track_developers", ["developer_id"], name: "index_baidu_track_developers_on_developer_id", using: :btree
 
   create_table "baidu_versions", force: :cascade do |t|
     t.integer  "app_id",           limit: 8

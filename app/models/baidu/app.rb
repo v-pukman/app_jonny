@@ -13,11 +13,13 @@ class Baidu::App < ActiveRecord::Base
   has_many :recommend_apps
   has_many :versions
   has_many :ranks
+  has_many :tracks, class_name: 'Baidu::Track::App'
 
   validates_uniqueness_of :id_str
   validates :id_str, :app_type, :packageid, :groupid, :docid, presence: true
 
   before_validation :set_id_str, on: :create
+  after_save :save_track
 
   def self.build_id_str app_type, packageid, groupid, docid
     "#{app_type}_#{packageid}_#{groupid}_#{docid}"
@@ -32,13 +34,14 @@ class Baidu::App < ActiveRecord::Base
   # get icon url working
   # URI.decode('http://cdn00.baidu-img.cn/timg?vsapp\u0026size=b150_150\u0026imgtype=3\u0026quality=100\u0026er\u0026sec=0\u0026di=32fa4b486ef8f5f6d43547762ea02fa9\u0026ref=http%3A%2F%2Fh.hiphotos.bdimg.com\u0026src=http%3A%2F%2Fh.hiphotos.bdimg.com%2Fwisegame%2Fpic%2Fitem%2F3aee3d6d55fbb2fbb41abaf9494a20a44623dc2d.jpg'.gsub('\u0026', '&'))
 
-  # popularity = popu_index ?
-  # sourcename can be nil, but not often
-
   private
 
   def set_id_str
     self.id_str = Baidu::App.build_id_str(self.app_type, self.packageid, self.groupid, self.docid)
+  end
+
+  def save_track
+    Baidu::Service::Track::App.save_track self
   end
 end
 

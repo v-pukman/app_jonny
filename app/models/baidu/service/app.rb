@@ -248,6 +248,7 @@ class Baidu::Service::App < Baidu::Service::Base
     developer
   rescue ActiveRecord::RecordNotUnique
     developer = Baidu::Developer.where(origin_id: developer_attrs[:origin_id]).first
+    developer.update_attributes(developer_attrs)
     developer
   rescue StandardError => e
     Baidu::Log.error self.class, :save_developer, e, developer_attrs

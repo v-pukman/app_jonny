@@ -9,6 +9,14 @@ RSpec.describe Baidu::App, type: :model do
     expect(app.persisted?).to eq true
   end
 
+  context "after save" do
+    it "saves track" do
+      app.today_download_pid = 5000
+      expect(Baidu::Service::Track::App).to receive(:save_track).with(app)
+      app.save
+    end
+  end
+
   describe ".build_id_str" do
     let(:app_type) { "game" }
     let(:packageid) { 123 }

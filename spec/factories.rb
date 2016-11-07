@@ -60,4 +60,15 @@ FactoryGirl.define do
     area Log::BAIDU_AREA
     message 'boom!'
   end
+
+  #stats
+  factory :baidu_track_app, class: 'Baidu::Track::App' do
+    association :app, factory: :baidu_app
+    day { Date.today }
+  end
+
+  factory :baidu_track_developer, class: 'Baidu::Track::Developer' do
+    association :developer, factory: :baidu_developer
+    day { Date.today }
+  end
 end
