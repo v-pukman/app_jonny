@@ -78,7 +78,8 @@ class Baidu::Service::Rank < Baidu::Service::Base
 
   def fetch_items full_info
     full_info = JSON.parse(full_info.to_json)
-    original_items = full_info['result'].is_a?(Hash) ? full_info['result']['data'] : []
+    original_items = full_info['result'].is_a?(Hash) ? full_info['result']['data'] : nil
+    return [] unless original_items
 
     extracted = []
     original_items.each do |preview_info|

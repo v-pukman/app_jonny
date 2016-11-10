@@ -1,0 +1,20 @@
+%h2= "Baidu log report on #{@date}"
+%br
+%h2 ERRORS:
+%hr
+- @errors.each do |log|
+    %p= "#{log.id}##{log.class_name}##{log.method_name}"
+    %p= log.message
+    %p= log.context
+    %p= log.backtrace
+    %hr
+
+%br
+%h2 INFOS:
+%hr
+- @infos.each do |log|
+    %p= "#{log.id}##{log.class_name}##{log.method_name}"
+    %p= log.message
+    %p= log.context
+    %p= log.backtrace
+    %hr

@@ -49,7 +49,7 @@ where (context->'datatype')::text IN ('40', '606', '22', '354')
 
 ; 
 
-select * from baidu_ranks; /* "soft_common" */
+select * from baidu_ranks order by rank_type, rank_number, id /* "soft_common" */
 
 select a.sname, r.* 
 from baidu_ranks r
@@ -62,3 +62,14 @@ group by rank_number
 order by count(*) desc;
 
 select * from logs where message != 'app already saved';
+
+select usenum, total_count, response_count, score_count, display_count, * from baidu_apps limit 10;
+select usenum, * from baidu_apps where unable_download = 1;
+
+select * from baidu_developers;
+
+/* r = ActiveRecord::Base.connection.execute q */
+select info->'board_id'::text AS board_id, count(*) 
+from baidu_ranks
+where rank_type = 'games_in_board'
+group by board_id

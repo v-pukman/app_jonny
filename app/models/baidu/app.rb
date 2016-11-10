@@ -21,6 +21,9 @@ class Baidu::App < ActiveRecord::Base
   before_validation :set_id_str, on: :create
   after_save :save_track
 
+  scope :games, -> { where(app_type: GAME_APP) }
+  scope :soft, -> { where(app_type: SOFT_APP) }
+
   def self.build_id_str app_type, packageid, groupid, docid
     "#{app_type}_#{packageid}_#{groupid}_#{docid}"
   end

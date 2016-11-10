@@ -1,0 +1,6 @@
+%p{style: "color: #{@color};"}
+  = "#{@task_name} #{@message}"
+- if @details
+  %p= @details
+%p
+  Sent date: #{@date}

@@ -13,8 +13,19 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send.
+  # Mailer
   config.action_mailer.raise_delivery_errors = false
+  #config.action_mailer.default_url_options = { host: '5.189.145.199' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.yandex.ru",
+    :port                 => 587,
+    :domain               => "yandex.ru",
+    :user_name            => "a.app.jonny@yandex.ru",
+    :password             => "04081990Pass",
+    :authentication       => "plain",
+    :enable_starttls_auto => true
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

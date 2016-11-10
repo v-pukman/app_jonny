@@ -17,6 +17,18 @@ RSpec.describe Baidu::App, type: :model do
     end
   end
 
+  it "has games scope" do
+    game = create :baidu_app, app_type: Baidu::App::GAME_APP
+    other = create :baidu_app, app_type: Baidu::App::SOFT_APP
+    expect(Baidu::App.games).to eq [game]
+  end
+
+  it "has soft scope" do
+    soft = create :baidu_app, app_type: Baidu::App::SOFT_APP
+    other = create :baidu_app, app_type: Baidu::App::GAME_APP
+    expect(Baidu::App.soft).to eq [soft]
+  end
+
   describe ".build_id_str" do
     let(:app_type) { "game" }
     let(:packageid) { 123 }
