@@ -1,6 +1,6 @@
-%h2= "Baidu log report on #{@date}"
+%h3= "Baidu log report on #{@date}"
 %br
-%h2 ERRORS:
+%h3= "ERRORS: #{@errors.count}"
 %hr
 - @errors.each do |log|
     %p= "#{log.id}##{log.class_name}##{log.method_name}"
@@ -10,7 +10,7 @@
     %hr
 
 %br
-%h2 INFOS:
+%h3= "INFOS: #{@infos.count}"
 %hr
 - @infos.each do |log|
     %p= "#{log.id}##{log.class_name}##{log.method_name}"

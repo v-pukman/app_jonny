@@ -6,12 +6,12 @@ class BaiduMailer < ApplicationMailer
     mail subject: "Baidu Log Report"
   end
 
-  #TODO: tests!
-  #TODO: add featured by boards, games by boards statistins
-  #      boards count
+  #TODO: it's hard to test
+  #      move it to Baidu::Report record?
   def data_report
     @date = Date.yesterday
 
+    #apps
     @soft_total = Baidu::App.soft.count
     @soft_new = Baidu::App.soft.where(created_at: @date).count
     @games_total = Baidu::App.games.count
@@ -19,16 +19,21 @@ class BaiduMailer < ApplicationMailer
 
     @apps_total = Baidu::App.count
 
+    #tracks
     @app_tracks_total = Baidu::Track::App.count
     @app_tracks_new = Baidu::Track::App.where(day: @date).count
 
+    #ranks
     @soft_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::SOFT_COMMON_RANK, day: @date).count
-    @game_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::GAMES_IN_BOARD_RANK, day: @date).count
+    @game_ranks_new = Baidu::Rank.ranks_count_by_board Baidu::Rank::GAMES_IN_BOARD_RANK, @date
 
     @top_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::TOP_RANK, day: @date).count
     @rising_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::RISING_RANK, day: @date).count
 
-    @feature_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::FEATURE_IN_BOARD_RANK, day: @date).count
+    @feature_ranks_new = Baidu::Rank.ranks_count_by_board Baidu::Rank::FEATURE_IN_BOARD_RANK, @date
+
+    #boards
+    @boards_total = Baidu::Board.count_by_type
 
     mail subject: "Baidu Data Report"
   end

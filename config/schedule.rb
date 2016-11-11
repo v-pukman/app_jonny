@@ -1,4 +1,8 @@
 every 1.day, at: '00:05' do
+  rake 'baidu:send_report'
+end
+
+every 1.day, at: '00:10' do
   rake 'baidu:download_apps_from_boards'
 end
 

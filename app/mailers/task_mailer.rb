@@ -1,9 +1,9 @@
-class AdminMailer < ApplicationMailer
+class TaskMailer < ApplicationMailer
   STARTED = 'started'
   COMPLETED = 'completed'
   FAILED = 'failed'
 
-  def task_report task_status, task_name, details=nil
+  def status_report task_status, task_name, details=nil
     @task_name = task_name
     @color = task_status == FAILED ? 'red' : 'green'
     @message = "#{task_status.upcase}!"
@@ -11,4 +11,5 @@ class AdminMailer < ApplicationMailer
     @date = Time.now
     mail subject: "Task #{task_status}"
   end
+
 end

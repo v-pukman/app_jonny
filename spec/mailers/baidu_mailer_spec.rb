@@ -9,4 +9,9 @@ RSpec.describe BaiduMailer, type: :mailer do
     it { expect(report.body.encoded).to match error_log.message }
     it { expect(report.body.encoded).to match info_log.message }
   end
+
+  describe ".data_report" do
+    let(:report) { BaiduMailer.data_report.deliver_now }
+    it { expect(report.body.encoded).to match 'Baidu data report' }
+  end
 end

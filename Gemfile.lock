@@ -208,6 +208,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  arel
   byebug
   factory_girl
   faraday

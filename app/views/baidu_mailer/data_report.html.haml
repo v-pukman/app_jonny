@@ -1,0 +1,62 @@
+%h3= "Baidu data report on #{@date}"
+%br
+%table{border: 1}
+  %tboby
+    %tr
+      %td soft_total
+      %td= @soft_total
+    %tr
+      %td soft_new
+      %td= @soft_new
+    %tr
+      %td games_total
+      %td= @games_total
+    %tr
+      %td games_new
+      %td= @games_new
+    %tr
+      %td apps_total
+      %td= @apps_total
+    %tr
+      %td{colspan: 2}
+    %tr
+      %td app_tracks_total
+      %td= @app_tracks_total
+    %tr
+      %td app_tracks_new
+      %td= @app_tracks_new
+    %tr
+      %td{colspan: 2}
+    %tr
+      %td soft_ranks_new
+      %td= @soft_ranks_new
+    %tr
+      %td top_ranks_new
+      %td= @top_ranks_new
+    %tr
+      %td rising_ranks_new
+      %td= @rising_ranks_new
+    %tr
+      %td game_ranks_new
+      %td
+        %ol
+          - @game_ranks_new.each do |h|
+            %li= "board #{h['board_id']}: #{h['count']}"
+
+    %tr
+      %td feature_ranks_new
+      %td
+        %ol
+          - @feature_ranks_new.each do |h|
+            %li= "board #{h['board_id']}: #{h['count']}"
+    %tr
+      %td{colspan: 2}
+    %tr
+      %td boards_total
+      %td
+        %ol
+          - @boards_total.each do |h|
+            %li= "#{h['action_type']}: #{h['count']}"
+
+    %tr
+      %td{colspan: 2}

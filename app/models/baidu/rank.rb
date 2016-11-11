@@ -11,5 +11,17 @@ class Baidu::Rank < ActiveRecord::Base
 
   validates :rank_type, :day, :app_id, :rank_number, presence: true
 
+  # for ranks devided to boards
+  def self.ranks_count_by_board rank_type, day
+    ranks = Baidu::Rank.arel_table
+    query = ranks.
+            where(ranks[:rank_type].eq(rank_type)).
+            where(ranks[:day].eq(day)).
+            group('board_id').
+            project("info->'board_id'::text AS board_id, count(*)")
+    result = ActiveRecord::Base.connection.execute query.to_sql
+    result.as_json
+  end
+
   #validates_uniqueness_of :app_id, scope: [:rank_type, :day]
 end

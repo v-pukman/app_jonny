@@ -19,6 +19,7 @@ gem 'haml-rails', '~> 0.9'
 gem 'faraday'
 gem 'redis', '~>3.2'
 gem 'whenever', :require => false
+gem 'arel'
 
 group :development, :test do
   gem 'byebug'

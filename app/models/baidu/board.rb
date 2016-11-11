@@ -24,6 +24,15 @@ class Baidu::Board < ActiveRecord::Base
     params
   end
 
+  def self.count_by_type
+    board = Baidu::Board.arel_table
+    query = board.
+            group(board[:action_type]).
+            project('action_type, count(*)')
+    result = ActiveRecord::Base.connection.execute query.to_sql
+    result.as_json
+  end
+
   private
 
   def set_params
