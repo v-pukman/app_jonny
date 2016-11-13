@@ -1,13 +1,13 @@
 # config valid only for Capistrano 3.1
 lock '3.1.0'
 
-set :application, 'appjonny'
+set :application, 'app_jonny'
 set :repo_url, 'git@gitlab.com:vctr_uniq/app_jonny2.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-set :deploy_to, '/home/deploy/appjonny'
+set :deploy_to, '/home/deploy/app_jonny'
 
 set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
 set :unicorn_pid,  "#{deploy_to}/shared/pids/unicorn.pid"
