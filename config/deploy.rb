@@ -8,8 +8,8 @@ set :repo_url, 'git@gitlab.com:vctr_uniq/app_jonny2.git'
 
 set :deploy_to, '/home/deploy/app_jonny'
 
-set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
-set :unicorn_pid,  "#{deploy_to}/shared/pids/unicorn.pid"
+#set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
+#set :unicorn_pid,  "#{deploy_to}/shared/pids/unicorn.pid"
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -37,7 +37,7 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       execute :touch, release_path.join('tmp/restart.txt')
-      execute "if [ -f #{fetch(:unicorn_pid)} ] && [ -e /proc/$(cat #{fetch(:unicorn_pid)}) ]; then kill -USR2 `cat #{fetch(:unicorn_pid)}`; else cd #{fetch(:deploy_to)}/current && bundle exec unicorn_rails -c #{fetch(:unicorn_conf)} -E #{fetch(:rails_env)} -D; fi"
+      #execute "if [ -f #{fetch(:unicorn_pid)} ] && [ -e /proc/$(cat #{fetch(:unicorn_pid)}) ]; then kill -USR2 `cat #{fetch(:unicorn_pid)}`; else cd #{fetch(:deploy_to)}/current && bundle exec unicorn_rails -c #{fetch(:unicorn_conf)} -E #{fetch(:rails_env)} -D; fi"
     end
   end
 
