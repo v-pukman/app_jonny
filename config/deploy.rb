@@ -1,5 +1,4 @@
-# config valid only for Capistrano 3.1
-lock '3.1.0'
+lock '3.4.1'
 
 set :application, 'app_jonny'
 set :repo_url, 'git@gitlab.com:vctr_uniq/app_jonny2.git'
