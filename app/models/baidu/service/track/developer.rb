@@ -29,6 +29,6 @@ class Baidu::Service::Track::Developer < Baidu::Service::Base
 
   def self.no_changes? developer
     last = developer.tracks.last
-    last && last.score == developer.core && last.level == developer.level
+    last && last.score == developer.score && last.level == developer.level
   end
 end
