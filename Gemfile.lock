@@ -53,6 +53,9 @@ GEM
     capistrano-rails (1.2.0)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
+    capistrano-rvm (0.1.2)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
     chronic (0.10.2)
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
@@ -229,6 +232,7 @@ DEPENDENCIES
   capistrano (~> 3.4.0)
   capistrano-bundler
   capistrano-rails
+  capistrano-rvm
   factory_girl
   faraday
   guard-rspec
