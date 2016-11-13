@@ -11,6 +11,8 @@ gem 'redis', '~>3.2'
 gem 'whenever', :require => false
 gem 'arel'
 gem 'uglifier'
+gem 'execjs'
+gem 'therubyracer'
 
 group :development, :test do
   gem 'byebug'
