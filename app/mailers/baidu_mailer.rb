@@ -25,15 +25,15 @@ class BaiduMailer < ApplicationMailer
 
     #ranks
     @soft_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::SOFT_COMMON_RANK, day: @date).count
-    @game_ranks_new = Baidu::Rank.ranks_count_by_board Baidu::Rank::GAMES_IN_BOARD_RANK, @date
+    @game_ranks_new = Baidu::Analytic::Rank.count_by_board Baidu::Rank::GAMES_IN_BOARD_RANK, @date
 
     @top_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::TOP_RANK, day: @date).count
     @rising_ranks_new = Baidu::Rank.where(rank_type: Baidu::Rank::RISING_RANK, day: @date).count
 
-    @feature_ranks_new = Baidu::Rank.ranks_count_by_board Baidu::Rank::FEATURE_IN_BOARD_RANK, @date
+    @feature_ranks_new = Baidu::Analytic::Rank.count_by_board Baidu::Rank::FEATURE_IN_BOARD_RANK, @date
 
     #boards
-    @boards_total = Baidu::Board.count_by_type
+    @boards_total = Baidu::Analytic::Board.count_by_type
 
     mail subject: "Baidu Data Report"
   end

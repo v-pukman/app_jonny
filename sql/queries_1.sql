@@ -62,6 +62,7 @@ group by rank_number
 order by count(*) desc;
 
 select * from logs where message != 'app already saved';
+select * from logs where method_name != 'save_track' and level = 'error';
 
 select usenum, total_count, response_count, score_count, display_count, * from baidu_apps limit 10;
 select usenum, * from baidu_apps where unable_download = 1;
@@ -73,3 +74,11 @@ select info->'board_id'::text AS board_id, count(*)
 from baidu_ranks
 where rank_type = 'games_in_board'
 group by board_id
+;
+
+select *
+from baidu_ranks
+where rank_type = 'games_in_board'
+
+
+select action_type, count(*) from baidu_boards group by action_type;

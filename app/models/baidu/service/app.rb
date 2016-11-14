@@ -106,18 +106,10 @@ class Baidu::Service::App < Baidu::Service::Base
       return nil
     end
 
-    id_str = Baidu::App.build_id_str(itemdata['type'], itemdata['packageid'], itemdata['groupid'], itemdata['docid'])
-    app = Baidu::App.where(id_str: id_str).first
-    if app.nil?
-      app = download_app itemdata['docid']
-      app.update_attributes(build_preview_attrs(preview_info)) if app && app.id
-    else
-      #Baidu::Log.info self.class, :save_item, 'app already saved', { id_str: id_str }
-    end
-
-    #TODO: save day
-    #save_game_day(app.id, preview_info, full_info, search_position, in_board_position)
+    app = download_app itemdata['docid'] #create new or update old
+    app.update_attributes build_preview_attrs(preview_info)
     app
+    #TODO: save additional data
   rescue StandardError => e
     Baidu::Log.error self.class, :save_item, e, preview_info
     nil
