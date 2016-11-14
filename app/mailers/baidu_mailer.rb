@@ -1,8 +1,8 @@
 class BaiduMailer < ApplicationMailer
   def log_report
     @date = Date.yesterday
-    @errors = Log.errors.where area: Log::BAIDU_AREA, created_at: @date
-    @infos = Log.infos.where area: Log::BAIDU_AREA, created_at: @date
+    @errors = Log.errors.where area: Log::BAIDU_AREA, created_at: @date.beginning_of_day..@date.end_of_day
+    @infos = Log.infos.where area: Log::BAIDU_AREA, created_at: @date.beginning_of_day..@date.end_of_day
     mail subject: "Baidu Log Report"
   end
 
@@ -13,9 +13,9 @@ class BaiduMailer < ApplicationMailer
 
     #apps
     @soft_total = Baidu::App.soft.count
-    @soft_new = Baidu::App.soft.where(created_at: @date).count
+    @soft_new = Baidu::App.soft.where(created_at: @date.beginning_of_day..@date.end_of_day).count
     @games_total = Baidu::App.games.count
-    @games_new = Baidu::App.games.where(created_at: @date).count
+    @games_new = Baidu::App.games.where(created_at: @date.beginning_of_day..@date.end_of_day).count
 
     @apps_total = Baidu::App.count
 
