@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107135326) do
+ActiveRecord::Schema.define(version: 20161122082518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 20161107135326) do
     t.integer  "developer_id"
     t.integer  "category_id"
     t.integer  "source_id"
+    t.integer  "not_available_count",              default: 0
   end
 
   add_index "baidu_apps", ["app_type"], name: "index_baidu_apps_on_app_type", using: :btree
@@ -112,6 +113,7 @@ ActiveRecord::Schema.define(version: 20161107135326) do
   add_index "baidu_apps", ["docid"], name: "index_baidu_apps_on_docid", using: :btree
   add_index "baidu_apps", ["groupid"], name: "index_baidu_apps_on_groupid", using: :btree
   add_index "baidu_apps", ["id_str"], name: "index_baidu_apps_on_id_str", unique: true, using: :btree
+  add_index "baidu_apps", ["not_available_count"], name: "index_baidu_apps_on_not_available_count", using: :btree
   add_index "baidu_apps", ["packageid"], name: "index_baidu_apps_on_packageid", using: :btree
   add_index "baidu_apps", ["sname"], name: "index_baidu_apps_on_sname", using: :btree
   add_index "baidu_apps", ["source_id"], name: "index_baidu_apps_on_source_id", using: :btree

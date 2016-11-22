@@ -13,6 +13,7 @@ gem 'arel'
 gem 'uglifier'
 gem 'execjs'
 gem 'therubyracer'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'byebug'

@@ -29,6 +29,15 @@ RSpec.describe Baidu::App, type: :model do
     expect(Baidu::App.soft).to eq [soft]
   end
 
+  it "has available scope" do
+    app1 = create :baidu_app
+    app2 = create :baidu_app, not_available_count: Baidu::App::NOT_AVAILABLE_MAX
+    app3 = create :baidu_app, not_available_count: Baidu::App::NOT_AVAILABLE_MAX + 1
+    result = Baidu::App.available.pluck :id
+    expect(result).to match_array [app1.id, app2.id]
+    expect(result).to_not include [app3.id]
+  end
+
   describe ".build_id_str" do
     let(:app_type) { "game" }
     let(:packageid) { 123 }

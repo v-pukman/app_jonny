@@ -1,5 +1,10 @@
 namespace :baidu do
 
+  desc "tracks every not tracked app. must run every day."
+  task update_apps: :environment do
+    Baidu::Service::App.new.update_apps
+  end
+
   desc "send daily report to admin email"
   task send_report: :environment do
     BaiduMailer.log_report.deliver_now

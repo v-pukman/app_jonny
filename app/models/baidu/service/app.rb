@@ -45,8 +45,28 @@ class Baidu::Service::App < Baidu::Service::Base
     full_info = api.get :app, docid: docid
     app = save_app_stack full_info
     app
+  rescue Baidu::Error::EmptyAppInfo => e
+    raise #handle at update_app
   rescue StandardError => e
     Baidu::Log.error self.class, :download_app, e, { docid: docid  }
+    nil
+  end
+
+  def update_apps
+    day = Time.now.in_time_zone('Beijing').to_date
+    Baidu::Track::App.not_tracked_ids_sliced(day).each do |ids|
+      Baidu::UpdateAppsWorker.perform_async ids
+    end
+  end
+
+  def update_app app_id
+    app = Baidu::App.find app_id
+    download_app app.docid
+  rescue Baidu::Error::EmptyAppInfo
+    app.not_available_count += 1
+    app.save!
+  rescue StandardError => e
+    Baidu::Log.error self.class, :update_app, e, { app_id: app_id }
     nil
   end
 
@@ -107,8 +127,12 @@ class Baidu::Service::App < Baidu::Service::Base
     end
 
     app = download_app itemdata['docid'] #create new or update old
-    app.update_attributes build_preview_attrs(preview_info)
-    app
+    if app && app.id
+      app.update_attributes build_preview_attrs(preview_info)
+      app
+    else
+      nil
+    end
     #TODO: save additional data
   rescue StandardError => e
     Baidu::Log.error self.class, :save_item, e, preview_info
@@ -117,29 +141,39 @@ class Baidu::Service::App < Baidu::Service::Base
 
   # saves app with all its relation models from full_info json
   def save_app_stack full_info
-    app = save_app build_app_attrs(full_info)
+    ActiveRecord::Base.transaction do
+      app = save_app build_app_attrs(full_info)
 
-    save_versions app, build_versions_attrs(full_info)
-    save_video app, build_video_attrs(full_info)
-    save_recommend_apps app, build_recommend_apps_attrs(full_info)
+      save_versions app, build_versions_attrs(full_info)
+      save_video app, build_video_attrs(full_info)
+      save_recommend_apps app, build_recommend_apps_attrs(full_info)
 
-    developer = save_developer build_developer_attrs(full_info)
-    app.developer = developer if developer && developer.id
+      developer = save_developer build_developer_attrs(full_info)
+      app.developer = developer if developer && developer.id
 
-    category = save_category build_category_attrs(full_info)
-    app.category = category if category && category.id
+      category = save_category build_category_attrs(full_info)
+      app.category = category if category && category.id
 
-    source = save_source build_source_attrs(full_info)
-    app.source = source if source && source.id
+      source = save_source build_source_attrs(full_info)
+      app.source = source if source && source.id
 
-    tags = save_tags build_tags_attrs(full_info)
-    app.tags = tags if tags.any?
+      tags = save_tags build_tags_attrs(full_info)
+      app.tags = tags if tags.any?
 
-    display_tags = save_display_tags build_display_tags_attrs(full_info)
-    app.display_tags = display_tags if display_tags.any?
+      display_tags = save_display_tags build_display_tags_attrs(full_info)
+      app.display_tags = display_tags if display_tags.any?
 
-    app.save!
-    app
+      app.save!
+      app
+    end
+  end
+
+  def update_not_available_count docid
+    app = Baidu::App.where(docid: docid).first
+    if app
+      app.not_available_count = app.not_available_count + 1
+      app.save!
+    end
   end
 
   ###################################
@@ -357,6 +391,8 @@ class Baidu::Service::App < Baidu::Service::Base
   def build_app_attrs full_info
     data = fetch_base_info full_info
     full_data = fetch_base_info full_info #pointer fix
+
+    raise Baidu::Error::EmptyAppInfo if data.blank?
 
     attrs = data.keep_if {|a| Baidu::App.column_names.include?(a.to_s)}
     attrs['today_str_download'] = full_data['today_strDownload']

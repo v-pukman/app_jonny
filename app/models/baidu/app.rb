@@ -4,6 +4,8 @@ class Baidu::App < ActiveRecord::Base
     GAME_APP = 'game'
   ].freeze
 
+  NOT_AVAILABLE_MAX = 3
+
   belongs_to :developer
   belongs_to :category
   belongs_to :source
@@ -23,6 +25,7 @@ class Baidu::App < ActiveRecord::Base
 
   scope :games, -> { where(app_type: GAME_APP) }
   scope :soft, -> { where(app_type: SOFT_APP) }
+  scope :available, -> { where('not_available_count <= ?', NOT_AVAILABLE_MAX) }
 
   def self.build_id_str app_type, packageid, groupid, docid
     "#{app_type}_#{packageid}_#{groupid}_#{docid}"

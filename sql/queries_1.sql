@@ -78,7 +78,18 @@ group by board_id
 
 select *
 from baidu_ranks
-where rank_type = 'games_in_board'
+where rank_type = 'top'
+
+select *
+from baidu_ranks
+where app_id = 431;
 
 
 select action_type, count(*) from baidu_boards group by action_type;
+
+select * from baidu_track_apps order by app_id;
+
+select id from baidu_apps where id not in (select distinct app_id from baidu_track_apps where day = '2016-11-12')
+
+
+select distinct app_id from baidu_track_apps where day = '2016-11-13'

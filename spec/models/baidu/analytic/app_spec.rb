@@ -21,6 +21,15 @@ RSpec.describe Baidu::Analytic::App do
       result = service.not_tracked day
       expect(result.map{|row| row['id'].to_i }).to eq [app2.id]
     end
+    it "uses not_available_count" do
+      app1.update_attributes not_available_count: Baidu::App::NOT_AVAILABLE_MAX - 1
+      app2.update_attributes not_available_count: Baidu::App::NOT_AVAILABLE_MAX + 1
+      app1.tracks.destroy_all
+      app2.tracks.destroy_all
+      result = service.not_tracked(day).map{|row| row['id'].to_i }
+      expect(result).to include app1.id
+      expect(result).to_not include app2.id
+    end
   end
   describe ".not_tracked_ids" do
     it "returns list of integer ids" do

@@ -174,6 +174,10 @@ RSpec.describe Baidu::Service::App do
       expect(Baidu::Log).to receive(:error)
       service.download_app docid
     end
+    it "raises EmptyAppInfo error when no full info" do
+      allow(service).to receive(:save_app_stack).and_raise Baidu::Error::EmptyAppInfo
+      expect{ service.download_app docid }.to raise_error Baidu::Error::EmptyAppInfo
+    end
   end
 
   describe "#save_app_stack" do
@@ -476,13 +480,6 @@ RSpec.describe Baidu::Service::App do
     end
   end
 
-  # describe "#build_recommend_groups_attrs" do
-  #   let(:attrs) { service.build_recommend_groups_attrs(full_info_source) }
-  #   it "retruns recommend groups" do
-  #     expect(attrs).to eq data_info['recommend_info'].map{|d| {name: d['recommend_title']} }
-  #   end
-  # end
-
   describe "#build_app_attrs" do
     let(:attrs) { service.build_app_attrs(full_info_source) }
     let(:base_info) { service.fetch_base_info full_info_source }
@@ -495,6 +492,10 @@ RSpec.describe Baidu::Service::App do
       keys =  base_info.keep_if {|a| Baidu::App.column_names.include?(a.to_s)}.keys
       keys = keys + ['today_str_download', 'now_download', 'app_type']
       expect(attrs.keys).to match_array keys
+    end
+    it "raises EmptyAppInfo error when app info is empty" do
+      allow(service).to receive(:fetch_base_info).and_return(nil)
+      expect{ attrs }.to raise_error Baidu::Error::EmptyAppInfo
     end
   end
 
@@ -583,6 +584,33 @@ RSpec.describe Baidu::Service::App do
       it "returns empty hash" do
          expect(attrs).to eq({})
       end
+    end
+  end
+
+  describe "#update_apps" do
+    it "use not tracked apps ids" do
+      expect(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([])
+      service.update_apps
+    end
+    it "calls updater worker" do
+      allow(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([[1,2]])
+      expect(Baidu::UpdateAppsWorker).to receive(:perform_async).with([1,2])
+      service.update_apps
+    end
+  end
+
+  describe "#update_app" do
+    it "calls download method of service to update" do
+      [app]
+      expect(service).to receive(:download_app).with(app.docid)
+      service.update_app app.id
+    end
+    it "increases not_available_count on EmptyAppInfo error" do
+      app.update_attributes not_available_count: 2
+      allow(service).to receive(:download_app).and_raise Baidu::Error::EmptyAppInfo
+      service.update_app app.id
+      app.reload
+      expect(app.not_available_count).to eq 3
     end
   end
 end

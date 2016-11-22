@@ -9,6 +9,7 @@ class Baidu::Analytic::App < Baidu::Analytic::Base
 
     query = apps.
             where(apps[:id].not_in(subquery)).
+            where(apps[:not_available_count].lteq(Baidu::App::NOT_AVAILABLE_MAX)).
             project(apps[:id])
 
     execute query
