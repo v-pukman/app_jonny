@@ -93,3 +93,32 @@ select id from baidu_apps where id not in (select distinct app_id from baidu_tra
 
 
 select distinct app_id from baidu_track_apps where day = '2016-11-13'
+
+select * from logs where level='error' and created_at::date = '2016-11-20';
+
+select t1.id, t1.packageid, t1.groupid, t1.docid, t2.*, t1.* ;
+select * from logs where method_name = 'perform'
+
+
+from baidu_apps t1
+join baidu_versions t2 on t2.app_id = t1.id
+where t1.packageid = 59384;
+
+select * from baidu_apps where docid = 8229313;
+
+select * from baidu_developers;
+
+select app_id from baidu_track_apps where day='2016-11-25';
+select count(app_id) from baidu_track_apps where day='2016-11-25'; /* 11 532, all apps: 20 394 */
+select id, docid, not_available_count from baidu_apps where not_available_count > 0;
+
+select * from logs where class_name = 'Baidu::UpdateAppsWorker' order by created_at;
+/*delete from logs where class_name = 'Baidu::UpdateAppsWorker';*/
+
+SELECT distinct app_id FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-11-26'
+ SELECT "baidu_apps"."id" FROM "baidu_apps" WHERE "baidu_apps"."not_available_count" > 3
+
+ SELECT count("baidu_apps"."id") 
+ FROM "baidu_apps" 
+ WHERE "baidu_apps"."id" NOT IN (SELECT distinct app_id FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-11-26') 
+ AND "baidu_apps"."not_available_count" <= 3
