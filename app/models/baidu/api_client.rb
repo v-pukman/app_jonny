@@ -3,6 +3,10 @@ class Baidu::ApiClient
   #SEARCH_URL = 'http://m.baidu.com/s'
   SEARCH_URL = 'http://m.baidu.com/as'
 
+  RETRY_MAX = 4
+  RETRY_INTERVAL = 5
+  RETRY_BACKOFF_FACTOR = 2
+
    # get :app, docid: 123
   def get resource, options={}
     method_name = "get_#{resource}".to_sym
@@ -12,17 +16,6 @@ class Baidu::ApiClient
       raise NotImplementedError
     end
   end
-
-  # TODO: add parser logic
-  #       choose postgresql or mysql?
-
-  # NEXT:
-  #       port tasks
-  #       dumb old data
-  #       setup server and deploy
-  #       apply old data
-  #       use worker - collect data in the few threads
-  #       add log (monitoring) system
 
   # returns app full info
   ## docid
@@ -123,7 +116,12 @@ class Baidu::ApiClient
     custom_options.each {|key, value| params[key.to_s] = value }
 
     response = connection(url).send(request_type) {|request| request.params = params }
-    JSON.parse(response.body)
+    handle_response response
+  end
+
+  def handle_response response
+    raise Baidu::Error::ApiClient::EmptyResponse if response.body.to_s == ""
+    JSON.parse response.body
   end
 
   def original_default_params default_params_name
@@ -148,16 +146,20 @@ class Baidu::ApiClient
     SecureRandom.urlsafe_base64(length)[0...length]
   end
 
-  #Faraday::ConnectionFailed:
-  #     execution expired
-  # JSON::ParserError
-
-  # disabled for now
-  def handle_timeouts
+  def with_retry
+    tries = 0
     begin
+      Rails.logger.debug "RETRY ATTEMPT: #{tries}"
       yield
-    rescue Faraday::TimeoutError #, Faraday::ConnectionFailed
-      {}
+    rescue Errno::ETIMEDOUT,
+           Faraday::TimeoutError,
+           Faraday::ConnectionFailed,
+           Baidu::Error::ApiClient::EmptyResponse => e
+      Rails.logger.error "error, #{e.message}"
+      tries += 1
+      time = tries * RETRY_INTERVAL * RETRY_BACKOFF_FACTOR
+      sleep time
+      tries < RETRY_MAX ? retry : raise
     end
   end
 
@@ -176,11 +178,11 @@ class Baidu::ApiClient
   end
 
   def make_api_call method_name, options
-    #handle_timeouts do
+    with_retry do
       handle_caching(method_name, options) do
         send(method_name, options)
       end
-    #end
+    end
   end
 
   def get_option options, key

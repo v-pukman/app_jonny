@@ -2,7 +2,9 @@ namespace :baidu do
 
   desc "tracks every not tracked app. must run every day."
   task update_apps: :environment do
+    TaskMailer.status_report(TaskMailer::STARTED, :update_apps).deliver_now
     Baidu::Service::App.new.update_apps
+    TaskMailer.status_report(TaskMailer::COMPLETED, :update_apps).deliver_now
   end
 
   desc "send daily report to admin email"
@@ -53,6 +55,7 @@ namespace :baidu do
 
   desc "download games and soft apps from catalog"
   task download_apps_from_boards: :environment do
+    TaskMailer.status_report(TaskMailer::STARTED, :download_apps_from_boards).deliver_now
     Baidu::Service::Board.new.download_boards # soft & games
 
     boards = Baidu::Board.generalboard

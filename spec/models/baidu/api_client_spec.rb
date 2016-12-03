@@ -311,6 +311,20 @@ RSpec.describe Baidu::ApiClient do
     end
   end
 
+  describe "#make_api_call" do
+    context "retry block" do
+      before do
+        stub_const("Baidu::ApiClient::RETRY_INTERVAL", 1)
+        stub_const("Baidu::ApiClient::RETRY_BACKOFF_FACTOR", 1)
+      end
+      it "retries method until success" do
+        allow(client).to receive(:get_app).and_raise Baidu::Error::ApiClient::EmptyResponse
+        expect(client).to receive(:get_app).at_least(Baidu::ApiClient::RETRY_MAX).times
+        expect{ client.send(:make_api_call, :get_app, {}) }.to raise_error Baidu::Error::ApiClient::EmptyResponse
+      end
+    end
+  end
+
   describe "#get_option" do
     it "raises error if no option" do
       expect { client.send(:get_option, {}, :option_name) }.to raise_error ArgumentError
@@ -379,6 +393,20 @@ RSpec.describe Baidu::ApiClient do
       original_pu = ::Baidu::DefaultParams.details['pu']
       params = client.send :default_params, :details
       expect(params['pu']).to_not eq original_pu
+    end
+  end
+
+  describe "#handle_response" do
+    let(:empty_response) { double(body: "") }
+    let(:response) {  double(body: {docid:1, sname: 'super'}.to_json) }
+    it "raises empty_response error" do
+      expect{ client.send :handle_response, empty_response }.to raise_error Baidu::Error::ApiClient::EmptyResponse
+    end
+    it "returns parsed response data" do
+      result = client.send :handle_response, response
+      expect(result.is_a?(Hash)).to eq true
+      expect(result['docid']).to eq 1
+      expect(result['sname']).to eq "super"
     end
   end
 end
