@@ -1,4 +1,4 @@
-class Baidu::ApiClient
+class Baidu::Service::ApiClient
   APPS_URL = 'http://m.baidu.com/appsrv'
   #SEARCH_URL = 'http://m.baidu.com/s'
   SEARCH_URL = 'http://m.baidu.com/as'

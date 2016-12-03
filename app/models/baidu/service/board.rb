@@ -36,9 +36,9 @@ class Baidu::Service::Board < Baidu::Service::Base
       page_number += 1
     end
 
-    Baidu::Log.info self.class, :download_apps, 'download finished', { board_id: board.id, items_count: items_count, saved_count: saved_count }
+    Log.info Log::BAIDU_AREA, self.class, :download_apps, 'download finished', { board_id: board.id, items_count: items_count, saved_count: saved_count }
   rescue StandardError => e
-    Baidu::Log.error self.class, :download_apps, e, { board_id: board.try(:id) }
+    Log.error Log::BAIDU_AREA, self.class, :download_apps, e, { board_id: board.try(:id) }
   end
 
   # get soft and game boards
@@ -90,7 +90,7 @@ class Baidu::Service::Board < Baidu::Service::Base
   rescue ActiveRecord::RecordNotUnique
     Baidu::Board.where(link: board_attrs[:link]).first
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_board, e, board_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_board, e, board_attrs
     nil
   end
 

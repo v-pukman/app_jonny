@@ -46,9 +46,9 @@ class Baidu::Service::Rank < Baidu::Service::Base
       page_number += 1
     end #while end
 
-    Baidu::Log.info self.class, :download_ranks, 'download finished', { rank_type: rank_type, options: options, items_count: items_count, saved_count: saved_count }
+    Log.info Log::BAIDU_AREA, self.class, :download_ranks, 'download finished', { rank_type: rank_type, options: options, items_count: items_count, saved_count: saved_count }
   rescue StandardError => e
-    Baidu::Log.error self.class, :download_ranks, e, { rank_type: rank_type, options: options }
+    Log.error Log::BAIDU_AREA, self.class, :download_ranks, e, { rank_type: rank_type, options: options }
   end
 
   def save_rank app, rank_attrs
@@ -70,7 +70,7 @@ class Baidu::Service::Rank < Baidu::Service::Base
   rescue ActiveRecord::RecordNotUnique
     app.ranks.where(day: rank_attrs[:day], rank_type: rank_attrs[:rank_type]).first
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_rank, e, rank_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_rank, e, rank_attrs
     nil
   end
 

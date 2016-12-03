@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe Baidu::ApiClient do
-  let(:client) { Baidu::ApiClient.new }
+RSpec.describe Baidu::Service::ApiClient do
+  let(:client) { Baidu::Service::ApiClient.new }
 
   before do
     RedisClient.flushdb
@@ -314,12 +314,12 @@ RSpec.describe Baidu::ApiClient do
   describe "#make_api_call" do
     context "retry block" do
       before do
-        stub_const("Baidu::ApiClient::RETRY_INTERVAL", 1)
-        stub_const("Baidu::ApiClient::RETRY_BACKOFF_FACTOR", 1)
+        stub_const("Baidu::Service::ApiClient::RETRY_INTERVAL", 1)
+        stub_const("Baidu::Service::ApiClient::RETRY_BACKOFF_FACTOR", 1)
       end
       it "retries method until success" do
         allow(client).to receive(:get_app).and_raise Baidu::Error::ApiClient::EmptyResponse
-        expect(client).to receive(:get_app).at_least(Baidu::ApiClient::RETRY_MAX).times
+        expect(client).to receive(:get_app).at_least(Baidu::Service::ApiClient::RETRY_MAX).times
         expect{ client.send(:make_api_call, :get_app, {}) }.to raise_error Baidu::Error::ApiClient::EmptyResponse
       end
     end

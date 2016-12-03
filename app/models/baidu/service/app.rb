@@ -36,9 +36,9 @@ class Baidu::Service::App < Baidu::Service::Base
       page_number += 1
     end
 
-    Baidu::Log.info self.class, :download_apps_from_board, 'download finished', { boardid: board.origin_id, items_count: items_count, saved_count: saved_count }
+    Log.info Log::BAIDU_AREA, self.class, :download_apps_from_board, 'download finished', { boardid: board.origin_id, items_count: items_count, saved_count: saved_count }
   rescue StandardError => e
-    Baidu::Log.error self.class, :download_apps_from_board, e, { boardid: board.try(:origin_id) }
+    Log.error Log::BAIDU_AREA, self.class, :download_apps_from_board, e, { boardid: board.try(:origin_id) }
   end
 
   def download_app docid
@@ -48,7 +48,7 @@ class Baidu::Service::App < Baidu::Service::Base
   rescue Baidu::Error::EmptyAppInfo => e
     raise #handle at update_app
   rescue StandardError => e
-    Baidu::Log.error self.class, :download_app, e, { docid: docid  }
+    Log.error Log::BAIDU_AREA, self.class, :download_app, e, { docid: docid  }
     nil
   end
 
@@ -66,7 +66,7 @@ class Baidu::Service::App < Baidu::Service::Base
     app.not_available_count += 1
     app.save!
   rescue StandardError => e
-    Baidu::Log.error self.class, :update_app, e, { app_id: app_id }
+    Log.error Log::BAIDU_AREA, self.class, :update_app, e, { app_id: app_id }
     nil
   end
 
@@ -84,18 +84,18 @@ class Baidu::Service::App < Baidu::Service::Base
         if itemdata.count{|i| i.is_a?(Hash) && i['link_info'].is_a?(Hash) } > 0
           boards_attrs = itemdata.map {|i| {link: i['link_info']['url']} }
           board_service.save_boards boards_attrs
-          Baidu::Log.info self.class, :save_item, 'board links detected', preview_info
+          Log.info Log::BAIDU_AREA, self.class, :save_item, 'board links detected', preview_info
           return nil
         #handle 34_2 datatype (list of board links from ranks page)
         elsif itemdata.count{|i| i.is_a?(Hash) && i['dataurl'].to_s.include?('board') }
           boards_attrs = itemdata.map{|i| {link: i['dataurl']} }
           board_service.save_boards boards_attrs
-          Baidu::Log.info self.class, :save_item, 'board links detected', preview_info
+          Log.info Log::BAIDU_AREA, self.class, :save_item, 'board links detected', preview_info
           return nil
         end
       end
 
-      Baidu::Log.info self.class, :save_item, 'itemdata is not hash', preview_info
+      Log.info Log::BAIDU_AREA, self.class, :save_item, 'itemdata is not hash', preview_info
       return nil
     end
 
@@ -122,7 +122,7 @@ class Baidu::Service::App < Baidu::Service::Base
         return result
       end
 
-      Baidu::Log.info self.class, :save_item, 'itemdata has no app info', preview_info
+      Log.info Log::BAIDU_AREA, self.class, :save_item, 'itemdata has no app info', preview_info
       return nil
     end
 
@@ -135,7 +135,7 @@ class Baidu::Service::App < Baidu::Service::Base
     end
     #TODO: save additional data
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_item, e, preview_info
+    Log.error Log::BAIDU_AREA, self.class, :save_item, e, preview_info
     nil
   end
 
@@ -256,11 +256,11 @@ class Baidu::Service::App < Baidu::Service::Base
         version = app.versions.where(id_str: id_str)
         version.update_attributes(attrs)
       rescue StandardError => e
-        Baidu::Log.error self.class, :save_versions, e, versions_attrs
+        Log.error Log::BAIDU_AREA, self.class, :save_versions, e, versions_attrs
       end
     end
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_versions, e, versions_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_versions, e, versions_attrs
   end
 
   def save_developer developer_attrs
@@ -277,7 +277,7 @@ class Baidu::Service::App < Baidu::Service::Base
     developer.update_attributes(developer_attrs)
     developer
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_developer, e, developer_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_developer, e, developer_attrs
     nil
   end
 
@@ -294,7 +294,7 @@ class Baidu::Service::App < Baidu::Service::Base
   rescue ActiveRecord::RecordNotUnique
     app.video.reload
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_video, e, video_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_video, e, video_attrs
     nil
   end
 
@@ -310,14 +310,14 @@ class Baidu::Service::App < Baidu::Service::Base
     category = Baidu::Category.where(origin_id: category_attrs[:origin_id]).first
     category
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_category, e, category_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_category, e, category_attrs
     nil
   end
 
   def save_tags tags_attrs
     tags_attrs.map {|tag| Baidu::Tag.where(name: tag[:name]).first_or_create }
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_tags, e, tags_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_tags, e, tags_attrs
     []
   end
 
@@ -331,12 +331,12 @@ class Baidu::Service::App < Baidu::Service::Base
         tag = Baidu::DisplayTag.where(name: tag_attrs[:name], content: tag_attrs[:content], content_json: tag_attrs[:content_json].to_s).first
         tag
       rescue StandardError => e
-        Baidu::Log.error self.class, :save_display_tags, e
+        Log.error Log::BAIDU_AREA, self.class, :save_display_tags, e
         nil
       end
     end.compact
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_display_tags, e, display_tags_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_display_tags, e, display_tags_attrs
     []
   end
 
@@ -366,11 +366,11 @@ class Baidu::Service::App < Baidu::Service::Base
       rescue ActiveRecord::RecordNotUnique
         # don't need to update
       rescue StandardError => e
-        Baidu::Log.error self.class, :save_recommend_apps, e, attrs
+        Log.error Log::BAIDU_AREA, self.class, :save_recommend_apps, e, attrs
       end #begin end
     end #each end
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_recommend_apps, e, recommend_apps_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_recommend_apps, e, recommend_apps_attrs
   end
 
   def save_source source_attrs
@@ -385,7 +385,7 @@ class Baidu::Service::App < Baidu::Service::Base
     source = Baidu::Source.where(name: source_attrs[:name]).first
     source
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_source, e, source_attrs
+    Log.error Log::BAIDU_AREA, self.class, :save_source, e, source_attrs
   end
 
   def build_app_attrs full_info

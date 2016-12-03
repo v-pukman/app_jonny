@@ -60,7 +60,6 @@ namespace :baidu do
 
     boards = Baidu::Board.generalboard
     boards.each do |board|
-      #Baidu::Log.info "tasks :baidu", :download_apps_from_boards, "start download", { board_origin_id: board.origin_id }
       Baidu::Service::Board.new.download_apps board
     end
     TaskMailer.status_report(TaskMailer::COMPLETED, :download_apps_from_boards).deliver_now

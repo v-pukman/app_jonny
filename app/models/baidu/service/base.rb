@@ -1,5 +1,5 @@
 class Baidu::Service::Base
   def api
-    @api ||= Baidu::ApiClient.new
+    @api ||= Baidu::Service::ApiClient.new
   end
 end

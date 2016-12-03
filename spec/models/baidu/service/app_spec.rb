@@ -14,7 +14,7 @@ RSpec.describe Baidu::Service::App do
   let(:base_info) { service.fetch_base_info(full_info_source) }
 
   it { expect(preview_info_source).to_not eq nil }
-  it { expect(service.api.is_a?(Baidu::ApiClient)).to eq true }
+  it { expect(service.api.is_a?(Baidu::Service::ApiClient)).to eq true }
 
   before do
     VCR.use_cassette("baidu/get_app--doudizhu") do
@@ -171,7 +171,7 @@ RSpec.describe Baidu::Service::App do
     end
     it "write error to log" do
       allow(service).to receive(:save_app_stack).and_raise StandardError.new 'boom!'
-      expect(Baidu::Log).to receive(:error)
+      expect(Log).to receive(:error)
       service.download_app docid
     end
     it "raises EmptyAppInfo error when no full info" do

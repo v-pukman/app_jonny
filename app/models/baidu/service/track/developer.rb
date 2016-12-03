@@ -16,7 +16,7 @@ class Baidu::Service::Track::Developer < Baidu::Service::Base
     track.update_attributes attrs
     track
   rescue StandardError => e
-    Baidu::Log.error self.class, :save_track, e, { developer_id: developer.try(:id), attrs: attrs }
+    Log.error Log::BAIDU_AREA, self.class, :save_track, e, { developer_id: developer.try(:id), attrs: attrs }
   end
 
   def self.build_attrs developer
