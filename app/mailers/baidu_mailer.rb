@@ -1,6 +1,6 @@
 class BaiduMailer < ApplicationMailer
   def log_report
-    @time = curr_time.yesterday
+    @time = Baidu::Helper::DateTime.curr_time.yesterday
     @errors = Log.errors.where area: Log::BAIDU_AREA, created_at: @time.beginning_of_day..@time.end_of_day
     @infos = Log.infos.where area: Log::BAIDU_AREA, created_at: @time.beginning_of_day..@time.end_of_day
     mail subject: "Baidu Log Report"
@@ -9,7 +9,7 @@ class BaiduMailer < ApplicationMailer
   #TODO: it's hard to test
   #      move it to Baidu::Report record?
   def data_report
-    @time = curr_time.yesterday
+    @time = Baidu::Helper::DateTime.curr_time.yesterday
 
     #apps
     @soft_total = Baidu::App.soft.count
@@ -36,10 +36,5 @@ class BaiduMailer < ApplicationMailer
     @boards_total = Baidu::Analytic::Board.count_by_type
 
     mail subject: "Baidu Data Report"
-  end
-
-  def curr_time
-    Time.now.in_time_zone('Beijing')
-    #Date.current.in_time_zone('Beijing') #for date
   end
 end

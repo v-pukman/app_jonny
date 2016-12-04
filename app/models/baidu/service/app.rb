@@ -53,7 +53,7 @@ class Baidu::Service::App < Baidu::Service::Base
   end
 
   def update_apps
-    day = Time.now.in_time_zone('Beijing').to_date
+    day = Baidu::Helper::DateTime.curr_date
     Baidu::Track::App.not_tracked_ids_sliced(day).each do |ids|
       Baidu::UpdateAppsWorker.perform_async ids
     end
@@ -62,6 +62,7 @@ class Baidu::Service::App < Baidu::Service::Base
   def update_app app_id
     app = Baidu::App.find app_id
     download_app app.docid
+    app.save_track #force track
   rescue Baidu::Error::EmptyAppInfo
     app.not_available_count += 1
     app.save!

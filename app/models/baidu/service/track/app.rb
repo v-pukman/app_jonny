@@ -19,7 +19,7 @@ class Baidu::Service::Track::App < Baidu::Service::Base
   end
 
   def self.build_attrs app
-    day = Date.today
+    day = Baidu::Helper::DateTime.curr_date
     attrs = app.attributes.keep_if {|a| Baidu::Track::App.column_names.include?(a.to_s)}
     attrs.symbolize_keys!
     attrs.delete :created_at

@@ -21,7 +21,7 @@ class Baidu::Service::Track::Developer < Baidu::Service::Base
 
   def self.build_attrs developer
     {
-      day: Date.today,
+      day: Baidu::Helper::DateTime.curr_date,
       score: developer.score,
       level: developer.level
     }

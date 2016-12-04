@@ -106,7 +106,7 @@ class Baidu::Service::Rank < Baidu::Service::Base
     info.merge! additional_info
     {
       rank_type: rank_type,
-      day: Date.today,
+      day: Baidu::Helper::DateTime.curr_date,
       rank_number: itemdata['rankingnum'],
       info: info
     }
