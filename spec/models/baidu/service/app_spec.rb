@@ -169,6 +169,10 @@ RSpec.describe Baidu::Service::App do
       expect(service).to receive(:save_app_stack)
       service.download_app docid
     end
+    it "calls backup info" do
+      expect(Baidu::Backup::App).to receive(:backup_full_info)
+      service.download_app docid
+    end
     it "write error to log" do
       allow(service).to receive(:save_app_stack).and_raise StandardError.new 'boom!'
       expect(Log).to receive(:error)

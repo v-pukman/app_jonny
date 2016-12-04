@@ -15,5 +15,8 @@
 /log/*
 !/log/.keep
 /tmp
+
 dump.rdb
 downloads/baidu/game_ranks_in_board/
+
+/backup/*

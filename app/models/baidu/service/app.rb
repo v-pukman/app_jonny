@@ -44,6 +44,7 @@ class Baidu::Service::App < Baidu::Service::Base
   def download_app docid
     full_info = api.get :app, docid: docid
     app = save_app_stack full_info
+    Baidu::Backup::App.backup_full_info app.id, full_info
     app
   rescue Baidu::Error::EmptyAppInfo => e
     raise #handle at update_app
