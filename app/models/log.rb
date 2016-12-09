@@ -15,14 +15,11 @@ class Log < ActiveRecord::Base
   scope :errors, -> { where(level: ERROR_LEVEL) }
   scope :infos, -> { where(level: INFO_LEVEL) }
 
-  #TODO: send email?
-
   def self.clear select_options
     Log.transaction do
       Log.where(select_options).destroy_all
     end
   end
-
 
   def self.write level, area, class_name, method_name, message, backtrace=nil, context={}
     Log.create({
@@ -38,7 +35,7 @@ class Log < ActiveRecord::Base
   end
 
   def self.error area, class_name, method_name, error, context={}
-    message = error.message
+    message = "#{error.class}##{error.message}"
     backtrace = (error.backtrace || []).join("\n")
     Log.write(Log::ERROR_LEVEL, area, class_name, method_name, message, backtrace, context)
   end

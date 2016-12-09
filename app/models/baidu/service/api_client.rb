@@ -120,8 +120,9 @@ class Baidu::Service::ApiClient
   end
 
   def handle_response response
-    raise Baidu::Error::ApiClient::EmptyResponse if response.body.to_s == ""
     JSON.parse response.body
+  rescue JSON::ParserError => e
+    raise Baidu::Error::ApiClient::ResponseError, e.message
   end
 
   def original_default_params default_params_name
@@ -149,13 +150,13 @@ class Baidu::Service::ApiClient
   def with_retry
     tries = 0
     begin
-      Rails.logger.debug "RETRY ATTEMPT: #{tries}"
+      puts "RETRY ATTEMPT: #{tries}"
       yield
     rescue Errno::ETIMEDOUT,
            Faraday::TimeoutError,
            Faraday::ConnectionFailed,
-           Baidu::Error::ApiClient::EmptyResponse => e
-      Rails.logger.error "error, #{e.message}"
+           Baidu::Error::ApiClient::ResponseError => e
+      puts "error, #{e.class}, #{e.message}"
       tries += 1
       time = tries * RETRY_INTERVAL * RETRY_BACKOFF_FACTOR
       sleep time

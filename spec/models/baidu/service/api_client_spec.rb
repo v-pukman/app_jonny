@@ -318,9 +318,9 @@ RSpec.describe Baidu::Service::ApiClient do
         stub_const("Baidu::Service::ApiClient::RETRY_BACKOFF_FACTOR", 1)
       end
       it "retries method until success" do
-        allow(client).to receive(:get_app).and_raise Baidu::Error::ApiClient::EmptyResponse
+        allow(client).to receive(:get_app).and_raise Baidu::Error::ApiClient::ResponseError
         expect(client).to receive(:get_app).at_least(Baidu::Service::ApiClient::RETRY_MAX).times
-        expect{ client.send(:make_api_call, :get_app, {}) }.to raise_error Baidu::Error::ApiClient::EmptyResponse
+        expect{ client.send(:make_api_call, :get_app, {}) }.to raise_error Baidu::Error::ApiClient::ResponseError
       end
     end
   end
@@ -399,8 +399,8 @@ RSpec.describe Baidu::Service::ApiClient do
   describe "#handle_response" do
     let(:empty_response) { double(body: "") }
     let(:response) {  double(body: {docid:1, sname: 'super'}.to_json) }
-    it "raises empty_response error" do
-      expect{ client.send :handle_response, empty_response }.to raise_error Baidu::Error::ApiClient::EmptyResponse
+    it "raises response error" do
+      expect{ client.send :handle_response, empty_response }.to raise_error Baidu::Error::ApiClient::ResponseError
     end
     it "returns parsed response data" do
       result = client.send :handle_response, response

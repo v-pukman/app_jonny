@@ -3,7 +3,7 @@ class Baidu::UpdateAppsWorker
 
   #TODO: tests!
   def perform app_ids
-    Log.info Log::BAIDU_AREA, self.class, :perform, 'run apps updater', { apps_count: app_ids.count }
+    ::Log.info ::Log::BAIDU_AREA, self.class, :perform, 'run apps updater', { apps_count: app_ids.count }
     service = ::Baidu::Service::App.new
     app_ids.each do |app_id|
       service.update_app app_id

@@ -39,7 +39,8 @@ RSpec.describe Log, type: :model do
     end
     let(:log) { Log.last }
     it { expect(log.level).to eq Log::ERROR_LEVEL }
-    it { expect(log.message).to eq error.message }
+    it { expect(log.message).to include error.message }
+    it { expect(log.message).to include error.class.to_s }
     it { expect(log.backtrace).to eq error.backtrace.join("\n") }
   end
 
@@ -50,7 +51,7 @@ RSpec.describe Log, type: :model do
     end
     let(:log) { Log.last }
     it { expect(log.level).to eq Log::INFO_LEVEL }
-    it { expect(log.message).to eq message }
+    it { expect(log.message).to include message }
     it { expect(log.backtrace).to eq nil }
   end
 
