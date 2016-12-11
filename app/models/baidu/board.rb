@@ -1,4 +1,6 @@
 class Baidu::Board < ActiveRecord::Base
+  include NamespacedModel
+
   TYPES = [
     GENERAL_BOARD = 'generalboard',
     RANKLIST_BOARD = 'ranklist',

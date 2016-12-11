@@ -4,10 +4,9 @@ gem 'rails', '4.2.3'
 #gem 'mysql2', '~> 0.3.18'
 gem 'pg', '~> 0.18.4'
 
-
 gem 'haml-rails', '~> 0.9'
 gem 'faraday'
-gem 'redis', '~>3.2'
+gem 'redis', '~> 3.2'
 gem 'whenever', :require => false
 gem 'arel'
 gem 'uglifier'

@@ -126,7 +126,7 @@ class Baidu::Service::ApiClient
   end
 
   def original_default_params default_params_name
-    ::Baidu::DefaultParams.send(default_params_name)
+    Baidu::Service::DefaultParams.send default_params_name
   end
 
   def default_params default_params_name
@@ -150,13 +150,13 @@ class Baidu::Service::ApiClient
   def with_retry
     tries = 0
     begin
-      puts "RETRY ATTEMPT: #{tries}"
+      #puts "RETRY ATTEMPT: #{tries}"
       yield
     rescue Errno::ETIMEDOUT,
            Faraday::TimeoutError,
            Faraday::ConnectionFailed,
            Baidu::Error::ApiClient::ResponseError => e
-      puts "error, #{e.class}, #{e.message}"
+      #puts "error, #{e.class}, #{e.message}"
       tries += 1
       time = tries * RETRY_INTERVAL * RETRY_BACKOFF_FACTOR
       sleep time

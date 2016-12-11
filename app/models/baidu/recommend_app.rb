@@ -1,4 +1,6 @@
 class Baidu::RecommendApp < ActiveRecord::Base
+  include NamespacedModel
+
   belongs_to :app
   belongs_to :recommend_group
   validates :app_id, :recommend_group_id, :app_type, :packageid, :docid, presence: true

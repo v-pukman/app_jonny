@@ -1,4 +1,4 @@
-class Baidu::DefaultParams
+class Baidu::Service::DefaultParams
 
   # docid
   #v16785257

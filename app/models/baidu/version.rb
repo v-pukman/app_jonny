@@ -1,4 +1,6 @@
 class Baidu::Version < ActiveRecord::Base
+  include NamespacedModel
+
   belongs_to :app
 
   validates_uniqueness_of :id_str, scope: :app_id

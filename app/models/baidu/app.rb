@@ -1,4 +1,6 @@
 class Baidu::App < ActiveRecord::Base
+  include NamespacedModel
+
   TYPES = [
     SOFT_APP = 'soft',
     GAME_APP = 'game'

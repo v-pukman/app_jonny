@@ -1,4 +1,6 @@
 class Baidu::Developer < ActiveRecord::Base
+  include NamespacedModel
+
   has_many :apps
   has_many :tracks, class_name: 'Baidu::Track::Developer'
 

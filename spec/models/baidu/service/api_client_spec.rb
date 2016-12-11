@@ -372,14 +372,14 @@ RSpec.describe Baidu::Service::ApiClient do
   describe "#original_default_params" do
     it "returns original default params hash" do
       params = client.send :original_default_params, :search
-      expect(params).to eq ::Baidu::DefaultParams.search
+      expect(params).to eq ::Baidu::Service::DefaultParams.search
     end
   end
 
   describe "#default_params" do
     let(:uid) { client.send(:generate_uid, 69) }
     it "returns default params hash" do
-      expect(::Baidu::DefaultParams).to receive(:details).and_return(::Baidu::DefaultParams.details)
+      expect(::Baidu::Service::DefaultParams).to receive(:details).and_return(::Baidu::Service::DefaultParams.details)
       params = client.send :default_params, :details
       expect(params).to_not eq nil
     end
@@ -390,7 +390,7 @@ RSpec.describe Baidu::Service::ApiClient do
       expect(params['pu']).to include "cuid@#{uid[0...42]}"
     end
     it "changes pu value" do
-      original_pu = ::Baidu::DefaultParams.details['pu']
+      original_pu = ::Baidu::Service::DefaultParams.details['pu']
       params = client.send :default_params, :details
       expect(params['pu']).to_not eq original_pu
     end

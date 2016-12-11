@@ -1,4 +1,6 @@
 class Baidu::Rank < ActiveRecord::Base
+  include NamespacedModel
+
   TYPES = [
     SOFT_COMMON_RANK = 'soft_common',
     GAMES_IN_BOARD_RANK = 'games_in_board',
