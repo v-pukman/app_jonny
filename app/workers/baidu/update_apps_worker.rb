@@ -1,3 +1,5 @@
+require 'log'
+
 class Baidu::UpdateAppsWorker
   include Sidekiq::Worker
 

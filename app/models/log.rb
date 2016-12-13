@@ -16,13 +16,13 @@ class Log < ActiveRecord::Base
   scope :infos, -> { where(level: INFO_LEVEL) }
 
   def self.clear select_options
-    Log.transaction do
-      Log.where(select_options).destroy_all
+    transaction do
+      where(select_options).destroy_all
     end
   end
 
   def self.write level, area, class_name, method_name, message, backtrace=nil, context={}
-    Log.create({
+    create({
       level: level,
       area: area,
       class_name: class_name,
@@ -37,11 +37,11 @@ class Log < ActiveRecord::Base
   def self.error area, class_name, method_name, error, context={}
     message = "#{error.class}##{error.message}"
     backtrace = (error.backtrace || []).join("\n")
-    Log.write(Log::ERROR_LEVEL, area, class_name, method_name, message, backtrace, context)
+    write(ERROR_LEVEL, area, class_name, method_name, message, backtrace, context)
   end
 
   def self.info area, class_name, method_name, message, context={}
-    Log.write(Log::INFO_LEVEL, area, class_name, method_name, message, nil, context)
+    write(INFO_LEVEL, area, class_name, method_name, message, nil, context)
   end
 
   private

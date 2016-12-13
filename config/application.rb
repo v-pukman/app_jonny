@@ -23,6 +23,7 @@ module AppJonny2
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.autoload_paths += %W(#{config.root}/app/workers/baidu)
+    #config.eager_load_paths += %W(#{config.root}/app/workers/baidu, #{config.root}/app/models/log)
     config.eager_load_paths += %W(#{config.root}/app/workers/baidu)
   end
 end
