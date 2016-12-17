@@ -1,4 +1,6 @@
 class Log < ActiveRecord::Base
+  establish_connection Rails.env.to_sym
+
   validates :level, :area, :message, presence: true
 
   LEVELS = [

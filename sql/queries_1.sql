@@ -115,10 +115,21 @@ select id, docid, not_available_count from baidu_apps where not_available_count 
 select * from logs where class_name = 'Baidu::UpdateAppsWorker' order by created_at;
 /*delete from logs where class_name = 'Baidu::UpdateAppsWorker';*/
 
-SELECT distinct app_id FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-11-26'
+SELECT distinct app_id FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-12-10'
  SELECT "baidu_apps"."id" FROM "baidu_apps" WHERE "baidu_apps"."not_available_count" > 3
 
  SELECT count("baidu_apps"."id") 
  FROM "baidu_apps" 
  WHERE "baidu_apps"."id" NOT IN (SELECT distinct app_id FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-11-26') 
  AND "baidu_apps"."not_available_count" <= 3
+
+ SELECT count(app_id) FROM "baidu_track_apps" WHERE "baidu_track_apps"."day" = '2016-12-15' /*26 798*/
+ SELECT count(id) FROM baidu_apps /* 28 159 */
+ SELECT count(id) FROM baidu_apps where not_available_count > 3; /* 1414 */
+ SELECT id, docid FROM baidu_apps where not_available_count > 3;
+
+ select * from logs where message = 'execution expired';
+ select * from logs where created_at::date = '2016-12-10';
+
+ select * from logs where method_name = 'perform';
+  select * from logs where class_name = 'Baidu::UpdateAppsWorker';
