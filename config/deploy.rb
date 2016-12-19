@@ -22,7 +22,6 @@ set :deploy_to, '/home/deploy/app_jonny'
 
 # Default value for :pty is false
 # set :pty, true
-#, config/redis.yml
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/redis.yml')
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
