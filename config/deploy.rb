@@ -23,7 +23,7 @@ set :deploy_to, '/home/deploy/app_jonny'
 # Default value for :pty is false
 # set :pty, true
 
-set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/database.yml, config/redis.yml}
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default value for default_env is {}
@@ -41,27 +41,26 @@ namespace :deploy do
     end
   end
 
-  # desc "Update crontab with whenever"
-  # task :update_cron do
-  #   on roles(:app) do
-  #     within current_path do
-  #       execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
-  #     end
-  #   end
-  # end
+  desc "Update crontab with whenever"
+  task :update_cron do
+    on roles(:app) do
+      within current_path do
+        execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
+      end
+    end
+  end
 
-  # desc "Create backup symlink"
-  # task :create_backup_sym do
-  #   on roles(:app) do
-  #     within current_path do
-  #       execute :ln, "-s /home/backup/app_jonny_backup /home/deploy/app_jonny/current/app_jonny_backup"
-  #     end
-  #   end
-  # end
-
+  desc "Create backup symlink"
+  task :create_backup_sym do
+    on roles(:app) do
+      within current_path do
+        execute :ln, "-s /data/app_jonny/backup /home/deploy/app_jonny/current/backup"
+      end
+    end
+  end
 
   after :publishing, 'deploy:restart'
   after :finishing, 'deploy:cleanup'
-  #after :finishing, 'deploy:update_cron'
-  #after :finishing, 'deploy:create_backup_sym'
+  after :finishing, 'deploy:update_cron'
+  after :finishing, 'deploy:create_backup_sym'
 end
