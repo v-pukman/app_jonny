@@ -6,7 +6,7 @@ class Baidu::Helper::DateTime
   end
 
   def self.curr_time
-    time_with_zone.to_time
+    time_with_zone
   end
 
   def self.curr_date
