@@ -5,6 +5,7 @@ class Baidu::Backup::App < Baidu::Backup::Base
   end
 
   def self.backup_full_info app_id, full_info_hash
+    return #SKIP IT FOR NOW!!!
     file_path = generate_file_path! app_id
 
     if !full_info_hash.blank? && !File.exist?(file_path)
