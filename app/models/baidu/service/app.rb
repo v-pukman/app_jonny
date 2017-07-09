@@ -56,6 +56,7 @@ class Baidu::Service::App < Baidu::Service::Base
   def update_apps
     day = Baidu::Helper::DateTime.curr_date
     Baidu::Track::App.not_tracked_ids_sliced(day).each do |ids|
+      TaskMailer.status_report(TaskMailer::STARTED, "update_apps_Method", "ids count: #{ids.count}, ids: #{ids}").deliver_now
       Baidu::UpdateAppsWorker.perform_async ids
     end
   end
