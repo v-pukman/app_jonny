@@ -46,7 +46,7 @@ class Baidu::Service::App < Baidu::Service::Base
     app = save_app_stack full_info
     Baidu::Backup::App.backup_full_info app.id, full_info
     app
-  rescue Baidu::Error::EmptyAppInfo => e
+  rescue Baidu::Error::EmptyAppInfo, Baidu::Error::ApiClient::ResponseError
     raise #handle at update_app
   rescue StandardError => e
     Log.error Log::BAIDU_AREA, self.class, :download_app, e, { docid: docid  }
@@ -65,7 +65,7 @@ class Baidu::Service::App < Baidu::Service::Base
     app = Baidu::App.find app_id
     download_app app.docid
     app.save_track #force track
-  rescue Baidu::Error::EmptyAppInfo
+  rescue Baidu::Error::EmptyAppInfo, Baidu::Error::ApiClient::ResponseError
     app.not_available_count += 1
     app.save!
   rescue StandardError => e
