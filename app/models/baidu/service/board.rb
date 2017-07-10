@@ -10,6 +10,7 @@ class Baidu::Service::Board < Baidu::Service::Base
     saved_count = 0
 
     while next_page
+      puts "page: #{page_number}"
       params = {
         boardid: board.origin_id,
         sorttype: board.sort_type,
@@ -21,7 +22,7 @@ class Baidu::Service::Board < Baidu::Service::Base
 
       result = api.get :board, params.merge(params_from_link)
       items = result['result']['data']
-      #items = items.is_a?(Array) ? items : []
+      items = items.is_a?(Array) ? items : []
       app_info_count = 0
       items.each do |preview_info|
         items_count += 1
