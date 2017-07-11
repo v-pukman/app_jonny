@@ -10,7 +10,7 @@ class Baidu::Service::Board < Baidu::Service::Base
     saved_count = 0
 
     while next_page
-      puts "page: #{page_number}"
+      #puts "page: #{page_number}"
       params = {
         boardid: board.origin_id,
         sorttype: board.sort_type,
@@ -28,6 +28,10 @@ class Baidu::Service::Board < Baidu::Service::Base
         items_count += 1
         app = app_service.save_item preview_info
         if app.try(:id)
+
+          app.not_available_count = 0
+          app.save
+
           saved_count += 1
           app_info_count += 1
         end
