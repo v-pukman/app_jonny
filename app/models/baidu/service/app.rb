@@ -166,6 +166,8 @@ class Baidu::Service::App < Baidu::Service::Base
       display_tags = save_display_tags build_display_tags_attrs(full_info)
       app.display_tags = display_tags if display_tags.any?
 
+      app.not_available_count = 0 #reset not_available_count
+
       app.save!
       app
     end
