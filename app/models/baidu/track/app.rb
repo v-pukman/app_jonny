@@ -4,7 +4,7 @@ class Baidu::Track::App < ActiveRecord::Base
   belongs_to :app, class_name: 'Baidu::App'
   validates_uniqueness_of :app_id, scope: [:day]
 
-  TRACK_ALL_IN_HOURS = 23 #23
+  TRACK_ALL_IN_HOURS = 20 #23
   TRACK_ONE_IN_SEC = 3
 
   def self.not_tracked_ids_sliced day
