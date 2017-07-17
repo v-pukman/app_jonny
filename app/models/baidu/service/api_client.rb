@@ -4,7 +4,7 @@ class Baidu::Service::ApiClient
   SEARCH_URL = 'http://m.baidu.com/as'
 
   RETRY_MAX = 4
-  RETRY_INTERVAL = 5
+  RETRY_INTERVAL = 30
   RETRY_BACKOFF_FACTOR = 2
 
    # get :app, docid: 123
