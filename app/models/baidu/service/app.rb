@@ -53,11 +53,21 @@ class Baidu::Service::App < Baidu::Service::Base
     nil
   end
 
+  #TODO: bring back the worker
+
+  #def update_apps
+  #  day = Baidu::Helper::DateTime.curr_date
+  #  Baidu::Track::App.not_tracked_ids_sliced(day).each do |ids|
+  #    TaskMailer.status_report(TaskMailer::STARTED, "update_apps_Method", "ids count: #{ids.count}, ids: #{ids}").deliver_now
+  #    Baidu::UpdateAppsWorker.perform_async ids
+  #  end
+  #end
+
   def update_apps
     day = Baidu::Helper::DateTime.curr_date
-    Baidu::Track::App.not_tracked_ids_sliced(day).each do |ids|
-      TaskMailer.status_report(TaskMailer::STARTED, "update_apps_Method", "ids count: #{ids.count}, ids: #{ids}").deliver_now
-      Baidu::UpdateAppsWorker.perform_async ids
+    ids = Baidu::Analytic::App.not_tracked_ids day
+    ids.each do |app_id|
+      update_app app_id
     end
   end
 

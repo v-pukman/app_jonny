@@ -592,13 +592,21 @@ RSpec.describe Baidu::Service::App do
   end
 
   describe "#update_apps" do
-    it "use not tracked apps ids" do
-      expect(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([])
-      service.update_apps
-    end
-    it "calls updater worker" do
-      allow(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([[1,2]])
-      expect(Baidu::UpdateAppsWorker).to receive(:perform_async).with([1,2])
+    #TODO: bring back the worker
+
+    # it "use not tracked apps ids" do
+    #   expect(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([])
+    #   service.update_apps
+    # end
+    # it "calls updater worker" do
+    #   allow(Baidu::Track::App).to receive(:not_tracked_ids_sliced).and_return([[1,2]])
+    #   expect(Baidu::UpdateAppsWorker).to receive(:perform_async).with([1,2])
+    #   service.update_apps
+    # end
+
+    it "calls update_app method" do
+      allow(Baidu::Analytic::App).to receive(:not_tracked_ids).and_return([1,2])
+      expect(service).to receive(:update_app).at_least(2).times
       service.update_apps
     end
   end
