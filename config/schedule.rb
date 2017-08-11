@@ -16,6 +16,6 @@ every 1.day, at: '19:00' do
   rake 'baidu:download_crown_ranks'
 end
 
-every 1.day, at: '01:00' do
-  rake 'baidu:update_apps' #1. select not updated 2. split to few proccess
-end
+#every 1.day, at: '01:00' do
+#  rake 'baidu:update_apps' #1. select not updated 2. split to few proccess
+#end
